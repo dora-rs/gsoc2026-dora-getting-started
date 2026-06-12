@@ -1,19 +1,22 @@
 (function () {
   function counterpartPath(pathname, targetLanguage) {
     var normalized = pathname.replace(/\\/g, "/");
-    var marker = targetLanguage === "zh" ? "/en/" : "/zh/";
-    var replacement = targetLanguage === "zh" ? "/zh/" : "/en/";
+    var match = normalized.match(/^\/(en|zh)(\/.*)?$/);
 
-    if (normalized.indexOf(marker) !== -1) {
-      return normalized.replace(marker, replacement);
+    if (match) {
+      var currentLanguage = match[1];
+      var rest = match[2] || "/introduction.html";
+      if (currentLanguage === targetLanguage) {
+        return normalized;
+      }
+      return "/" + targetLanguage + rest;
     }
 
     if (normalized.endsWith("/") || normalized.endsWith("/index.html")) {
-      return normalized.replace(/index\.html$/, "") + targetLanguage + "/introduction.html";
+      return "/" + targetLanguage + "/introduction.html";
     }
 
-    var base = normalized.slice(0, normalized.lastIndexOf("/") + 1);
-    return base + targetLanguage + "/introduction.html";
+    return "/" + targetLanguage + "/introduction.html";
   }
 
   function currentLanguage(pathname) {

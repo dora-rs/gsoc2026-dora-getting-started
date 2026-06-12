@@ -18,8 +18,17 @@
 | Codex 配置基础 | <https://developers.openai.com/codex/config-basic> |
 | Codex 审批与安全 | <https://developers.openai.com/codex/agent-approvals-security> |
 | Codex 沙盒机制 | <https://developers.openai.com/codex/concepts/sandboxing> |
+| Rerun Python SDK 安装指南 | <https://rerun.io/docs/getting-started/install-rerun/python> |
+| Rerun log and ingest 指南 | <https://rerun.io/docs/getting-started/data-in> |
+| Rerun CLI manual | <https://rerun.io/docs/reference/cli> |
+| Rerun SDK PyPI 包 | <https://pypi.org/project/rerun-sdk/> |
+| Rerun GitHub 仓库 | <https://github.com/rerun-io/rerun> |
+| Claude Code 概览 | <https://docs.anthropic.com/en/docs/claude-code/overview> |
+| OpenClaw 仓库 | <https://github.com/openclaw/openclaw> |
+| Octos 仓库 | <https://github.com/octos-org/octos> |
 
 ## 来源说明
 
 - `adora` 仓库已经归档，并说明后续工作进入 `dora-rs/dora`，所以本书把 Dora 作为当前活跃的项目入口。
 - Dora 官方安装页和 Dora README 当前展示的首选安装路径略有差异。本教程采用隔离 Python 虚拟环境，并固定 `dora-rs-cli==0.5.0` 与 `dora-rs==0.5.0`，因为这种方式在 Windows 上容易复现，也不会影响开发者已有的 Dora 源码构建。
+- Rerun 的包信息和平台信息在准备 Rerun 场景章节时，根据官方 Rerun 文档和 PyPI `rerun-sdk` 包页面检查。

@@ -18,6 +18,14 @@ These sources were checked while preparing this tutorial.
 | Codex configuration basics | <https://developers.openai.com/codex/config-basic> |
 | Codex approvals and security | <https://developers.openai.com/codex/agent-approvals-security> |
 | Codex sandboxing | <https://developers.openai.com/codex/concepts/sandboxing> |
+| Rerun Python SDK install guide | <https://rerun.io/docs/getting-started/install-rerun/python> |
+| Rerun log and ingest guide | <https://rerun.io/docs/getting-started/data-in> |
+| Rerun CLI manual | <https://rerun.io/docs/reference/cli> |
+| Rerun SDK PyPI package | <https://pypi.org/project/rerun-sdk/> |
+| Rerun GitHub repository | <https://github.com/rerun-io/rerun> |
+| Claude Code overview | <https://docs.anthropic.com/en/docs/claude-code/overview> |
+| OpenClaw repository | <https://github.com/openclaw/openclaw> |
+| Octos repository | <https://github.com/octos-org/octos> |
 
 ## Source Notes
 
@@ -28,3 +36,6 @@ These sources were checked while preparing this tutorial.
   Python virtual environment with `dora-rs-cli==0.5.0` and `dora-rs==0.5.0`
   because it is easy to reproduce on Windows and does not disturb a developer's
   existing source checkout.
+- Rerun package and platform details were checked against official Rerun
+  documentation and the PyPI `rerun-sdk` package page while preparing the Rerun
+  scene chapter.

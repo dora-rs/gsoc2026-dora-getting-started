@@ -10,6 +10,11 @@ work-product/verification/**/logs/*.log
 verification/**/out/
 work-product/verification/**/out/
 
+# Heavy/generated verification artifacts. Curated tutorial images live under
+# work-product/*/src/assets/ instead.
+verification/**/artifacts/
+work-product/verification/**/artifacts/
+
 # Dora recording outputs
 *.drec
 
