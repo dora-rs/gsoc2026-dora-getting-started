@@ -22,19 +22,32 @@ mkdir -p artifacts logs
   echo "== Environment =="
   echo "Example root: <repo>/work-product/verification/week2-rerun-scene"
   python --version
+  dora --version
   rerun --version
   python - <<'PY'
+import dora
 import rerun as rr
+print("dora-rs python package", getattr(dora, "__version__", "unknown"))
 print("rerun-sdk", getattr(rr, "__version__", "unknown"))
 PY
 
-  echo "== Generating assets =="
+  echo "== Running Dora dataflow =="
   python generate_models.py
+  dora run dataflow.yml --uv --stop-after 13s
 
-  echo "== Logging static Rerun scene =="
-  python visualizer.py
+  echo "== Rerun Viewer screenshot and recording =="
+  python capture_rerun_viewer.py || true
 
   test -s artifacts/dora_rerun_scene.rrd
+  if [[ -s artifacts/rerun_viewer_screenshot.png ]]; then
+    echo "Verified: Rerun Viewer screenshot was generated."
+  else
+    echo "Note: Rerun Viewer screenshot was not generated."
+  fi
+  if [[ -s artifacts/rerun_viewer_recording.mp4 ]]; then
+    echo "Verified: Rerun Viewer recording was generated."
+  else
+    echo "Note: Rerun Viewer recording was not generated."
+  fi
   echo "Verified: Rerun recording was generated."
 } 2>&1 | tee logs/latest-run.log
-
