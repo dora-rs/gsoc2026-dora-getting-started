@@ -1,0 +1,13 @@
+[book]
+title = "Dora Getting Started"
+authors = ["Qiyang Tan"]
+src = "src"
+
+[build]
+build-dir = "book"
+
+[output.html]
+default-theme = "light"
+preferred-dark-theme = "navy"
+additional-css = ["theme/dora.css"]
+additional-js = ["theme/language-switch.js"]

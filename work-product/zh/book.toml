@@ -1,0 +1,14 @@
+[book]
+title = "Dora 入门指南"
+authors = ["Qiyang Tan"]
+language = "zh-CN"
+src = "src"
+
+[build]
+build-dir = "../book/zh"
+
+[output.html]
+default-theme = "light"
+preferred-dark-theme = "navy"
+additional-css = ["../theme/dora.css"]
+additional-js = ["../theme/language-switch.js"]

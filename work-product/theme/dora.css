@@ -1,0 +1,330 @@
+:root {
+  --content-max-width: 920px;
+  --menu-bar-height: 52px;
+  --page-padding: 24px;
+  --dora-radius: 8px;
+  --dora-shadow: 0 16px 44px rgba(26, 40, 40, 0.09);
+  --dora-border: #d9e3df;
+  --dora-accent: #1d6f68;
+  --dora-accent-2: #a94b35;
+  --dora-muted: #5f6f6e;
+  --dora-panel: #ffffff;
+  --dora-panel-soft: #f0f5f2;
+  --dora-code-border: #d9e2df;
+}
+
+.light,
+html:not(.js) {
+  --bg: #f7f9f7;
+  --fg: #172321;
+  --sidebar-bg: #edf3f0;
+  --sidebar-fg: #263533;
+  --sidebar-active: #185f59;
+  --links: #1d6f68;
+  --quote-bg: #eef7f3;
+  --quote-border: #1d6f68;
+  --table-border-color: #d8e2de;
+  --table-header-bg: #e7efeb;
+  --code-bg: #f1f5f3;
+  --theme-popup-bg: #ffffff;
+  --theme-popup-border: #cad7d3;
+  --theme-hover: #e7efeb;
+}
+
+.navy,
+.ayu,
+.coal {
+  --bg: #101715;
+  --fg: #e6efeb;
+  --sidebar-bg: #151d1b;
+  --sidebar-fg: #c9d7d2;
+  --sidebar-active: #7fd0bf;
+  --links: #7fd0bf;
+  --quote-bg: #172420;
+  --quote-border: #7fd0bf;
+  --table-border-color: #2d3b38;
+  --table-header-bg: #1d2926;
+  --code-bg: #17201e;
+  --theme-popup-bg: #17201e;
+  --theme-popup-border: #34433f;
+  --theme-hover: #22312d;
+  --dora-border: #2d3b38;
+  --dora-shadow: 0 18px 46px rgba(0, 0, 0, 0.28);
+  --dora-muted: #a9bab4;
+  --dora-panel: #151d1b;
+  --dora-panel-soft: #1b2623;
+  --dora-code-border: #33423e;
+}
+
+html {
+  letter-spacing: 0;
+}
+
+body {
+  font-family:
+    "Segoe UI",
+    "Microsoft YaHei",
+    "PingFang SC",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  color: var(--fg);
+  background:
+    linear-gradient(180deg, rgba(29, 111, 104, 0.05), transparent 280px),
+    var(--bg);
+}
+
+.menu-bar {
+  border-bottom: 1px solid var(--dora-border);
+  background: color-mix(in srgb, var(--bg) 88%, var(--dora-panel));
+  backdrop-filter: blur(10px);
+}
+
+.sidebar {
+  border-right: 1px solid var(--dora-border);
+}
+
+.sidebar .chapter li {
+  margin: 1px 8px;
+}
+
+.sidebar .chapter li a {
+  border-radius: 6px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
+
+.sidebar .chapter li a:hover,
+.sidebar .chapter li a.active {
+  background: var(--theme-hover);
+  color: var(--sidebar-active);
+}
+
+.content main {
+  max-width: var(--content-max-width);
+  padding-top: 34px;
+}
+
+.content h1,
+.content h2,
+.content h3 {
+  letter-spacing: 0;
+  color: var(--fg);
+}
+
+.content h1 {
+  margin-top: 0.2rem;
+  margin-bottom: 1.1rem;
+  font-size: 2.35rem;
+  line-height: 1.13;
+}
+
+.content h1::after {
+  content: "";
+  display: block;
+  width: 72px;
+  height: 3px;
+  margin-top: 18px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--dora-accent), var(--dora-accent-2));
+}
+
+.content h2 {
+  margin-top: 2.25rem;
+  padding-bottom: 0.38rem;
+  border-bottom: 1px solid var(--table-border-color);
+  font-size: 1.45rem;
+}
+
+.content h3 {
+  margin-top: 1.7rem;
+  font-size: 1.08rem;
+}
+
+.content p,
+.content li {
+  line-height: 1.75;
+}
+
+.content a {
+  text-underline-offset: 3px;
+}
+
+.table-wrapper {
+  margin: 1.35rem 0;
+  overflow-x: auto;
+  border-radius: var(--dora-radius);
+}
+
+.content table {
+  width: 100%;
+  min-width: 620px;
+  border: 1px solid var(--table-border-color);
+  border-radius: var(--dora-radius);
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--dora-panel);
+  font-size: 1.38rem;
+  line-height: 1.28;
+  box-shadow: 0 8px 24px rgba(30, 40, 38, 0.06);
+}
+
+.content table th,
+.content table td {
+  border-width: 0 1px 1px 0;
+  padding: 8px 14px;
+  vertical-align: top;
+}
+
+.content table th {
+  background: color-mix(in srgb, var(--table-header-bg) 92%, var(--dora-panel));
+  color: var(--fg);
+  font-size: 1.34rem;
+  font-weight: 700;
+}
+
+.content table code {
+  font-size: 0.98em;
+}
+
+.content table tbody tr:nth-child(even) td {
+  background: color-mix(in srgb, var(--dora-panel-soft) 46%, transparent);
+}
+
+.content table tr:last-child td {
+  border-bottom-width: 0;
+}
+
+.content table th:last-child,
+.content table td:last-child {
+  border-right-width: 0;
+}
+
+.content main > table:first-of-type,
+.content main > .table-wrapper:first-of-type table {
+  margin-top: 1rem;
+  min-width: 520px;
+  box-shadow: var(--dora-shadow);
+}
+
+.content pre {
+  border: 1px solid var(--dora-code-border);
+  border-radius: var(--dora-radius);
+  box-shadow: 0 10px 28px rgba(20, 32, 30, 0.08);
+}
+
+.content :not(pre) > code {
+  border: 1px solid var(--dora-code-border);
+  border-radius: 5px;
+  padding: 0.08rem 0.28rem;
+}
+
+.content blockquote {
+  border-left: 4px solid var(--quote-border);
+  border-radius: 0 var(--dora-radius) var(--dora-radius) 0;
+  background: var(--quote-bg);
+}
+
+.language-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 18px;
+  margin: 30px 0;
+}
+
+.landing-card {
+  display: flex;
+  min-height: 164px;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 24px;
+  border: 1px solid var(--dora-border);
+  border-radius: var(--dora-radius);
+  background: var(--dora-panel);
+  box-shadow: var(--dora-shadow);
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.landing-card:hover {
+  border-color: var(--links);
+  color: var(--fg);
+}
+
+.landing-card strong {
+  font-size: 1.35rem;
+  line-height: 1.25;
+}
+
+.landing-card span:last-child {
+  color: var(--dora-muted);
+}
+
+.landing-kicker {
+  color: var(--links);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.language-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 32px;
+  margin: 10px 8px 0 0;
+  padding: 2px;
+  border: 1px solid var(--dora-border);
+  border-radius: 999px;
+  background: var(--dora-panel-soft);
+}
+
+.language-switch a {
+  display: inline-flex;
+  min-width: 40px;
+  height: 26px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  color: var(--fg);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.language-switch a.active {
+  background: var(--dora-panel);
+  color: var(--links);
+  box-shadow: 0 1px 8px rgba(15, 31, 29, 0.12);
+}
+
+@media (max-width: 700px) {
+  :root {
+    --page-padding: 16px;
+  }
+
+  .content h1 {
+    font-size: 1.9rem;
+  }
+
+  .language-switch {
+    margin-right: 4px;
+  }
+
+  .language-switch a {
+    min-width: 34px;
+  }
+
+  .content table {
+    min-width: 560px;
+    font-size: 1.22rem;
+  }
+
+  .content table th,
+  .content table td {
+    padding: 7px 12px;
+  }
+}
