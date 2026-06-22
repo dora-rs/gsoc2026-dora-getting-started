@@ -413,3 +413,7 @@ listener output.
 - Codex configuration basics: <https://developers.openai.com/codex/config-basic>
 - Codex approvals and security: <https://developers.openai.com/codex/agent-approvals-security>
 - Codex sandboxing: <https://developers.openai.com/codex/concepts/sandboxing>
+
+## Next Step
+
+The next chapter adds Rerun on top of the Dora setup and uses a static 3D scene to verify robot, vehicle, floor, and reusable glTF asset visualization.

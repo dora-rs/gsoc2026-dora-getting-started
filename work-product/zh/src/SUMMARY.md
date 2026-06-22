@@ -4,7 +4,7 @@
 - [dora-rs 介绍、安装与 Hello World](weeks/week-01-dora-introduction-installation-hello-world.md)
 - [Rerun 介绍与静态场景](weeks/week-02-rerun-scene-with-dora.md)
 - [Dora 控制 Rerun 场景运动](weeks/week-03-ai-assistant-rerun-workflow.md)
-- [Camera Data 与 Visual Feedback](weeks/week-04-camera-data-visual-feedback.md)
+- [仿真场景中的相机传感器](weeks/week-04-camera-data-visual-feedback.md)
 - [内容整合与 Midterm 打磨](weeks/week-05-consolidation-refinement.md)
 - [Midterm 工作产出准备](weeks/week-06-midterm-work-product.md)
 - [多模态场景理解](weeks/week-07-multimodal-scene-understanding.md)

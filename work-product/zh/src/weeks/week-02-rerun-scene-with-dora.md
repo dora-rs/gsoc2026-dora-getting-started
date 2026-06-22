@@ -196,13 +196,6 @@ source .venv/bin/activate
 rerun artifacts/dora_rerun_scene.rrd
 ```
 
-## 复现经验
-
-- 让助手确认包名。PyPI 包是 `rerun-sdk`，但 Python import 是 `rerun`。
-- 在教程脚本中保留 `RERUN_ANALYTICS=disabled`，这样日志更干净，也避免交互提示影响流程。
-- 当模型材质很重要时，优先使用 glTF 作为可复用 3D 教程资产。
-- 在远程机器上捕获 Viewer 媒体时，要使用当前桌面会话的 `DISPLAY`。本次验证中 `:1` 可用，`:0` 不可用。
-
 ## 下一步
 
 下一章会保持这个场景布局，并使用 Dora 发布不断变化的机器人和小车 transform。这样静态 Rerun 场景就会变成一个小型 Dora 控制运动示例。
