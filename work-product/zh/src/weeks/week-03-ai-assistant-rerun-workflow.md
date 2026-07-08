@@ -194,19 +194,6 @@ neither WAYLAND_DISPLAY nor WAYLAND_SOCKET nor DISPLAY is set
 
 这在 headless 主机上是正常现象。可以之后在有桌面的机器上打开生成的 `.rrd`，或者在环境允许时使用虚拟 display。
 
-## 复现经验
+## 下一步
 
-- 录制教程素材时只捕获 Rerun Viewer 窗口；全桌面录屏会降低阅读体验。
-- 在运动开始前增加一段初始停留，否则录屏可能开始时对象已经移动过了。
-- 在教程脚本中保留 `RERUN_ANALYTICS=disabled`，这样日志更干净，也避免交互提示影响流程。
-- 不要随意提交 `.rrd` 录制文件。加入图像或传感器数据后，它可能很快变大。
-- 如果 `dora run --uv` 找不到 `uv`，可以在虚拟环境中安装 `uv`，或者移除 `--uv` 后直接运行 Python 节点。
-
-## 继续扩展
-
-接下来可以尝试：
-
-- 在 Rerun 中添加路径线，让规划路线可见。
-- 将 controller 拆成 robot 和 car 两个节点。
-- 用另一个 Dora 节点的真实机器人状态替换合成轨迹。
-- 在后续章节中加入 camera stream 或 sensor feedback。
+下一章会从 Rerun 可视化切换到 Habitat-Sim 仿真，构建一个能产生 RGB 和 depth 数据的 wrist camera 示例。

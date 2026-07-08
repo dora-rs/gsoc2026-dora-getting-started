@@ -39,7 +39,7 @@
   <a class="roadmap-item" href="weeks/week-01-dora-introduction-installation-hello-world.html"><span>Week 1</span><strong>Dora 与 Hello World</strong><em>Dora 与 adora 介绍、安装指南和 Hello World 示例。</em></a>
   <a class="roadmap-item" href="weeks/week-02-rerun-scene-with-dora.html"><span>Week 2</span><strong>Rerun 静态场景</strong><em>Rerun 可视化介绍、安装、初始化，以及第一个静态 3D 场景。</em></a>
   <a class="roadmap-item" href="weeks/week-03-ai-assistant-rerun-workflow.html"><span>Week 3</span><strong>Dora 控制运动</strong><em>使用 Dora 和 AI 助手工作流，让 Rerun 场景动起来。</em></a>
-  <a class="roadmap-item" href="weeks/week-04-camera-data-visual-feedback.html"><span>Week 4</span><strong>Camera Feedback</strong><em>从 Rerun 场景中获取 camera data，并实现 visual feedback。</em></a>
+  <a class="roadmap-item" href="weeks/week-04-camera-data-visual-feedback.html"><span>Week 4</span><strong>相机传感器</strong><em>使用 Habitat-Sim 从仿真 wrist camera 生成 RGB 和 depth data。</em></a>
   <a class="roadmap-item" href="weeks/week-05-consolidation-refinement.html"><span>Week 5</span><strong>内容整合</strong><em>整合前几章内容，完善文档、示例和视频。</em></a>
   <a class="roadmap-item" href="weeks/week-06-midterm-work-product.html"><span>Week 6</span><strong>Midterm 准备</strong><em>准备 midterm work products，并验证目前的学习路径。</em></a>
   <a class="roadmap-item" href="weeks/week-07-multimodal-scene-understanding.html"><span>Week 7</span><strong>多模态理解</strong><em>集成开源多模态模型，分析场景视觉信息。</em></a>

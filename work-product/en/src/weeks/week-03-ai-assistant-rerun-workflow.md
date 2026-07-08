@@ -219,24 +219,6 @@ neither WAYLAND_DISPLAY nor WAYLAND_SOCKET nor DISPLAY is set
 That is expected on headless hosts. Open the generated `.rrd` later on a desktop
 machine, or use a virtual display if your environment allows it.
 
-## Reproduction Tips
+## Next Step
 
-- Capture only the Rerun Viewer window when recording tutorial media; full
-  desktop recordings are harder to read.
-- Add an initial hold before motion starts, otherwise the recording may begin
-  after the actors have already moved.
-- Keep `RERUN_ANALYTICS=disabled` in tutorial scripts when you want clean,
-  non-interactive logs.
-- Do not commit `.rrd` recordings unless they are intentionally small. They can
-  grow quickly once you add images or sensor data.
-- If `dora run --uv` cannot find `uv`, install `uv` inside the virtual
-  environment or remove `--uv` and run plain Python nodes.
-
-## What to Try Next
-
-Good next experiments are:
-
-- Add path lines in Rerun so the planned route is visible.
-- Split the controller into separate robot and car nodes.
-- Replace the synthetic trajectory with real robot state from another Dora node.
-- Add a camera stream or sensor feedback in a later chapter.
+The next chapter moves from Rerun visualization to Habitat-Sim simulation and builds a wrist camera example that produces RGB and depth data.

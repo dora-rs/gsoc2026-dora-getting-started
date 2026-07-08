@@ -216,16 +216,6 @@ source .venv/bin/activate
 rerun artifacts/dora_rerun_scene.rrd
 ```
 
-## Reproduction Tips
-
-- Ask the assistant to verify package names. The PyPI package is `rerun-sdk`, but
-  the Python import is `rerun`.
-- Keep `RERUN_ANALYTICS=disabled` in tutorial scripts when you want clean,
-  non-interactive logs.
-- Prefer glTF for reusable 3D tutorial assets when materials matter.
-- On remote machines, use the active desktop `DISPLAY` when capturing Viewer
-  media. In this verification run, `:1` worked and `:0` did not.
-
 ## Next Step
 
 The next chapter keeps this scene layout and uses Dora to publish changing

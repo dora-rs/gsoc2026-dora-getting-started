@@ -372,3 +372,7 @@ listener output.
 - Codex configuration basics: <https://developers.openai.com/codex/config-basic>
 - Codex approvals and security: <https://developers.openai.com/codex/agent-approvals-security>
 - Codex sandboxing: <https://developers.openai.com/codex/concepts/sandboxing>
+
+## 下一步
+
+下一章会在 Dora 基础环境之外加入 Rerun，用一个静态 3D 场景验证机器人、车辆、地面和可复用 glTF 资产的可视化流程。
