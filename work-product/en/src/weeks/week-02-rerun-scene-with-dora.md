@@ -2,28 +2,11 @@
 
 ## Version Information
 
-This chapter was verified on a Linux desktop environment over SSH.
-
-- Operating system: Ubuntu 22.04.5 LTS, x86_64
-- Python: CPython 3.10.12
-- Rerun CLI and Python SDK: 0.33.0
-- Verification example: `verification/week2-rerun-scene`
-
-## What Rerun Is
-
-Rerun is a visualization and logging toolkit for robotics, computer vision, and
-physical AI systems. A program records typed data such as transforms, boxes,
-images, points, text, tensors, and time-series state. The Rerun Viewer can show
-that data live, or open a saved `.rrd` recording later.
-
-The official Python SDK package is `rerun-sdk`, and the Python import name is
-`rerun`. Installing the Python SDK also provides the Viewer command line tool.
-
-At the time this chapter was prepared, `rerun-sdk==0.33.0` requires Python 3.10
-or newer. The PyPI wheels checked for this chapter include Windows x86-64, Linux
-x86-64, Linux ARM64, and macOS ARM64 builds. If your platform is not covered by a
-wheel, use the official Rerun install and troubleshooting pages as the source of
-truth.
+| Component | Version / Environment |
+| --- | --- |
+| Operating system | Ubuntu 22.04.5 LTS, x86_64 |
+| Python | CPython 3.10.12 |
+| Rerun CLI and Python SDK | 0.33.0 |
 
 ## Goal
 
@@ -43,7 +26,22 @@ assets, and Viewer workflow before adding Dora-controlled motion.
 
 ![Rerun Viewer static scene screenshot](../assets/week2-rerun-scene/rerun_viewer_screenshot.png)
 
-## Ask Codex to Prepare the Static Scene
+## What Rerun Is
+
+Rerun is a visualization and logging toolkit for robotics, computer vision, and
+physical AI systems. A program records typed data such as transforms, boxes,
+images, points, text, tensors, and time-series state. The Rerun Viewer can show
+that data live, or open a saved `.rrd` recording later.
+
+The official Python SDK package is `rerun-sdk`, and the Python import name is
+`rerun`. Installing the Python SDK also provides the Viewer command line tool.
+
+`rerun-sdk==0.33.0` requires Python 3.10 or newer. Wheels for this version are
+available for Windows x86-64, Linux x86-64, Linux ARM64, and macOS ARM64. If
+your platform is not covered by a wheel, use the official Rerun installation
+and troubleshooting pages as the source of truth.
+
+## Prepare the Static Scene
 
 Start Codex CLI from the tutorial root and give it a prompt like this:
 
@@ -86,7 +84,7 @@ The important details in the prompt are:
 
 ## Project Layout
 
-The verification example lives in:
+The runnable example lives in:
 
 ```text
 verification/week2-rerun-scene/
@@ -97,7 +95,7 @@ verification/week2-rerun-scene/
 └── visualizer.py
 ```
 
-The next chapter extends the same verification directory with Dora nodes and
+The next chapter extends the same example directory with Dora nodes and
 motion capture. Generated runtime files stay out of the tutorial source:
 
 - `.venv/` contains the local Python environment.

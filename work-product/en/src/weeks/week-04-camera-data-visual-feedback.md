@@ -2,30 +2,16 @@
 
 ## Version Information
 
-This chapter was verified on a Linux desktop environment with GPU rendering.
-
-- Operating system: Ubuntu 22.04.5 LTS, x86_64
-- Python: CPython 3.9.23
-- Habitat-Sim: 0.3.3
-- OpenCV: 4.12.0
-- NumPy: 1.26.4
-- Trimesh: 4.7.4
-- GPU: NVIDIA GeForce RTX 5090 Laptop GPU
-- NVIDIA driver: 580.159.03
-
-## What Habitat-Sim Is
-
-Habitat-Sim is a simulator. It creates a virtual 3D world and renders sensor
-observations from that world, including RGB camera images and depth images. That
-is the missing piece when you want a robotics tutorial to use sensor data
-without first building a physical test scene.
-
-This is different from Rerun. Rerun is a visualization and logging tool: it can
-display robot poses, maps, point clouds, images, planned paths, trajectories,
-and status values. It does not create the physical world or generate camera data
-by itself. In a complete stack, Habitat-Sim can produce sensor observations,
-Dora can move those observations through a dataflow, and Rerun can display or
-record the resulting state.
+| Component | Version / Environment |
+| --- | --- |
+| Operating system | Ubuntu 22.04.5 LTS, x86_64 |
+| Python | CPython 3.9.23 |
+| Habitat-Sim | 0.3.3 |
+| OpenCV | 4.12.0 |
+| NumPy | 1.26.4 |
+| Trimesh | 4.7.4 |
+| GPU | NVIDIA GeForce RTX 5090 Laptop GPU |
+| NVIDIA driver | 580.159.03 |
 
 ## Goal
 
@@ -58,7 +44,21 @@ as the arm moves.
   <source src="../assets/habitat-camera-sensors/external_rgb_depth_side_by_side.mp4" type="video/mp4">
 </video>
 
-## Ask Codex to Build the Camera Sensor Example
+## What Habitat-Sim Is
+
+Habitat-Sim is a simulator. It creates a virtual 3D world and renders sensor
+observations from that world, including RGB camera images and depth images. That
+is the missing piece when you want a robotics tutorial to use sensor data
+without first building a physical test scene.
+
+This is different from Rerun. Rerun is a visualization and logging tool: it can
+display robot poses, maps, point clouds, images, planned paths, trajectories,
+and status values. It does not create the physical world or generate camera data
+by itself. In a complete stack, Habitat-Sim can produce sensor observations,
+Dora can move those observations through a dataflow, and Rerun can display or
+record the resulting state.
+
+## Build the Camera Sensor Example
 
 Start Codex CLI from the tutorial root and give it a prompt like this:
 
@@ -79,7 +79,7 @@ Target:
 - Show the RGB and depth streams in external OpenCV windows when a desktop
   display is available.
 - Support a headless mode that still runs the simulation and writes local
-  verification outputs.
+  outputs.
 
 Please create a run script that:
 1. Creates or reuses an isolated Habitat-Sim environment.
@@ -98,7 +98,7 @@ The important details in the prompt are:
   commands.
 - Treat Habitat-Sim as the sensor source, not as a replacement for Dora or
   Rerun.
-- Keep the arm, scene, and generated outputs inside one verification example.
+- Keep the arm, scene, and generated outputs inside one runnable example.
 - Include a no-window mode so the example can still run over SSH or in CI-like
   environments.
 
@@ -125,7 +125,7 @@ Generated runtime files stay out of the tutorial source:
 - `.tools/` contains the local micromamba binary.
 - `.mamba-root/` contains the local Conda environment.
 - `assets/habitat_wrist_camera_probe.glb` is generated from the script.
-- `outputs/` contains generated local verification media and notes.
+- `outputs/` contains generated local media and run notes.
 
 Only curated book media files are copied into the language-specific
 `src/assets/` directories, following the same asset layout used by the earlier
@@ -179,7 +179,7 @@ for center, color, size in zip(centers, colors, sizes):
 ```
 
 The arm model is a Franka Panda URDF. The mesh files come from the Franka ROS
-`franka_description` package, and the verification example keeps the copied
+`franka_description` package, and the example keeps the copied
 license and source note under `assets/franka_description/`.
 
 The URDF includes seven revolute Panda joints:

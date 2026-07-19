@@ -2,18 +2,16 @@
 
 ## Version Information
 
-This chapter was verified on the same Linux desktop environment as the static
-Rerun scene.
-
-- Operating system: Ubuntu 22.04.5 LTS, x86_64
-- Python: CPython 3.10.12
-- Dora CLI: 0.5.0
-- dora-rs Python package: `dora-rs==0.5.0`
-- Rerun CLI and Python SDK: 0.33.0
-- uv: 0.11.17
-- pyarrow: 24.0.0
-- PyYAML: 6.0.3
-- Verification example: `verification/week2-rerun-scene`
+| Component | Version / Environment |
+| --- | --- |
+| Operating system | Ubuntu 22.04.5 LTS, x86_64 |
+| Python | CPython 3.10.12 |
+| Dora CLI | 0.5.0 |
+| dora-rs Python package | `dora-rs==0.5.0` |
+| Rerun CLI and Python SDK | 0.33.0 |
+| uv | 0.11.17 |
+| pyarrow | 24.0.0 |
+| PyYAML | 6.0.3 |
 
 ## Goal
 
@@ -30,7 +28,7 @@ floor, cube, cylinder, robot, and car, then uses Dora to drive motion:
 
 <video controls muted loop src="../assets/week2-rerun-scene/rerun_viewer_recording.mp4"></video>
 
-## Ask Codex to Add Dora Motion
+## Add Dora-Controlled Motion
 
 Start from the static scene directory created in the previous chapter. Then ask
 Codex CLI to extend it:
@@ -205,10 +203,10 @@ scene instead of jumping directly to the final state.
 
 ## Desktop Capture Notes
 
-The verification machine has a desktop session, but SSH shells do not always
-inherit the desktop display. The script therefore tries the current `DISPLAY`,
-then `:1`, then `:0`. In this verification run, `DISPLAY=:1` produced the Viewer
-screenshot and short recording.
+An SSH shell does not always inherit the active desktop display. The script
+therefore tries the current `DISPLAY`, then `:1`, then `:0`. If the Viewer does
+not open, set `DISPLAY` to the active desktop session explicitly and rerun the
+capture.
 
 If there is no desktop display, Rerun may report:
 

@@ -1,8 +1,9 @@
-# Final Consolidation
+# End-to-End Robotics Workflow
 
-This chapter is reserved for final consolidation of documentation, runnable
-examples, and companion videos.
+This chapter connects the tutorial's simulation, sensor data, multimodal
+perception, planning, actions, and visualization components into one runnable
+Dora application.
 
 ## Next Step
 
-The next step is to complete final review, package the work product, and synchronize the submission materials, PRs, and project status.
+The next chapter verifies the complete application and presents practical extension paths for new sensors, models, robots, and tasks.

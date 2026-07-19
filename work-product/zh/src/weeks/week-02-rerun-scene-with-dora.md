@@ -2,21 +2,11 @@
 
 ## 版本信息
 
-本章在一台 Linux 桌面环境中通过 SSH 完成验证。
-
-- 操作系统：Ubuntu 22.04.5 LTS, x86_64
-- Python：CPython 3.10.12
-- Rerun CLI 与 Python SDK：0.33.0
-- 验证示例：`verification/week2-rerun-scene`
-
-## Rerun 是什么
-
-Rerun 是面向 robotics、computer vision 和 physical AI 系统的可视化与日志工具。程序可以记录 transform、box、image、point、text、tensor、时间序列状态等带类型的数据。Rerun Viewer 可以实时查看这些数据，也可以打开保存下来的 `.rrd` 录制文件。
-
-官方 Python SDK 包名是 `rerun-sdk`，Python import 名称是 `rerun`。安装 Python
-SDK 后也会得到 Viewer 的命令行工具。
-
-编写本章时，`rerun-sdk==0.33.0` 要求 Python 3.10 或更新版本。本章检查到的 PyPI wheel 包括 Windows x86-64、Linux x86-64、Linux ARM64 和 macOS ARM64。如果你的平台没有对应 wheel，请以 Rerun 官方安装和 troubleshooting 文档为准。
+| 组件 | 版本 / 环境 |
+| --- | --- |
+| 操作系统 | Ubuntu 22.04.5 LTS, x86_64 |
+| Python | CPython 3.10.12 |
+| Rerun CLI 与 Python SDK | 0.33.0 |
 
 ## 目标
 
@@ -33,7 +23,18 @@ SDK 后也会得到 Viewer 的命令行工具。
 
 ![Rerun Viewer 静态场景截图](../assets/week2-rerun-scene/rerun_viewer_screenshot.png)
 
-## 让 Codex 准备静态场景
+## Rerun 是什么
+
+Rerun 是面向 robotics、computer vision 和 physical AI 系统的可视化与日志工具。程序可以记录 transform、box、image、point、text、tensor、时间序列状态等带类型的数据。Rerun Viewer 可以实时查看这些数据，也可以打开保存下来的 `.rrd` 录制文件。
+
+官方 Python SDK 包名是 `rerun-sdk`，Python import 名称是 `rerun`。安装 Python
+SDK 后也会得到 Viewer 的命令行工具。
+
+`rerun-sdk==0.33.0` 要求 Python 3.10 或更新版本。这个版本提供 Windows x86-64、
+Linux x86-64、Linux ARM64 和 macOS ARM64 wheels。如果你的平台没有对应 wheel，
+请以 Rerun 官方安装和 troubleshooting 文档为准。
+
+## 准备静态场景
 
 在教程根目录启动 Codex CLI，然后给它类似下面的 prompt：
 
@@ -76,7 +77,7 @@ student is less likely to hit the same problem.
 
 ## 工程结构
 
-验证示例位于：
+可运行示例位于：
 
 ```text
 verification/week2-rerun-scene/
@@ -87,7 +88,7 @@ verification/week2-rerun-scene/
 └── visualizer.py
 ```
 
-下一章会继续扩展同一个验证目录，加入 Dora 节点和运动捕获。运行时生成的文件不作为教程源码维护：
+下一章会继续扩展同一个示例目录，加入 Dora 节点和运动捕获。运行时生成的文件不作为教程源码维护：
 
 - `.venv/` 保存本地 Python 环境。
 - `models/` 保存可复用的人型机器人和小车 glTF 模型。
