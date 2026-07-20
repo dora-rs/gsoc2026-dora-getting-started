@@ -2,22 +2,16 @@
 
 ## 版本信息
 
-本章在一台支持 GPU 渲染的 Linux 桌面环境中完成验证。
-
-- 操作系统：Ubuntu 22.04.5 LTS, x86_64
-- Python：CPython 3.9.23
-- Habitat-Sim：0.3.3
-- OpenCV：4.12.0
-- NumPy：1.26.4
-- Trimesh：4.7.4
-- GPU：NVIDIA GeForce RTX 5090 Laptop GPU
-- NVIDIA driver：580.159.03
-
-## Habitat-Sim 是什么
-
-Habitat-Sim 是 simulator。它负责创建虚拟 3D 世界，并从这个世界里渲染传感器观测，包括 RGB camera image 和 depth image。当你希望教程使用传感器数据，但又不想先搭建真实测试环境时，它提供的就是这层能力。
-
-这和 Rerun 不一样。Rerun 是可视化与日志工具：它可以显示 robot pose、map、point cloud、image、planned path、trajectory 和 status value，但它本身不会创建物理世界，也不会主动生成 camera data。一个完整组合可以是：Habitat-Sim 生成传感器观测，Dora 在 dataflow 中传递这些观测，Rerun 负责显示或记录系统状态。
+| 组件 | 版本 / 环境 |
+| --- | --- |
+| 操作系统 | Ubuntu 22.04.5 LTS, x86_64 |
+| Python | CPython 3.9.23 |
+| Habitat-Sim | 0.3.3 |
+| OpenCV | 4.12.0 |
+| NumPy | 1.26.4 |
+| Trimesh | 4.7.4 |
+| GPU | NVIDIA GeForce RTX 5090 Laptop GPU |
+| NVIDIA driver | 580.159.03 |
 
 ## 目标
 
@@ -45,7 +39,13 @@ Habitat-Sim 是 simulator。它负责创建虚拟 3D 世界，并从这个世界
   <source src="../assets/habitat-camera-sensors/external_rgb_depth_side_by_side.mp4" type="video/mp4">
 </video>
 
-## 让 Codex 构建 Camera Sensor 示例
+## Habitat-Sim 是什么
+
+Habitat-Sim 是 simulator。它负责创建虚拟 3D 世界，并从这个世界里渲染传感器观测，包括 RGB camera image 和 depth image。当你希望教程使用传感器数据，但又不想先搭建真实测试环境时，它提供的就是这层能力。
+
+这和 Rerun 不一样。Rerun 是可视化与日志工具：它可以显示 robot pose、map、point cloud、image、planned path、trajectory 和 status value，但它本身不会创建物理世界，也不会主动生成 camera data。一个完整组合可以是：Habitat-Sim 生成传感器观测，Dora 在 dataflow 中传递这些观测，Rerun 负责显示或记录系统状态。
+
+## 构建 Camera Sensor 示例
 
 在教程根目录启动 Codex CLI，然后给它类似下面的 prompt：
 
@@ -66,7 +66,7 @@ Target:
 - Show the RGB and depth streams in external OpenCV windows when a desktop
   display is available.
 - Support a headless mode that still runs the simulation and writes local
-  verification outputs.
+  outputs.
 
 Please create a run script that:
 1. Creates or reuses an isolated Habitat-Sim environment.
@@ -83,7 +83,7 @@ After running it, document any pitfalls and keep the example self-contained.
 
 - 要求助手先确认 Habitat-Sim 安装细节，再写命令。
 - 把 Habitat-Sim 当作 sensor source，而不是 Dora 或 Rerun 的替代品。
-- 把机械臂、场景和生成结果都放在同一个 verification example 中。
+- 把机械臂、场景和生成结果都放在同一个可运行示例中。
 - 支持无窗口模式，这样通过 SSH 或类似 CI 的环境也能跑通。
 
 ## 工程结构
@@ -109,7 +109,7 @@ verification/habitat-camera-sensors/
 - `.tools/` 保存本地 micromamba binary。
 - `.mamba-root/` 保存本地 Conda environment。
 - `assets/habitat_wrist_camera_probe.glb` 由脚本运行时生成。
-- `outputs/` 保存本地 verification media 和 notes。
+- `outputs/` 保存本地生成的 media 和运行 notes。
 
 只有经过整理、会被 book 直接引用的媒体会复制到各语言自己的 `src/assets/` 目录下，和前面章节保持同一套资产管理方式。
 
@@ -156,7 +156,7 @@ for center, color, size in zip(centers, colors, sizes):
 ```
 
 机械臂模型是 Franka Panda URDF。mesh 文件来自 Franka ROS 的
-`franka_description` package，verification example 会在
+`franka_description` package，这个示例会在
 `assets/franka_description/` 下保留复制过来的 license 和 source note。
 
 这个 URDF 包含七个 Panda revolute joints：

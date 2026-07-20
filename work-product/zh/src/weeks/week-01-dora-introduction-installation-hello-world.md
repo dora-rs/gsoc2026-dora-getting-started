@@ -1,5 +1,7 @@
 # dora-rs 介绍、安装与 Hello World
 
+## 版本信息
+
 | 组件 | 版本 / 环境 |
 | --- | --- |
 | 操作系统 | Microsoft Windows 11 Pro, build 26200, x64 |
@@ -9,7 +11,6 @@
 | uv | 0.11.17 |
 | pyarrow | 24.0.0 |
 | PyYAML | 6.0.3 |
-| 验证示例 | `verification/week1-hello-world` |
 
 ## 目标
 

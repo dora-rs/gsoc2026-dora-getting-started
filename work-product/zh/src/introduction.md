@@ -33,22 +33,20 @@
 
 ## 学习路线
 
-这份路线图用于保持整本书的结构清晰。随着内容推进，每个 week 都应该变成可阅读的章节，并配套可运行代码、验证记录和视频素材。
+这份路线图把教程组织成一条连续的学习路径。每个主题都会建立在前面已经完成的可运行代码、验证方法和概念之上。
 
 <div class="roadmap-grid">
-  <a class="roadmap-item" href="weeks/week-01-dora-introduction-installation-hello-world.html"><span>Week 1</span><strong>Dora 与 Hello World</strong><em>Dora 与 adora 介绍、安装指南和 Hello World 示例。</em></a>
-  <a class="roadmap-item" href="weeks/week-02-rerun-scene-with-dora.html"><span>Week 2</span><strong>Rerun 静态场景</strong><em>Rerun 可视化介绍、安装、初始化，以及第一个静态 3D 场景。</em></a>
-  <a class="roadmap-item" href="weeks/week-03-ai-assistant-rerun-workflow.html"><span>Week 3</span><strong>Dora 控制运动</strong><em>使用 Dora 和 AI 助手工作流，让 Rerun 场景动起来。</em></a>
-  <a class="roadmap-item" href="weeks/week-04-camera-data-visual-feedback.html"><span>Week 4</span><strong>相机传感器</strong><em>使用 Habitat-Sim 从仿真 wrist camera 生成 RGB 和 depth data。</em></a>
-  <a class="roadmap-item" href="weeks/week-05-consolidation-refinement.html"><span>Week 5</span><strong>内容整合</strong><em>整合前几章内容，完善文档、示例和视频。</em></a>
-  <a class="roadmap-item" href="weeks/week-06-midterm-work-product.html"><span>Week 6</span><strong>Midterm 准备</strong><em>准备 midterm work products，并验证目前的学习路径。</em></a>
-  <a class="roadmap-item" href="weeks/week-07-multimodal-scene-understanding.html"><span>Week 7</span><strong>多模态理解</strong><em>集成开源多模态模型，分析场景视觉信息。</em></a>
-  <a class="roadmap-item" href="weeks/week-08-sensor-data-scene-interaction.html"><span>Week 8</span><strong>Sensor Interaction</strong><em>获取更多 sensor data，并扩展场景交互能力。</em></a>
-  <a class="roadmap-item" href="weeks/week-09-llm-action-path-planning.html"><span>Week 9</span><strong>LLM 动作规划</strong><em>使用大语言模型规划动作路径。</em></a>
-  <a class="roadmap-item" href="weeks/week-10-agent-task-planning.html"><span>Week 10</span><strong>Agent 任务规划</strong><em>集成 agent 工具，实现自动化任务规划。</em></a>
-  <a class="roadmap-item" href="weeks/week-11-adora-octos-integration.html"><span>Week 11</span><strong>adora 与 Octos</strong><em>探索 adora 与 Octos 的高级集成，构建更智能的机器人控制体验。</em></a>
-  <a class="roadmap-item" href="weeks/week-12-final-consolidation.html"><span>Week 12</span><strong>最终整合</strong><em>最终整合文档、可运行示例和视频。</em></a>
-  <a class="roadmap-item" href="weeks/final-week-work-product-submission.html"><span>Final Week</span><strong>最终提交</strong><em>打包最终工作产出，完成最终 review materials。</em></a>
+  <a class="roadmap-item" href="weeks/week-01-dora-introduction-installation-hello-world.html"><span>基础</span><strong>Dora 与 Hello World</strong><em>Dora 与 adora 介绍、安装指南和 Hello World 示例。</em></a>
+  <a class="roadmap-item" href="weeks/week-02-rerun-scene-with-dora.html"><span>可视化</span><strong>Rerun 静态场景</strong><em>Rerun 可视化介绍、安装、初始化，以及第一个静态 3D 场景。</em></a>
+  <a class="roadmap-item" href="weeks/week-03-ai-assistant-rerun-workflow.html"><span>运动控制</span><strong>Dora 控制运动</strong><em>使用 Dora 和 AI 助手工作流，让 Rerun 场景动起来。</em></a>
+  <a class="roadmap-item" href="weeks/week-04-camera-data-visual-feedback.html"><span>仿真</span><strong>相机传感器</strong><em>使用 Habitat-Sim 从仿真 wrist camera 生成 RGB 和 depth data。</em></a>
+  <a class="roadmap-item" href="weeks/week-07-multimodal-scene-understanding.html"><span>场景感知</span><strong>用多模态模型分析视觉信息</strong><em>使用本地多模态模型把腕部摄像机图像转换成结构化 JSON。</em></a>
+  <a class="roadmap-item" href="weeks/week-08-sensor-data-scene-interaction.html"><span>场景交互</span><strong>传感器与场景交互</strong><em>获取更多 sensor data，并扩展场景交互能力。</em></a>
+  <a class="roadmap-item" href="weeks/week-09-llm-action-path-planning.html"><span>动作规划</span><strong>LLM 动作规划</strong><em>使用大语言模型规划动作路径。</em></a>
+  <a class="roadmap-item" href="weeks/week-10-agent-task-planning.html"><span>Agent</span><strong>Agent 任务规划</strong><em>集成 agent 工具，实现自动化任务规划。</em></a>
+  <a class="roadmap-item" href="weeks/week-11-adora-octos-integration.html"><span>系统集成</span><strong>adora 与 Octos</strong><em>探索 adora 与 Octos 的高级集成，构建更智能的机器人控制体验。</em></a>
+  <a class="roadmap-item" href="weeks/week-12-final-consolidation.html"><span>完整系统</span><strong>端到端机器人工作流</strong><em>连接感知、规划、动作、可视化和运行时检查。</em></a>
+  <a class="roadmap-item" href="weeks/final-week-work-product-submission.html"><span>扩展方向</span><strong>验证与扩展</strong><em>验证完整示例，并找到继续扩展它的实用途径。</em></a>
 </div>
 
 需要和 Dora、Rerun 或 AI 助手的上游资料对照时，可以查看参考资料页。

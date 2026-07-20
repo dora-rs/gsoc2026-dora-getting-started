@@ -5,4 +5,4 @@ intelligent robot-control experience.
 
 ## Next Step
 
-The next chapter consolidates the documentation, examples, and media in preparation for the final work product submission.
+The next chapter connects perception, planning, actions, visualization, and runtime checks into one end-to-end robotics workflow.

@@ -2,17 +2,16 @@
 
 ## 版本信息
 
-本章与静态 Rerun 场景在同一台 Linux 桌面环境中完成验证。
-
-- 操作系统：Ubuntu 22.04.5 LTS, x86_64
-- Python：CPython 3.10.12
-- Dora CLI：0.5.0
-- dora-rs Python 包：`dora-rs==0.5.0`
-- Rerun CLI 与 Python SDK：0.33.0
-- uv：0.11.17
-- pyarrow：24.0.0
-- PyYAML：6.0.3
-- 验证示例：`verification/week2-rerun-scene`
+| 组件 | 版本 / 环境 |
+| --- | --- |
+| 操作系统 | Ubuntu 22.04.5 LTS, x86_64 |
+| Python | CPython 3.10.12 |
+| Dora CLI | 0.5.0 |
+| dora-rs Python 包 | `dora-rs==0.5.0` |
+| Rerun CLI 与 Python SDK | 0.33.0 |
+| uv | 0.11.17 |
+| pyarrow | 24.0.0 |
+| PyYAML | 6.0.3 |
 
 ## 目标
 
@@ -26,7 +25,7 @@
 
 <video controls muted loop src="../assets/week2-rerun-scene/rerun_viewer_recording.mp4"></video>
 
-## 让 Codex 添加 Dora 运动
+## 添加 Dora 控制运动
 
 从上一章创建的静态场景目录开始，然后让 Codex CLI 继续扩展：
 
@@ -184,7 +183,8 @@ Verified: Rerun recording was generated.
 
 ## 桌面捕获注意事项
 
-验证机器有桌面会话，但 SSH shell 不一定继承桌面 display。脚本会依次尝试当前 `DISPLAY`、`:1` 和 `:0`。在本次验证中，`DISPLAY=:1` 成功生成了 Viewer 截图和短录屏。
+SSH shell 不一定继承当前桌面 display。脚本会依次尝试当前 `DISPLAY`、`:1` 和 `:0`。
+如果 Viewer 没有打开，应把 `DISPLAY` 明确设置为当前桌面会话，然后重新执行捕获。
 
 如果没有桌面 display，Rerun 可能会输出：
 
