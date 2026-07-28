@@ -6,7 +6,7 @@
 - [Dora 控制 Rerun 场景运动](weeks/week-03-ai-assistant-rerun-workflow.md)
 - [仿真场景中的相机传感器](weeks/week-04-camera-data-visual-feedback.md)
 - [用多模态模型分析视觉信息](weeks/week-07-multimodal-scene-understanding.md)
-- [Sensor Data 与场景交互](weeks/week-08-sensor-data-scene-interaction.md)
+- [激光雷达、SLAM 建图与 Dora 导航](weeks/week-08-sensor-data-scene-interaction.md)
 - [基于 LLM 的动作路径规划](weeks/week-09-llm-action-path-planning.md)
 - [基于 Agent 的自动化任务规划](weeks/week-10-agent-task-planning.md)
 - [adora 与 Octos 高级集成](weeks/week-11-adora-octos-integration.md)
