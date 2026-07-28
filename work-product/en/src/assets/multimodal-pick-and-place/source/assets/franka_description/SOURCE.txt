@@ -1,0 +1,8 @@
+Source: Franka ROS `franka_description`
+Repository: https://github.com/frankarobotics/franka_ros
+Asset path: franka_description/meshes/
+License: Apache-2.0, copied in this directory as LICENSE.
+
+The verification example uses the Panda arm visual and collision meshes from
+this package. The tutorial URDF is a small, self-contained Panda description
+with a fixed `wrist_camera_link` added to the hand.

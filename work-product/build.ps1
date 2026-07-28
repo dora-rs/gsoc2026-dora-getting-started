@@ -17,6 +17,7 @@ if ($Clean -and (Test-Path $book)) {
 
 Push-Location $root
 try {
+    node .\tools\validate-chapter-structure.mjs
     mdbook build .
     mdbook build .\en
     mdbook build .\zh

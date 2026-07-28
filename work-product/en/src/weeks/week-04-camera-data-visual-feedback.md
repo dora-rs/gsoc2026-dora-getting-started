@@ -13,6 +13,15 @@
 | GPU | NVIDIA GeForce RTX 5090 Laptop GPU |
 | NVIDIA driver | 580.159.03 |
 
+## Downloads
+
+- [Complete Habitat-Sim camera reference project](../assets/habitat-camera-sensors/habitat-camera-sensors-reference.zip)
+- [Franka Panda wrist-camera URDF](../assets/habitat-camera-sensors/source/assets/franka_panda_with_wrist_camera.urdf)
+- [Mesh source and license note](../assets/habitat-camera-sensors/source/assets/franka_description/SOURCE.txt)
+
+The archive includes the fixed scene source, scripts, environment definition,
+and every visual mesh referenced by the URDF.
+
 ## Goal
 
 This chapter builds a small simulated camera-sensor example:
@@ -58,56 +67,36 @@ by itself. In a complete stack, Habitat-Sim can produce sensor observations,
 Dora can move those observations through a dataflow, and Rerun can display or
 record the resulting state.
 
-## Build the Camera Sensor Example
+## Inspect the Camera Sensor Example
 
-Start Codex CLI from the tutorial root and give it a prompt like this:
+Use the supplied scene, Panda model, wrist-camera URDF, and scripts instead of
+asking an assistant to construct a new simulation. After extracting the
+archive, ask the assistant to inspect the fixed project:
 
 ```text
-I want to create a Habitat-Sim camera sensor example for a Dora tutorial.
+Inspect this supplied Habitat-Sim camera reference project.
 
-Please use current official Habitat-Sim installation guidance before choosing
-commands. Use an isolated local environment. Do not expose secrets, private
-hostnames, tokens, or absolute home paths in committed files or tutorial text.
+Treat camera_sensor_scene.py, assets/franka_panda_with_wrist_camera.urdf, and
+assets/franka_description/ as fixed tutorial sources. Do not rebuild the scene,
+replace the Panda, alter camera transforms, or substitute mesh files.
 
-Target:
-- Install Habitat-Sim with GPU rendering enabled on this Ubuntu desktop machine.
-- Create a small simulated scene with a floor and several colored blocks.
-- Use a real Franka Panda URDF with visual meshes.
-- Add a fixed camera link to the Panda hand.
-- Move the Panda joints so the wrist camera viewpoint changes over time.
-- Read both RGB and depth observations from the wrist camera.
-- Show the RGB and depth streams in external OpenCV windows when a desktop
-  display is available.
-- Support a headless mode that still runs the simulation and writes local
-  outputs.
-
-Please create a run script that:
-1. Creates or reuses an isolated Habitat-Sim environment.
-2. Installs pinned dependencies.
-3. Prints OS, Python, Habitat-Sim, OpenCV, NumPy, Trimesh, display, and GPU
-   information.
-4. Runs the simulated scene.
-5. Fails if the RGB, depth, and overview outputs were not generated.
-
-After running it, document any pitfalls and keep the example self-contained.
+Explain how run.sh creates the isolated environment, how the script generates
+the GLB world, how the URDF attaches the camera link, and where RGB, depth, and
+overview outputs are written. Check GPU and display prerequisites without
+installing or editing anything yet. Do not print usernames, home paths,
+hostnames, IP addresses, tokens, or unrelated process information.
 ```
 
-The important details in the prompt are:
-
-- Ask the assistant to verify Habitat-Sim installation details before writing
-  commands.
-- Treat Habitat-Sim as the sensor source, not as a replacement for Dora or
-  Rerun.
-- Keep the arm, scene, and generated outputs inside one runnable example.
-- Include a no-window mode so the example can still run over SSH or in CI-like
-  environments.
+This makes the scene geometry, robot model, camera transform, and expected
+outputs identical for every reader. The assistant remains useful for
+environment checks, execution, and troubleshooting.
 
 ## Project Layout
 
-A typical local workspace that Codex creates for this exercise looks like this:
+The extracted reference project has this layout:
 
 ```text
-verification/habitat-camera-sensors/
+habitat-camera-sensors-reference/
 ├── assets/
 │   ├── franka_description/
 │   │   ├── LICENSE
@@ -127,24 +116,25 @@ Generated runtime files stay out of the tutorial source:
 - `assets/habitat_wrist_camera_probe.glb` is generated from the script.
 - `outputs/` contains generated local media and run notes.
 
-Only curated book media files are copied into the language-specific
-`src/assets/` directories, following the same asset layout used by the earlier
-chapters.
+The downloaded source remains unchanged; all generated files stay in the local
+extracted directory.
 
 ## Install and Smoke Test
 
 On a Linux desktop or SSH session with access to the desktop display:
 
 ```bash
-cd verification/habitat-camera-sensors
-DISPLAY=:1 ./run.sh
+mkdir habitat-camera-sensors-reference
+unzip habitat-camera-sensors-reference.zip -d habitat-camera-sensors-reference
+cd habitat-camera-sensors-reference
+DISPLAY=:1 bash run.sh
 ```
 
 If no display is available, run without OpenCV preview windows:
 
 ```bash
-cd verification/habitat-camera-sensors
-SHOW_WINDOWS=0 ./run.sh
+cd habitat-camera-sensors-reference
+SHOW_WINDOWS=0 bash run.sh
 ```
 
 Expected success markers include:
@@ -313,6 +303,29 @@ cv2.waitKey(int(1000 / FPS))
 
 The same script supports `SHOW_WINDOWS=0` through `run.sh`, which keeps the
 simulation path usable when no desktop display is attached.
+
+## Complete Source
+
+The full scene and sensor implementation is shown directly below. The
+downloadable archive contains this file together with its URDF and meshes.
+
+### `camera_sensor_scene.py`
+
+```python
+{{#include ../assets/habitat-camera-sensors/source/camera_sensor_scene.py}}
+```
+
+### `environment.yml`
+
+```yaml
+{{#include ../assets/habitat-camera-sensors/source/environment.yml}}
+```
+
+### `run.sh`
+
+```bash
+{{#include ../assets/habitat-camera-sensors/source/run.sh}}
+```
 
 ## Next Step
 

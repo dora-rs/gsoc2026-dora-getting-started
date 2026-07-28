@@ -13,6 +13,12 @@
 | pyarrow | 24.0.0 |
 | PyYAML | 6.0.3 |
 
+## 下载
+
+- [完整 Rerun 与 Dora 参考工程](../assets/week2-rerun-scene/rerun-scene-reference.zip)
+
+这与上一章使用的是同一套固定场景、模型、轨迹和 Dora 工程。
+
 ## 目标
 
 上一章构建了一个静态 Rerun 场景。本章保留同一个地面、正方体、圆柱体、机器人和小车，然后用 Dora 驱动运动：
@@ -25,44 +31,25 @@
 
 <video controls muted loop src="../assets/week2-rerun-scene/rerun_viewer_recording.mp4"></video>
 
-## 添加 Dora 控制运动
+## 检查 Dora 控制运动
 
-从上一章创建的静态场景目录开始，然后让 Codex CLI 继续扩展：
+继续使用上面下载的参考工程。运动实现已经包含在工程中，因此让助手解释并验证它，
+不要修改场景和模型资产：
 
 ```text
-I already have a static Rerun scene with a floor, cube obstacle, cylinder goal,
-humanoid robot glTF model, and small car glTF model.
+检查已经提供的 Dora 控制 Rerun 参考工程。
 
-Please search the latest official Dora and Rerun documentation before choosing
-commands or APIs. Keep the existing static scene structure and add Dora-driven
-motion.
+不要替换 glTF 文件、修改物体坐标、重新设计路径或重新生成场景。解释
+dataflow.yml 如何连接 controller.py 和 visualizer.py，trajectory.py 如何延迟并
+依次启动两个角色，以及 run.sh 如何生成 .rrd。
 
-Target:
-- Use dora-rs and dora-rs-cli.
-- Create a Dora dataflow with a controller node and a visualizer node.
-- The controller should publish scene state as JSON through Apache Arrow.
-- The visualizer should receive scene state and update Rerun Transform3D values.
-- The robot should start first, go around the cube, approach the cylinder, and
-  stop.
-- The car should start later, go around the cube on a separate lane, approach
-  the cylinder, and stop.
-- The Rerun Viewer recording should show the scene from the starting positions,
-  not only the final state.
-
-Please update the run script so it:
-1. Creates or reuses the virtual environment.
-2. Installs pinned Dora and Rerun dependencies.
-3. Prints OS, Python, Dora, Rerun, and key package versions.
-4. Runs the Dora dataflow.
-5. Saves a .rrd recording.
-6. Opens the Rerun Viewer and records only the Viewer window when a desktop
-   display is available.
-7. Fails if the .rrd recording was not created.
-
-After running it, document any pitfalls and update the tutorial notes.
+先运行源码检查，再执行 `bash run.sh`。确认录制从初始位置开始、两个角色都到达最终
+waypoint，并且 artifacts/dora_rerun_scene.rrd 非空。报告错误和脱敏后的版本信息，
+不要输出身份、网络或密钥信息。
 ```
 
-这个 prompt 会让助手保留静态场景，只增加运动层。它还强调了一个很重要的录屏细节：只录 Rerun Viewer 窗口，并且要让录屏从起点开始，而不是直接跳到最终状态。
+固定源码消除了场景生成差异，同时保留了有价值的助手工作流：检查 dataflow、运行、
+诊断错误并验证结果。
 
 ## Dora Dataflow
 
@@ -167,8 +154,8 @@ for event in node:
 运行同一个验证脚本：
 
 ```bash
-cd verification/week2-rerun-scene
-./run.sh
+cd rerun-scene-reference
+bash run.sh
 ```
 
 预期成功标记：
@@ -180,6 +167,40 @@ Verified: Rerun recording was generated.
 ```
 
 脚本会先创建保存版 `.rrd`，然后启动 live Rerun Viewer capture 并再次运行 dataflow。这样录屏会从初始场景开始，而不是直接跳到最终状态。
+
+## 完整运动源码
+
+下面直接展示完整文本源码。参考工程压缩包中还包含 glTF 文件和 Viewer 录制脚本。
+
+### `dataflow.yml`
+
+```yaml
+{{#include ../assets/week2-rerun-scene/source/dataflow.yml}}
+```
+
+### `trajectory.py`
+
+```python
+{{#include ../assets/week2-rerun-scene/source/trajectory.py}}
+```
+
+### `controller.py`
+
+```python
+{{#include ../assets/week2-rerun-scene/source/controller.py}}
+```
+
+### `visualizer.py`
+
+```python
+{{#include ../assets/week2-rerun-scene/source/visualizer.py}}
+```
+
+### `run.sh`
+
+```bash
+{{#include ../assets/week2-rerun-scene/source/run.sh}}
+```
 
 ## 桌面捕获注意事项
 

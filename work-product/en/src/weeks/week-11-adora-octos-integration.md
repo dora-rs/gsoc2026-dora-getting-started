@@ -1,5 +1,11 @@
 # Advanced adora and Octos Integration
 
+## Version Information
+
+| Component | Version / Environment |
+| --- | --- |
+| Tutorial environment | Reuse the validated environment from the preceding runnable chapters |
+
 This chapter is reserved for advanced adora and Octos integration and a more
 intelligent robot-control experience.
 

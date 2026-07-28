@@ -13,6 +13,13 @@
 | pyarrow | 24.0.0 |
 | PyYAML | 6.0.3 |
 
+## Downloads
+
+- [Complete Rerun and Dora reference project](../assets/week2-rerun-scene/rerun-scene-reference.zip)
+
+This is the same fixed scene, model, trajectory, and Dora project introduced in
+the previous chapter.
+
 ## Goal
 
 The previous chapter built a static Rerun scene. This chapter keeps the same
@@ -28,48 +35,29 @@ floor, cube, cylinder, robot, and car, then uses Dora to drive motion:
 
 <video controls muted loop src="../assets/week2-rerun-scene/rerun_viewer_recording.mp4"></video>
 
-## Add Dora-Controlled Motion
+## Inspect the Dora-Controlled Motion
 
-Start from the static scene directory created in the previous chapter. Then ask
-Codex CLI to extend it:
+Continue with the reference project downloaded above. The motion implementation
+is already included, so ask the assistant to explain and verify it without
+changing the scene or model assets:
 
 ```text
-I already have a static Rerun scene with a floor, cube obstacle, cylinder goal,
-humanoid robot glTF model, and small car glTF model.
+Inspect the supplied Dora-controlled Rerun reference project.
 
-Please search the latest official Dora and Rerun documentation before choosing
-commands or APIs. Keep the existing static scene structure and add Dora-driven
-motion.
+Do not replace the glTF files, change object coordinates, redesign the paths,
+or regenerate the scene. Explain how dataflow.yml connects controller.py and
+visualizer.py, how trajectory.py delays and sequences the two actors, and how
+run.sh creates the .rrd output.
 
-Target:
-- Use dora-rs and dora-rs-cli.
-- Create a Dora dataflow with a controller node and a visualizer node.
-- The controller should publish scene state as JSON through Apache Arrow.
-- The visualizer should receive scene state and update Rerun Transform3D values.
-- The robot should start first, go around the cube, approach the cylinder, and
-  stop.
-- The car should start later, go around the cube on a separate lane, approach
-  the cylinder, and stop.
-- The Rerun Viewer recording should show the scene from the starting positions,
-  not only the final state.
-
-Please update the run script so it:
-1. Creates or reuses the virtual environment.
-2. Installs pinned Dora and Rerun dependencies.
-3. Prints OS, Python, Dora, Rerun, and key package versions.
-4. Runs the Dora dataflow.
-5. Saves a .rrd recording.
-6. Opens the Rerun Viewer and records only the Viewer window when a desktop
-   display is available.
-7. Fails if the .rrd recording was not created.
-
-After running it, document any pitfalls and update the tutorial notes.
+Run the focused source checks, then run `bash run.sh`. Confirm that the recording
+starts at the initial positions, both actors reach their final waypoints, and
+artifacts/dora_rerun_scene.rrd is non-empty. Report errors and sanitized
+version information without printing identity, network, or secret data.
 ```
 
-This prompt tells the assistant to preserve the static scene and add only the
-motion layer. It also asks for one important recording detail: capture the Rerun
-Viewer window itself, and give the recording enough time to show the actors at
-their starting positions before they move.
+The fixed source removes scene-generation differences while preserving the
+useful assistant workflow: inspect the dataflow, run it, diagnose failures, and
+verify the result.
 
 ## Dora Dataflow
 
@@ -185,8 +173,8 @@ the cube, cylinder, floor, and glTF assets remain static.
 Run the same verification script:
 
 ```bash
-cd verification/week2-rerun-scene
-./run.sh
+cd rerun-scene-reference
+bash run.sh
 ```
 
 Expected success markers:
@@ -200,6 +188,41 @@ Verified: Rerun recording was generated.
 The script first creates the saved `.rrd` recording, then starts a live Rerun
 Viewer capture and runs the dataflow again so the video starts from the initial
 scene instead of jumping directly to the final state.
+
+## Complete Motion Source
+
+The complete text sources are shown directly below. The reference archive also
+contains the glTF files and Viewer capture script.
+
+### `dataflow.yml`
+
+```yaml
+{{#include ../assets/week2-rerun-scene/source/dataflow.yml}}
+```
+
+### `trajectory.py`
+
+```python
+{{#include ../assets/week2-rerun-scene/source/trajectory.py}}
+```
+
+### `controller.py`
+
+```python
+{{#include ../assets/week2-rerun-scene/source/controller.py}}
+```
+
+### `visualizer.py`
+
+```python
+{{#include ../assets/week2-rerun-scene/source/visualizer.py}}
+```
+
+### `run.sh`
+
+```bash
+{{#include ../assets/week2-rerun-scene/source/run.sh}}
+```
 
 ## Desktop Capture Notes
 

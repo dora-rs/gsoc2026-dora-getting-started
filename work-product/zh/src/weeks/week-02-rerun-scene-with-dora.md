@@ -8,6 +8,15 @@
 | Python | CPython 3.10.12 |
 | Rerun CLI 与 Python SDK | 0.33.0 |
 
+## 下载
+
+- [完整 Rerun 与 Dora 参考工程](../assets/week2-rerun-scene/rerun-scene-reference.zip)
+- [人型机器人 glTF 模型](../assets/week2-rerun-scene/source/models/humanoid_robot.gltf)
+- [小车 glTF 模型](../assets/week2-rerun-scene/source/models/small_car.gltf)
+
+压缩包包含本章和下一章使用的 glTF 资产、固定版本依赖、场景记录程序、Dora
+节点、轨迹、录制脚本和运行脚本。
+
 ## 目标
 
 本章创建后续章节会继续使用的静态场景基础：
@@ -34,57 +43,39 @@ SDK 后也会得到 Viewer 的命令行工具。
 Linux x86-64、Linux ARM64 和 macOS ARM64 wheels。如果你的平台没有对应 wheel，
 请以 Rerun 官方安装和 troubleshooting 文档为准。
 
-## 准备静态场景
+## 检查静态场景
 
-在教程根目录启动 Codex CLI，然后给它类似下面的 prompt：
+把参考工程解压到新目录后，让助手检查这些固定输入，而不是重新创建：
 
 ```text
-I want to create a small static Rerun scene for a Dora tutorial.
+检查这个已经提供的 Rerun 与 Dora 参考工程。
 
-Please search the latest official Rerun documentation and PyPI package page
-before choosing commands or APIs. Use a local isolated Python environment. Do not
-expose secrets, private hostnames, tokens, or absolute home paths in committed
-files or tutorial text.
+把 models/humanoid_robot.gltf、models/small_car.gltf，以及
+visualizer.py 中的物体坐标视为固定教程资产。不要替换、重新生成、缩放或重新排列。
 
-Target:
-- Install the latest stable rerun-sdk package that works on this machine.
-- Create a script that logs a 3D scene to Rerun.
-- The scene should contain a floor, a cube obstacle, a cylinder goal, a humanoid
-  robot model, and a small car model.
-- Use reusable glTF model assets for the robot and car.
-- Save a .rrd recording.
-- Save a static screenshot from the Rerun Viewer for the tutorial when a desktop
-  session is available.
-
-Please create a run script that:
-1. Creates or reuses a virtual environment.
-2. Installs pinned dependencies.
-3. Prints OS, Python, Rerun, and key package versions.
-4. Generates the model assets if needed.
-5. Logs the static scene.
-6. Fails if the Rerun recording was not created.
-
-After running it, summarize any errors and update the reproduction notes so a
-student is less likely to hit the same problem.
+总结场景层级、固定版本的 Python 包、生成输出，以及 run.sh 执行的命令。检查缺失
+依赖和机器相关路径。此时不要安装、修改或运行任何内容，也不要输出用户名、主机名、
+IP 地址、token 或无关系统信息。
 ```
 
-这个 prompt 中最重要的点是：
-
-- 要求助手先检查官方文档，再决定包名和 API。
-- 使用固定版本的、可复现的 Python 环境。
-- 使用真实 Rerun Viewer 输出，而不是手绘示意图。
-- 使用可复用 3D 资产，而不是只用一次性的 primitive 占位。
+这样可以让所有读者使用同一个场景，同时仍然借助助手理解依赖和执行流程。
 
 ## 工程结构
 
-可运行示例位于：
+解压后的可运行示例结构如下：
 
 ```text
-verification/week2-rerun-scene/
+rerun-scene-reference/
+├── capture_rerun_viewer.py
+├── controller.py
+├── dataflow.yml
 ├── generate_models.py
 ├── models/
+│   ├── humanoid_robot.gltf
+│   └── small_car.gltf
 ├── requirements.txt
 ├── run.sh
+├── trajectory.py
 └── visualizer.py
 ```
 
@@ -96,7 +87,8 @@ verification/week2-rerun-scene/
 - `logs/` 保存运行日志。
 - `out/` 保存 Dora 运行会话数据。
 
-经过整理的 Rerun Viewer 媒体会复制到 `src/assets/`，这样 book 可以直接渲染它们。
+压缩包已经包含模型资产。`generate_models.py` 仍然保留，方便检查模型的确定性构造
+过程，但教程运行时以提供的 glTF 文件为固定输入。
 
 ## 依赖
 
@@ -172,16 +164,28 @@ rr.log("world/actors/car", rr.Asset3D(path=MODELS / "small_car.gltf"), static=Tr
 
 在本教程中，glTF 比 OBJ/MTL 更合适。OBJ 虽然容易生成，但在这个环境里 Rerun Viewer 会渲染成白模；glTF 内置材质更稳定。
 
+### 模型生成脚本源码
+
+下面直接展示完整的确定性模型生成脚本：
+
+```python
+{{#include ../assets/week2-rerun-scene/source/generate_models.py}}
+```
+
 ## 运行静态场景
 
 在 Linux 或有桌面会话的 SSH 机器上运行：
 
 ```bash
-cd verification/week2-rerun-scene
-./run.sh
+mkdir rerun-scene-reference
+unzip rerun-scene-reference.zip -d rerun-scene-reference
+cd rerun-scene-reference
+bash run.sh
 ```
 
-脚本会创建 `.venv`、安装依赖、生成 glTF 模型、保存 `.rrd`，并打印验证时的软件版本。
+脚本会创建 `.venv`、安装固定版本依赖、校验提供的 glTF 模型、保存 `.rrd`，并打印
+验证时的软件版本。只有需要主动复现确定性模型生成步骤时，才设置
+`REGENERATE_MODELS=1`。
 
 预期成功标记包括：
 
@@ -192,7 +196,8 @@ Verified: Rerun recording was generated.
 如果没有桌面 display，可以保留生成的 `.rrd`，之后在有桌面的机器上打开：
 
 ```bash
-cd verification/week2-rerun-scene
+cd rerun-scene-reference
+CAPTURE_VIEWER=0 bash run.sh
 source .venv/bin/activate
 rerun artifacts/dora_rerun_scene.rrd
 ```

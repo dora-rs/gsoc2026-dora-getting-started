@@ -13,6 +13,14 @@
 | GPU | NVIDIA GeForce RTX 5090 Laptop GPU |
 | NVIDIA driver | 580.159.03 |
 
+## 下载
+
+- [完整 Habitat-Sim 相机参考工程](../assets/habitat-camera-sensors/habitat-camera-sensors-reference.zip)
+- [Franka Panda 腕部摄像机 URDF](../assets/habitat-camera-sensors/source/assets/franka_panda_with_wrist_camera.urdf)
+- [Mesh 来源和许可证说明](../assets/habitat-camera-sensors/source/assets/franka_description/SOURCE.txt)
+
+压缩包包含固定场景源码、脚本、环境定义，以及 URDF 引用的全部 visual meshes。
+
 ## 目标
 
 本章会构建一个小型 simulated camera sensor 示例：
@@ -45,53 +53,33 @@ Habitat-Sim 是 simulator。它负责创建虚拟 3D 世界，并从这个世界
 
 这和 Rerun 不一样。Rerun 是可视化与日志工具：它可以显示 robot pose、map、point cloud、image、planned path、trajectory 和 status value，但它本身不会创建物理世界，也不会主动生成 camera data。一个完整组合可以是：Habitat-Sim 生成传感器观测，Dora 在 dataflow 中传递这些观测，Rerun 负责显示或记录系统状态。
 
-## 构建 Camera Sensor 示例
+## 检查 Camera Sensor 示例
 
-在教程根目录启动 Codex CLI，然后给它类似下面的 prompt：
+直接使用已经提供的场景、Panda 模型、腕部摄像机 URDF 和脚本，不再让助手重新构造
+仿真。解压后，让助手检查这个固定工程：
 
 ```text
-I want to create a Habitat-Sim camera sensor example for a Dora tutorial.
+检查这个已经提供的 Habitat-Sim 相机参考工程。
 
-Please use current official Habitat-Sim installation guidance before choosing
-commands. Use an isolated local environment. Do not expose secrets, private
-hostnames, tokens, or absolute home paths in committed files or tutorial text.
+把 camera_sensor_scene.py、assets/franka_panda_with_wrist_camera.urdf 和
+assets/franka_description/ 视为固定教程源码。不要重新构建场景、替换 Panda、
+修改摄像机 transform 或替换 mesh 文件。
 
-Target:
-- Install Habitat-Sim with GPU rendering enabled on this Ubuntu desktop machine.
-- Create a small simulated scene with a floor and several colored blocks.
-- Use a real Franka Panda URDF with visual meshes.
-- Add a fixed camera link to the Panda hand.
-- Move the Panda joints so the wrist camera viewpoint changes over time.
-- Read both RGB and depth observations from the wrist camera.
-- Show the RGB and depth streams in external OpenCV windows when a desktop
-  display is available.
-- Support a headless mode that still runs the simulation and writes local
-  outputs.
-
-Please create a run script that:
-1. Creates or reuses an isolated Habitat-Sim environment.
-2. Installs pinned dependencies.
-3. Prints OS, Python, Habitat-Sim, OpenCV, NumPy, Trimesh, display, and GPU
-   information.
-4. Runs the simulated scene.
-5. Fails if the RGB, depth, and overview outputs were not generated.
-
-After running it, document any pitfalls and keep the example self-contained.
+解释 run.sh 如何创建隔离环境、脚本如何生成 GLB world、URDF 如何连接 camera
+link，以及 RGB、depth 和 overview 输出写到哪里。检查 GPU 和 display 前置条件，
+此时不要安装或修改任何内容。不要输出用户名、home 路径、主机名、IP 地址、token
+或无关进程信息。
 ```
 
-这个 prompt 中最重要的点是：
-
-- 要求助手先确认 Habitat-Sim 安装细节，再写命令。
-- 把 Habitat-Sim 当作 sensor source，而不是 Dora 或 Rerun 的替代品。
-- 把机械臂、场景和生成结果都放在同一个可运行示例中。
-- 支持无窗口模式，这样通过 SSH 或类似 CI 的环境也能跑通。
+这样可以让每位读者使用完全相同的场景几何、机器人模型、摄像机 transform 和预期
+输出。助手仍然负责环境检查、执行和排错。
 
 ## 工程结构
 
-Codex 为这个练习创建的典型本地 workspace 结构如下：
+解压后的参考工程结构如下：
 
 ```text
-verification/habitat-camera-sensors/
+habitat-camera-sensors-reference/
 ├── assets/
 │   ├── franka_description/
 │   │   ├── LICENSE
@@ -111,22 +99,24 @@ verification/habitat-camera-sensors/
 - `assets/habitat_wrist_camera_probe.glb` 由脚本运行时生成。
 - `outputs/` 保存本地生成的 media 和运行 notes。
 
-只有经过整理、会被 book 直接引用的媒体会复制到各语言自己的 `src/assets/` 目录下，和前面章节保持同一套资产管理方式。
+下载的源码保持不变；运行生成的文件只保存在本地解压目录中。
 
 ## 安装与 Smoke Test
 
 在 Linux 桌面环境，或能访问桌面 display 的 SSH session 中运行：
 
 ```bash
-cd verification/habitat-camera-sensors
-DISPLAY=:1 ./run.sh
+mkdir habitat-camera-sensors-reference
+unzip habitat-camera-sensors-reference.zip -d habitat-camera-sensors-reference
+cd habitat-camera-sensors-reference
+DISPLAY=:1 bash run.sh
 ```
 
 如果没有 display，可以关闭 OpenCV 预览窗口：
 
 ```bash
-cd verification/habitat-camera-sensors
-SHOW_WINDOWS=0 ./run.sh
+cd habitat-camera-sensors-reference
+SHOW_WINDOWS=0 bash run.sh
 ```
 
 预期成功标记包括：
@@ -279,6 +269,29 @@ cv2.waitKey(int(1000 / FPS))
 ```
 
 同一个脚本也支持通过 `run.sh` 设置 `SHOW_WINDOWS=0`。这样即使没有连接桌面 display，simulation path 仍然可以运行。
+
+## 完整源码
+
+下面直接展示完整的场景和传感器实现。下载压缩包中还包含这个文件所需的 URDF 和
+全部 meshes。
+
+### `camera_sensor_scene.py`
+
+```python
+{{#include ../assets/habitat-camera-sensors/source/camera_sensor_scene.py}}
+```
+
+### `environment.yml`
+
+```yaml
+{{#include ../assets/habitat-camera-sensors/source/environment.yml}}
+```
+
+### `run.sh`
+
+```bash
+{{#include ../assets/habitat-camera-sensors/source/run.sh}}
+```
 
 ## 下一步
 

@@ -1,0 +1,23 @@
+nodes:
+  - id: controller
+    path: controller_node.py
+    inputs:
+      analysis: vision/analysis
+      motion_complete: simulation/motion_complete
+    outputs:
+      - command
+
+  - id: simulation
+    path: simulation_node.py
+    inputs:
+      command: controller/command
+    outputs:
+      - observation
+      - motion_complete
+
+  - id: vision
+    path: vision_node.py
+    inputs:
+      observation: simulation/observation
+    outputs:
+      - analysis

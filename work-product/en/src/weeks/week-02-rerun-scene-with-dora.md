@@ -8,6 +8,16 @@
 | Python | CPython 3.10.12 |
 | Rerun CLI and Python SDK | 0.33.0 |
 
+## Downloads
+
+- [Complete Rerun and Dora reference project](../assets/week2-rerun-scene/rerun-scene-reference.zip)
+- [Humanoid robot glTF model](../assets/week2-rerun-scene/source/models/humanoid_robot.gltf)
+- [Small car glTF model](../assets/week2-rerun-scene/source/models/small_car.gltf)
+
+The archive contains the exact glTF assets, pinned dependencies, scene logger,
+Dora nodes, trajectory, capture script, and run script used in this and the
+next chapter.
+
 ## Goal
 
 This chapter creates the static foundation for the scene used in the next
@@ -41,57 +51,44 @@ available for Windows x86-64, Linux x86-64, Linux ARM64, and macOS ARM64. If
 your platform is not covered by a wheel, use the official Rerun installation
 and troubleshooting pages as the source of truth.
 
-## Prepare the Static Scene
+## Inspect the Static Scene
 
-Start Codex CLI from the tutorial root and give it a prompt like this:
+Extract the reference project into a new directory, then ask the assistant to
+inspect the fixed inputs rather than recreate them:
 
 ```text
-I want to create a small static Rerun scene for a Dora tutorial.
+Inspect this supplied Rerun and Dora reference project.
 
-Please search the latest official Rerun documentation and PyPI package page
-before choosing commands or APIs. Use a local isolated Python environment. Do not
-expose secrets, private hostnames, tokens, or absolute home paths in committed
-files or tutorial text.
+Treat models/humanoid_robot.gltf, models/small_car.gltf, and the object
+coordinates in visualizer.py as fixed tutorial assets. Do not replace,
+regenerate, resize, or rearrange them.
 
-Target:
-- Install the latest stable rerun-sdk package that works on this machine.
-- Create a script that logs a 3D scene to Rerun.
-- The scene should contain a floor, a cube obstacle, a cylinder goal, a humanoid
-  robot model, and a small car model.
-- Use reusable glTF model assets for the robot and car.
-- Save a .rrd recording.
-- Save a static screenshot from the Rerun Viewer for the tutorial when a desktop
-  session is available.
-
-Please create a run script that:
-1. Creates or reuses a virtual environment.
-2. Installs pinned dependencies.
-3. Prints OS, Python, Rerun, and key package versions.
-4. Generates the model assets if needed.
-5. Logs the static scene.
-6. Fails if the Rerun recording was not created.
-
-After running it, summarize any errors and update the reproduction notes so a
-student is less likely to hit the same problem.
+Summarize the scene hierarchy, pinned Python packages, generated outputs, and
+the commands run by run.sh. Check for missing dependencies and
+machine-specific paths. Do not install, edit, or run anything yet, and do not
+print usernames, hostnames, IP addresses, tokens, or unrelated system
+information.
 ```
 
-The important details in the prompt are:
-
-- Ask for official documentation before choosing package names or APIs.
-- Keep a pinned, reproducible Python environment.
-- Use real Rerun Viewer output, not a hand-drawn illustration.
-- Use reusable 3D assets instead of one-off primitive-only placeholders.
+This keeps every reader on the same scene while still using the assistant to
+explain dependencies and the execution path.
 
 ## Project Layout
 
-The runnable example lives in:
+After extraction, the runnable example has this layout:
 
 ```text
-verification/week2-rerun-scene/
+rerun-scene-reference/
+├── capture_rerun_viewer.py
+├── controller.py
+├── dataflow.yml
 ├── generate_models.py
 ├── models/
+│   ├── humanoid_robot.gltf
+│   └── small_car.gltf
 ├── requirements.txt
 ├── run.sh
+├── trajectory.py
 └── visualizer.py
 ```
 
@@ -104,8 +101,9 @@ motion capture. Generated runtime files stay out of the tutorial source:
 - `logs/` contains runtime logs.
 - `out/` contains Dora runtime session data.
 
-Curated Rerun Viewer media files are copied into `src/assets/` so the book can
-render them.
+The archive already contains the model assets. `generate_models.py` is included
+so their deterministic construction can be reviewed, but the supplied glTF
+files are the tutorial inputs.
 
 ## Dependencies
 
@@ -187,17 +185,29 @@ For this tutorial, glTF worked better than OBJ/MTL. OBJ was easy to generate,
 but the Rerun Viewer rendered the model as a white material in this environment.
 The glTF assets carried materials more reliably.
 
+### Model Generator Source
+
+The complete deterministic model generator is shown below for review:
+
+```python
+{{#include ../assets/week2-rerun-scene/source/generate_models.py}}
+```
+
 ## Run the Static Scene
 
 On Linux or an SSH machine with a desktop session:
 
 ```bash
-cd verification/week2-rerun-scene
-./run.sh
+mkdir rerun-scene-reference
+unzip rerun-scene-reference.zip -d rerun-scene-reference
+cd rerun-scene-reference
+bash run.sh
 ```
 
-The script creates `.venv`, installs dependencies, generates the glTF models,
-saves the `.rrd`, and prints the verified versions.
+The script creates `.venv`, installs the pinned dependencies, validates the
+supplied glTF assets, saves the `.rrd`, and prints the verified versions. Set
+`REGENERATE_MODELS=1` only when you intentionally want to reproduce the
+deterministic model-generation step.
 
 Expected success markers include:
 
@@ -209,7 +219,8 @@ If there is no desktop display, keep the generated `.rrd` and open it later on a
 desktop machine:
 
 ```bash
-cd verification/week2-rerun-scene
+cd rerun-scene-reference
+CAPTURE_VIEWER=0 bash run.sh
 source .venv/bin/activate
 rerun artifacts/dora_rerun_scene.rrd
 ```

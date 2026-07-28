@@ -14,6 +14,11 @@ This folder contains the Dora tutorial source and supporting assets:
 Keeping these files under one folder leaves the repository root open for other
 shared assets.
 
+Every tutorial chapter starts with its title and **Version Information**. When
+a chapter provides source packages or other downloads, **Downloads** follows
+immediately after the version section. `build.ps1` validates this structure
+before building the books.
+
 Preview locally:
 
 ```powershell
