@@ -14,11 +14,6 @@
 | 规划与视觉模型 | `qwen3-vl:8b-instruct` |
 | Python | 3.10 |
 
-编写本章时，Dora `v0.5.0` 和 Webots `R2025a` 也是各自最新的稳定版。
-升级前请检查官方的 [Dora releases](https://github.com/dora-rs/dora/releases)
-和 [Webots releases](https://github.com/cyberbotics/webots/releases)；
-先复现固定版本的工程，再一次只升级一个组件。
-
 ## 下载
 
 - [完整参考工程](../assets/llm-action-planning/llm-action-planning-reference.zip)

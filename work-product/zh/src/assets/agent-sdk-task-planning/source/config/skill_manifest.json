@@ -1,0 +1,40 @@
+{
+  "navigate_to_named_pose": {
+    "description": "Navigate through a validated route to one named location.",
+    "arguments": {
+      "location": [
+        "home",
+        "indicator_station",
+        "main_switch"
+      ]
+    }
+  },
+  "capture_observation": {
+    "description": "Capture RGB data at the indicator station and classify the lamp.",
+    "arguments": {
+      "target": [
+        "status_indicator"
+      ]
+    }
+  },
+  "move_arm_to_named_pose": {
+    "description": "Move the arm to one bounded pose in the safe state machine.",
+    "arguments": {
+      "pose": [
+        "home",
+        "ready",
+        "press",
+        "retract"
+      ]
+    }
+  },
+  "get_robot_state": {
+    "description": "Read authoritative location, arm, activity, and stop state."
+  },
+  "get_action_status": {
+    "description": "Read a stored action result by action identifier."
+  },
+  "stop_robot": {
+    "description": "Cancel motion and return the arm toward home."
+  }
+}

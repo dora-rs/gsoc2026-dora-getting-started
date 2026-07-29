@@ -33,6 +33,9 @@ for (const language of languages) {
     const h2Headings = lines
       .map((line, index) => ({ line, index }))
       .filter(({ line }) => /^## /.test(line));
+    const numberedSectionHeadings = lines
+      .map((line, index) => ({ line, index }))
+      .filter(({ line }) => /^#{2,6}\s+\d+(?:[.)、:]|\s)/.test(line));
 
     if (h1Index === -1) {
       errors.push(`${displayPath}: missing chapter title`);
@@ -44,6 +47,12 @@ for (const language of languages) {
       .some((line) => line.trim().length > 0);
     if (contentBeforeTitle) {
       errors.push(`${displayPath}: chapter title must be the first content`);
+    }
+
+    for (const heading of numberedSectionHeadings) {
+      errors.push(
+        `${displayPath}:${heading.index + 1}: section headings must not use numeric prefixes`,
+      );
     }
 
     const versionSection = h2Headings[0];

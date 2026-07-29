@@ -14,13 +14,6 @@
 | Planning and vision model | `qwen3-vl:8b-instruct` |
 | Python | 3.10 |
 
-Dora `v0.5.0` and Webots `R2025a` were also their latest stable releases when
-this chapter was prepared. Check the official
-[Dora releases](https://github.com/dora-rs/dora/releases) and
-[Webots releases](https://github.com/cyberbotics/webots/releases) before
-upgrading; first reproduce the pinned project, then change one component at a
-time.
-
 ## Downloads
 
 - [Complete reference project](../assets/llm-action-planning/llm-action-planning-reference.zip)

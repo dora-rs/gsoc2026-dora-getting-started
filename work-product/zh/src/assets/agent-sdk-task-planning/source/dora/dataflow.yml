@@ -1,0 +1,50 @@
+nodes:
+  - id: gateway
+    path: gateway_node.py
+    inputs:
+      tick: dora/timer/millis/50
+      state: state/state
+      navigation_result: navigation/result
+      arm_result: arm/result
+      observation_result: vision/result
+      stop_result: stop/result
+    outputs:
+      - navigation_request
+      - arm_request
+      - observation_request
+      - stop_request
+
+  - id: state
+    path: state_node.py
+    inputs:
+      tick: dora/timer/millis/100
+    outputs:
+      - state
+
+  - id: navigation
+    path: navigation_node.py
+    inputs:
+      navigate: gateway/navigation_request
+    outputs:
+      - result
+
+  - id: stop
+    path: stop_node.py
+    inputs:
+      stop: gateway/stop_request
+    outputs:
+      - result
+
+  - id: arm
+    path: arm_node.py
+    inputs:
+      move: gateway/arm_request
+    outputs:
+      - result
+
+  - id: vision
+    path: vision_node.py
+    inputs:
+      observe: gateway/observation_request
+    outputs:
+      - result

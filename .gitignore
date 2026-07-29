@@ -1,4 +1,8 @@
 # Local verification environments
+**/.venv/
+**/.pytest_cache/
+**/__pycache__/
+**/*.py[cod]
 verification/**/.venv/
 work-product/verification/**/.venv/
 work-product/verification/**/.tools/

@@ -113,10 +113,6 @@ The static Rerun portion uses:
 rerun-sdk==0.33.0
 ```
 
-Pinning versions is useful in a tutorial because it makes bugs easier to
-reproduce. When you intentionally update a dependency, update the version
-information at the top of the chapter and run the verification script again.
-
 ## Log Static Objects
 
 The Rerun scene starts with a world coordinate system and a few static objects.
