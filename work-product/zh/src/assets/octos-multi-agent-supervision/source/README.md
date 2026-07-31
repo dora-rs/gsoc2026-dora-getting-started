@@ -1,0 +1,75 @@
+# Dora and Octos Process Supervision
+
+This reference project runs a continuous temperature and pressure supervision
+task with two simulated mobile manipulators:
+
+- the Observer robot docks at the sensor station, reads pressure through Dora,
+  and reads the temperature display through RGB and a local VLM;
+- the Operator robot uses named cooling and relief switch actions;
+- the Supervisor uses Octos and a local coding model to author and review a
+  restricted adaptive strategy.
+
+The model chooses observations, timing, and switch requests. Dora transports
+state and action receipts. Deterministic validation and simulator interlocks
+remain responsible for execution and hard safety limits.
+
+## Requirements
+
+- Ubuntu 22.04 with an NVIDIA GPU and working X11 display
+- Docker Engine and NVIDIA Container Toolkit
+- Dora CLI and Python package 0.5.0
+- Webots R2025a and ROS 2 Humble, supplied by the container
+- Octos 2.0.2
+- Ollama 0.32.1
+- `qwen3-vl:8b-instruct` and `qwen2.5-coder:7b`
+
+## Prepare the Host
+
+```bash
+npm install -g @octos-org/octos@2.0.2
+octos --version
+
+ollama pull qwen3-vl:8b-instruct
+ollama pull qwen2.5-coder:7b
+
+docker build -t octos-process-supervision:humble .
+chmod +x run-container.sh launch-webots.sh
+```
+
+## Run the Application
+
+Terminal 1:
+
+```bash
+./run-container.sh
+./launch-webots.sh
+```
+
+Terminal 2:
+
+```bash
+docker exec -it octos-process-supervision bash
+cd /workspace/dora
+dora run week11_dataflow.yml
+```
+
+Terminal 3 on the host:
+
+```bash
+python3 tools/run_octos_multi_agent.py
+```
+
+The task has no natural completion. Press `Ctrl+C` after observing the desired
+number of cooling and relief cycles. The shutdown path requests both controls
+off before the runner exits.
+
+## Test
+
+Inside the container:
+
+```bash
+cd /workspace
+python3 -m pytest -q
+```
+
+Runtime output is written below `outputs/` and is ignored by Git.

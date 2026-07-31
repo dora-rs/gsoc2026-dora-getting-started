@@ -134,7 +134,7 @@ arguments、save_as，以及只支持 eq/ne 的小型条件树。拒绝坐标、
 校验器把 LLM 输出视为不可信输入。只有
 `validate_plan(plan).require_valid()` 成功后，计划才能执行。
 
-#### 完整计划校验器
+### 完整计划校验器
 
 
 ```python
@@ -209,7 +209,7 @@ HTTP、解析、schema 或校验出现错误时都必须停止。模型绝不能
 }
 ```
 
-#### 完整 Ollama 规划与视觉客户端
+### 完整 Ollama 规划与视觉客户端
 
 
 ```python
@@ -245,7 +245,7 @@ Dora graph 把规划、执行和结果记录分离：
 `when` 条件由任务状态机判断，而不是交给模型判断。如果第一次观察报告开关
 已经是 `off`，机械臂动作和第二次观察都会跳过，机器人直接返回起点。
 
-#### 完整任务状态机
+### 完整任务状态机
 
 
 ```python
@@ -253,7 +253,7 @@ Dora graph 把规划、执行和结果记录分离：
 ```
 
 
-#### 完整 Dora planner node
+### 完整 Dora planner node
 
 
 ```python
@@ -261,7 +261,7 @@ Dora graph 把规划、执行和结果记录分离：
 ```
 
 
-#### 完整 Dora executor node
+### 完整 Dora executor node
 
 
 ```python
@@ -269,7 +269,7 @@ Dora graph 把规划、执行和结果记录分离：
 ```
 
 
-#### 完整 Dora reporter node
+### 完整 Dora reporter node
 
 
 ```python
@@ -313,7 +313,7 @@ set_switch_state 要求机器人位于开关工作空间内，再调用提供的
 
 <img src="../assets/llm-action-planning/media/switch-off-observation.jpg" alt="RGB 开关图像与结构化关闭状态验证" width="1920" height="540">
 
-#### 完整 ROS skill runtime
+### 完整 ROS skill runtime
 
 
 ```python
@@ -395,7 +395,7 @@ Dora dataflow。
 使用压缩包最方便，也可以直接在这里查看这些文件，不下载工程也能审阅机器人
 行为。
 
-#### 导航控制与麦克纳姆轮速转换
+### 导航控制与麦克纳姆轮速转换
 
 
 ```python
@@ -403,7 +403,7 @@ Dora dataflow。
 ```
 
 
-#### Webots 机器人、传感器、导航与机械臂控制器
+### Webots 机器人、传感器、导航与机械臂控制器
 
 
 ```python
@@ -411,7 +411,7 @@ Dora dataflow。
 ```
 
 
-#### 固定场景相机控制器
+### 固定场景相机控制器
 
 
 ```python
@@ -424,7 +424,7 @@ Dora dataflow。
 下面继续展示其余文字类文件，便于直接检查。Webots world 和模型资产由仿真器
 作为场景资源加载，因此仍使用下载链接。
 
-#### 容器环境
+### 容器环境
 
 
 ```dockerfile
@@ -432,7 +432,7 @@ Dora dataflow。
 ```
 
 
-#### 容器与 Webots 启动脚本
+### 容器与 Webots 启动脚本
 
 
 ```bash
@@ -448,7 +448,7 @@ Dora dataflow。
 ```
 
 
-#### 结构化数据 contracts
+### 结构化数据 contracts
 
 
 ```python
@@ -456,7 +456,7 @@ Dora dataflow。
 ```
 
 
-#### 计划与任务测试
+### 计划与任务测试
 
 
 ```python
@@ -468,7 +468,7 @@ Dora dataflow。
 ```
 
 
-#### 视觉与导航测试
+### 视觉与导航测试
 
 
 ```python

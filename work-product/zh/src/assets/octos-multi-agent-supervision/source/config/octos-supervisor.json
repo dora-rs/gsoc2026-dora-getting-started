@@ -1,0 +1,7 @@
+{
+  "tool_policy": {
+    "allow": [
+      "__no_tools__"
+    ]
+  }
+}

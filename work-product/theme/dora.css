@@ -253,6 +253,12 @@ body {
   object-fit: cover;
 }
 
+.content video.process-demo-video {
+  height: auto;
+  aspect-ratio: 8 / 3;
+  object-fit: contain;
+}
+
 .content video.standard-demo-video {
   height: auto;
   aspect-ratio: 8 / 5;
@@ -283,6 +289,11 @@ body {
 
 .media-pair img.media-focus-left {
   object-position: left center;
+}
+
+.media-pair--ultrawide img {
+  aspect-ratio: 8 / 3;
+  object-fit: contain;
 }
 
 .media-pair figcaption {
@@ -367,6 +378,10 @@ body {
   border-left-color: var(--dora-accent);
 }
 
+.architecture-variant--multi {
+  border-left-color: var(--quote-border);
+}
+
 .architecture-variant-heading {
   display: flex;
   align-items: baseline;
@@ -395,6 +410,10 @@ body {
 
 .architecture-variant--agent .architecture-node {
   border-top-color: var(--dora-accent);
+}
+
+.architecture-variant--multi .architecture-node {
+  border-top-color: var(--quote-border);
 }
 
 .architecture-caption {
@@ -458,6 +477,14 @@ body {
   color: var(--dora-muted);
   font-size: 14px;
   line-height: 1.45;
+}
+
+.architecture-feedback--multi {
+  border-color: color-mix(in srgb, var(--quote-border) 58%, var(--dora-border));
+}
+
+.architecture-feedback--multi .architecture-feedback-arrow {
+  color: var(--quote-border);
 }
 
 .language-grid {
@@ -621,6 +648,10 @@ body {
 @media (max-width: 700px) {
   :root {
     --page-padding: 16px;
+  }
+
+  .menu-title {
+    display: none;
   }
 
   .content h1 {
