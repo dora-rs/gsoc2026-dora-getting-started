@@ -6,7 +6,7 @@
 - [Dora-Controlled Motion in a Rerun Scene](weeks/week-03-ai-assistant-rerun-workflow.md)
 - [Camera Sensors in a Simulated Scene](weeks/week-04-camera-data-visual-feedback.md)
 - [Analyze Visual Information with Multimodal Models](weeks/week-07-multimodal-scene-understanding.md)
-- [Sensor Data and Scene Interaction](weeks/week-08-sensor-data-scene-interaction.md)
+- [LiDAR, SLAM Mapping, and Navigation with Dora](weeks/week-08-sensor-data-scene-interaction.md)
 - [LLM-Based Action Path Planning](weeks/week-09-llm-action-path-planning.md)
 - [Agent-Based Automated Task Planning](weeks/week-10-agent-task-planning.md)
 - [Advanced adora and Octos Integration](weeks/week-11-adora-octos-integration.md)

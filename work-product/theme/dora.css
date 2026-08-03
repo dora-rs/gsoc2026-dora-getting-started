@@ -234,8 +234,24 @@ body {
   background: #050706;
 }
 
+.content main > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 1.35rem 0;
+  border-radius: var(--dora-radius);
+  background: #050706;
+}
+
 .content video.wide-demo-video {
+  height: auto;
   aspect-ratio: 32 / 9;
+  object-fit: cover;
+}
+
+.content video.standard-demo-video {
+  height: auto;
+  aspect-ratio: 8 / 5;
   object-fit: cover;
 }
 

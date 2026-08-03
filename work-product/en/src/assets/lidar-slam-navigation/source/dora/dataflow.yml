@@ -1,0 +1,20 @@
+nodes:
+  - id: sensor-bridge
+    path: sensor_bridge_node.py
+    inputs:
+      tick: dora/timer/millis/500
+    outputs:
+      - status
+
+  - id: mission-controller
+    path: mission_controller_node.py
+    inputs:
+      sensors: sensor-bridge/status
+      tick: dora/timer/millis/200
+    outputs:
+      - mission
+
+  - id: result-reporter
+    path: result_reporter_node.py
+    inputs:
+      mission: mission-controller/mission
