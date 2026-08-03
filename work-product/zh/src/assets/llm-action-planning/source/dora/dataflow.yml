@@ -1,0 +1,19 @@
+nodes:
+  - id: planner
+    path: planner_node.py
+    inputs:
+      tick: dora/timer/millis/500
+    outputs:
+      - plan
+
+  - id: executor
+    path: executor_node.py
+    inputs:
+      plan: planner/plan
+    outputs:
+      - status
+
+  - id: reporter
+    path: reporter_node.py
+    inputs:
+      status: executor/status

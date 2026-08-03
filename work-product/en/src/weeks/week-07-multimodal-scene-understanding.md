@@ -18,11 +18,23 @@ with the [latest official release](https://github.com/dora-rs/dora/releases/late
 and check the [official installation guide](https://dora-rs.ai/dora/getting-started/installation.html),
 because releases and model availability change.
 
+## Downloads
+
+- [Complete multimodal pick-and-place reference project](../assets/multimodal-pick-and-place/multimodal-pick-and-place-reference.zip)
+- [Franka Panda wrist-camera URDF](../assets/multimodal-pick-and-place/source/assets/franka_panda_with_wrist_camera.urdf)
+- [Validated joint trajectory](../assets/multimodal-pick-and-place/source/validated-trajectory.json)
+- [Mesh source and license note](../assets/multimodal-pick-and-place/source/assets/franka_description/SOURCE.txt)
+
+The archive contains the complete Habitat-Sim scene, all referenced meshes,
+validated trajectory, Dora nodes, model client, tests, and recording scripts.
+Extract it into a new directory before continuing.
+
 ## Goal
 
-You will use an AI coding assistant to build a vision-gated pick-and-place
-application. The Habitat-Sim scene contains a Franka Panda arm, an RGB wrist
-camera, and three separated cubes arranged red, yellow, and blue.
+You will use an AI coding assistant to inspect, configure, and run a
+vision-gated pick-and-place application. The supplied Habitat-Sim scene contains
+a Franka Panda arm, an RGB wrist camera, and three separated cubes arranged
+red, yellow, and blue.
 
 Dora connects the complete task:
 
@@ -41,11 +53,11 @@ visual judgment and Dora orchestration, not grasp-policy uncertainty.
 
 ## Before You Begin
 
-The commands in this chapter target Ubuntu/Linux and assume that the repository
-is open at its root. Reuse the working Dora, Python, and Habitat-Sim environment
-from the previous camera chapter. Ollama is installed below; FFmpeg and
-FFprobe are needed only to prepare and inspect tutorial media. Keep generated
-outputs under `work-product/verification/multimodal-pick-and-place/outputs/`.
+The commands in this chapter target Ubuntu/Linux and assume that the downloaded
+reference project is the current directory. Reuse the working Dora, Python, and
+Habitat-Sim environment from the previous camera chapter. Ollama is installed
+below; FFmpeg and FFprobe are needed only to prepare and inspect tutorial media.
+Keep generated outputs under the extracted project's `outputs/` directory.
 
 ## Hardware Requirements
 
@@ -79,7 +91,7 @@ and JSON Schema can constrain the response.
 
 1. Inspect the computer and choose local or cloud inference.
 2. Install the model runtime and prepare a vision-language model.
-3. Build the arm, camera, cubes, and deterministic trajectory.
+3. Inspect and test the supplied arm, camera, cubes, and deterministic trajectory.
 4. Define the structured visual contract and Dora control flow.
 5. Connect the model and independently test the two gate images.
 6. Run the complete task and collect visual and numerical evidence.
@@ -172,41 +184,36 @@ curl -fsS http://127.0.0.1:11434/api/tags
 Do not publish the complete API response if it contains unrelated local model
 names. Keep the service terminal open until the Dora run is complete.
 
-## Build the Scene and Motion
+## Inspect the Scene and Motion
 
 The wrist camera should show all three cubes while the arm is home. During the
 motion, its origin follows the wrist and its view remains centered on the red
 task object. A second camera records the complete scene for the reader.
 
 ```text
-Extend the verified Habitat-Sim Panda camera example into a deterministic
-pick-and-place scene.
+Inspect the supplied multimodal pick-and-place reference project.
 
-Requirements:
-- Use the real Franka Panda visual meshes and GPU rendering.
-- Add separated 10 cm red, yellow, and blue cubes in one row.
-- Mount one RGB-only pinhole camera above the wrist, with no depth sensor.
-- At home, both the external view and wrist RGB view must show all three cubes.
-- Generate a smooth joint path: home, pre-grasp, grasp, lift, transfer, place,
-  retreat, and home.
-- Use validated IK waypoints. Attach the red cube deterministically after the
-  grasp waypoint and release it exactly on top of the blue cube at place.
-- Record 960x540 external and wrist views at 12 FPS, plus a side-by-side clip.
-- Save initial and final screenshots from both cameras.
-- Fail if any initial cube color is missing, the arm does not return home, or
-  the final red-cube center is not one cube height above the blue-cube center.
-- Keep generated assets and logs out of the book source until they are reviewed.
+Treat scene.py, assets/, and validated-trajectory.json as fixed tutorial
+inputs. Do not replace the Panda, rebuild or rearrange the cubes, change camera
+poses, or solve a different trajectory.
 
-Run focused tests before recording. Show the solved waypoints, motion duration,
-home error, stack error, and sanitized output file list.
+Explain how the real Franka meshes are loaded, how the RGB wrist camera follows
+the arm, how the red cube is attached and released, and how the external and
+wrist recordings remain synchronized. Run the focused tests before recording.
+Confirm all three colors are visible at home, the arm returns home, and the red
+cube ends exactly one cube height above the blue cube. Report the frame count,
+duration, home error, stack error, and sanitized output list.
 ```
 
 ### Test and Generate the Simulation
 
-From the repository root, run the verified scripts in this order:
+Extract the archive and run the verified scripts in this order:
 
 ```bash
-cd work-product/verification/multimodal-pick-and-place
+mkdir multimodal-pick-and-place-reference
+unzip multimodal-pick-and-place-reference.zip \
+  -d multimodal-pick-and-place-reference
+cd multimodal-pick-and-place-reference
 
 python -m unittest discover -s tests
 python prepare_trajectory.py --output outputs/trajectory
@@ -238,8 +245,8 @@ error is approximately `5.2e-9 m`.
 
 ### Reference: Deterministic Motion
 
-The core execution loop below is taken from
-`work-product/verification/multimodal-pick-and-place/simulation_runtime.py`.
+The core execution loop below is taken from the supplied
+`simulation_runtime.py`.
 The cube is attached only after the `grasp` waypoint and released only after
 the `place` waypoint.
 
@@ -298,8 +305,7 @@ The expected initial observation is:
 
 ### Reference: Strict Result Validation
 
-The validated parser in
-`work-product/verification/multimodal-pick-and-place/contracts.py` rejects
+The validated parser in the supplied `contracts.py` rejects
 additional fields, non-boolean flags, and invalid confidence values:
 
 ```python
@@ -400,7 +406,7 @@ nodes:
 ### Reference: Confidence-Gated State Transition
 
 The decision logic is ordinary, testable Python from
-`work-product/verification/multimodal-pick-and-place/controller.py`:
+the supplied `controller.py`:
 
 ```python
 def on_analysis(
@@ -459,8 +465,7 @@ distinguished the unstacked and stacked scenes.
 
 ### Reference: Ollama Vision Request
 
-The verified request code in
-`work-product/verification/multimodal-pick-and-place/vision_client.py` sends the
+The verified request code in the supplied `vision_client.py` sends the
 PNG as base64, asks Ollama to enforce `SCHEMA`, and validates the returned text
 again in Python:
 
@@ -498,7 +503,7 @@ With Ollama running and the images generated earlier, test both inputs without
 Dora before starting the complete dataflow:
 
 ```bash
-cd work-product/verification/multimodal-pick-and-place
+cd multimodal-pick-and-place-reference
 
 python - <<'PY'
 import json
@@ -533,19 +538,16 @@ error, stack error, peak GPU memory, and GPU utilization. Keep GPU memory below
 
 ### Run the Dora Dataflow
 
-With Ollama still running in the other terminal, execute:
+With Ollama still running in the other terminal, use the supplied script. It
+creates or reuses the pinned environment, puts its Python first on `PATH`, runs
+the unit tests, starts the Dora dataflow, and requires `TASK_SUCCESS`:
 
 ```bash
-cd work-product/verification/multimodal-pick-and-place
+cd multimodal-pick-and-place-reference
 
 export OLLAMA_MODEL=qwen3-vl:8b-instruct
 export OLLAMA_URL=http://127.0.0.1:11434
-export WEEK7_TRAJECTORY="$PWD/outputs/trajectory/trajectory.json"
-export WEEK7_OUTPUT="$PWD/outputs/dora-run"
-
-mkdir -p outputs/logs
-set -o pipefail
-dora run dataflow.yml 2>&1 | tee outputs/logs/dora-run.log
+bash run.sh
 ```
 
 In another terminal, sample GPU use without listing unrelated process names:
@@ -609,6 +611,89 @@ After placement and the return to home, both views provide clear evidence:
     <figcaption>Final wrist RGB verification input</figcaption>
   </figure>
 </div>
+
+## Complete Project Source
+
+The archive is the easiest way to obtain the meshes and URDF. The complete text
+sources used by the tutorial are also shown directly here.
+
+### `scene.py`
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/scene.py}}
+```
+
+### `trajectory.py`
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/trajectory.py}}
+```
+
+### `simulation_runtime.py`
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/simulation_runtime.py}}
+```
+
+### `contracts.py`
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/contracts.py}}
+```
+
+### `controller.py`
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/controller.py}}
+```
+
+### `vision_client.py`
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/vision_client.py}}
+```
+
+### `dataflow.yml`
+
+```yaml
+{{#include ../assets/multimodal-pick-and-place/source/dataflow.yml}}
+```
+
+### Dora Nodes
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/controller_node.py}}
+```
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/simulation_node.py}}
+```
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/vision_node.py}}
+```
+
+### Preparation and Recording Scripts
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/prepare_trajectory.py}}
+```
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/record_demo.py}}
+```
+
+### `environment.yml`
+
+```yaml
+{{#include ../assets/multimodal-pick-and-place/source/environment.yml}}
+```
+
+### `run.sh`
+
+```bash
+{{#include ../assets/multimodal-pick-and-place/source/run.sh}}
+```
 
 ## Troubleshooting
 

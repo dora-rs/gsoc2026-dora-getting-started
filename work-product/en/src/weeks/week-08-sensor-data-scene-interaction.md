@@ -14,12 +14,6 @@
 | SLAM Toolbox | 2.6.10 |
 | Dora CLI and Python API | 0.5.0 |
 
-This chapter uses the latest stable Dora release available during validation,
-`v0.5.0`. A newer release candidate may appear on the
-[Dora releases page](https://github.com/dora-rs/dora/releases); use stable
-releases for this tutorial unless you intentionally want to test prerelease
-APIs.
-
 ## Downloads
 
 - [Complete LiDAR, SLAM, Nav2, and Dora reference project](../assets/lidar-slam-navigation/lidar-slam-navigation-reference.zip)
@@ -101,7 +95,7 @@ Report the OS version and architecture, free memory and disk space, GPU model,
 GPU memory, NVIDIA driver, Docker GPU support, ROS 2 distribution, Webots,
 webots_ros2_tiago, Navigation2, SLAM Toolbox, Dora CLI, and Dora Python API.
 
-Check the current official documentation and stable releases. Recommend native
+Check the current official installation documentation. Recommend native
 installation or an isolated GPU-enabled Docker environment. Do not install or
 remove anything yet. Do not print usernames, home paths, private hostnames, IP
 addresses, tokens, serial numbers, or unrelated process information.

@@ -17,11 +17,21 @@
 [官方最新 release](https://github.com/dora-rs/dora/releases/latest)比较，并检查
 [官方安装文档](https://dora-rs.ai/dora/getting-started/installation.html)。
 
+## 下载
+
+- [完整多模态抓取与放置参考工程](../assets/multimodal-pick-and-place/multimodal-pick-and-place-reference.zip)
+- [Franka Panda 腕部摄像机 URDF](../assets/multimodal-pick-and-place/source/assets/franka_panda_with_wrist_camera.urdf)
+- [已验证的关节轨迹](../assets/multimodal-pick-and-place/source/validated-trajectory.json)
+- [Mesh 来源和许可证说明](../assets/multimodal-pick-and-place/source/assets/franka_description/SOURCE.txt)
+
+压缩包包含完整 Habitat-Sim 场景、全部引用 meshes、已验证轨迹、Dora 节点、模型
+client、测试和录制脚本。继续之前先把它解压到一个新目录。
+
 ## 目标
 
-本章会使用 AI 编程助手构建一个由视觉结果控制的抓取与放置应用。Habitat-Sim
-场景中包含 Franka Panda 机械臂、RGB 腕部摄像机，以及水平分开放置的红、黄、蓝
-三个方块。
+本章会使用 AI 编程助手检查、配置并运行一个由视觉结果控制的抓取与放置应用。
+提供的 Habitat-Sim 场景中包含 Franka Panda 机械臂、RGB 腕部摄像机，以及水平
+分开放置的红、黄、蓝三个方块。
 
 Dora 把完整任务连接起来：
 
@@ -37,10 +47,10 @@ Dora 把完整任务连接起来：
 
 ## 开始之前
 
-本章命令面向 Ubuntu/Linux，并假设终端位于仓库根目录。继续使用上一章已经可用的
-Dora、Python 和 Habitat-Sim 环境。Ollama 会在下文安装；FFmpeg 和 FFprobe 只用于
-准备和检查教程素材。生成文件统一保存在
-`work-product/verification/multimodal-pick-and-place/outputs/` 下。
+本章命令面向 Ubuntu/Linux，并假设终端位于下载后解压的参考工程目录。继续使用
+上一章已经可用的 Dora、Python 和 Habitat-Sim 环境。Ollama 会在下文安装；
+FFmpeg 和 FFprobe 只用于准备和检查教程素材。生成文件统一保存在解压工程的
+`outputs/` 目录下。
 
 ## 硬件需求
 
@@ -70,7 +80,7 @@ JSON Schema 也能约束返回结构。
 
 1. 检查设备并选择本地或云端推理。
 2. 安装模型运行时并准备视觉语言模型。
-3. 构建机械臂、摄像机、方块和确定性轨迹。
+3. 检查并测试提供的机械臂、摄像机、方块和确定性轨迹。
 4. 定义结构化视觉 contract 和 Dora 控制流程。
 5. 接入模型并独立测试两张门控图像。
 6. 运行完整任务并收集视觉与数值证据。
@@ -152,38 +162,32 @@ curl -fsS http://127.0.0.1:11434/api/tags
 如果完整 API 响应包含其他本地模型名称，不要公开这部分内容。在 Dora 运行完成前，
 保持 Ollama 服务终端开启。
 
-## 构建场景和动作
+## 检查场景和动作
 
 机械臂位于 home 时，腕部摄像机必须看到三个方块。动作期间，摄像机光心跟随腕部，
 画面保持对红色任务对象的关注。另一个摄像机记录供读者观察的完整场景。
 
 ```text
-把已经验证的 Habitat-Sim Panda 摄像机示例扩展为确定性的抓取与放置场景。
+检查已经提供的多模态抓取与放置参考工程。
 
-要求：
-- 使用真实 Franka Panda visual meshes 和 GPU 渲染。
-- 加入边长 10 cm、彼此分开的红、黄、蓝三个方块，并排成一行。
-- 在腕部上方安装一个 RGB pinhole camera，不使用 depth sensor。
-- home 状态下，第三方视角和腕部 RGB 都必须看到三个方块。
-- 生成平滑关节轨迹：home、pre-grasp、grasp、lift、transfer、place、retreat、home。
-- 使用经过验证的 IK waypoints。在 grasp 后确定性附着红方块，在 place 时把它精确
-  释放到蓝方块上。
-- 以 12 FPS 录制 960x540 的第三方和腕部视角，并生成左右并排视频。
-- 保存动作前后的两路截图。
-- 初始画面缺少任一颜色、机械臂没有回到 home，或者最终红方块中心没有比蓝方块
-  中心高一个方块边长时，立即失败。
-- 生成资产和日志在审核前保存在 book source 之外。
+把 scene.py、assets/ 和 validated-trajectory.json 视为固定教程输入。不要替换
+Panda、重新构建或排列方块、修改摄像机位姿，或求解不同的轨迹。
 
-录制前先运行 focused tests。展示求解后的 waypoints、动作时长、home error、
-stack error 和脱敏后的输出文件列表。
+解释真实 Franka meshes 如何加载、RGB 腕部摄像机如何跟随机械臂、红方块如何附着
+和释放，以及第三方与腕部录制如何保持同步。录制前运行 focused tests。确认 home
+状态能看到三种颜色、机械臂最终回到 home，并且红方块最终位于蓝方块中心正上方
+一个方块边长。报告帧数、时长、home error、stack error 和脱敏后的输出列表。
 ```
 
 ### 测试并生成仿真
 
-从仓库根目录开始，按以下顺序执行已经验证的脚本：
+解压压缩包，并按以下顺序执行已经验证的脚本：
 
 ```bash
-cd work-product/verification/multimodal-pick-and-place
+mkdir multimodal-pick-and-place-reference
+unzip multimodal-pick-and-place-reference.zip \
+  -d multimodal-pick-and-place-reference
+cd multimodal-pick-and-place-reference
 
 python -m unittest discover -s tests
 python prepare_trajectory.py --output outputs/trajectory
@@ -213,8 +217,7 @@ python record_demo.py \
 
 ### 参考实现：确定性动作
 
-下面的核心执行循环来自
-`work-product/verification/multimodal-pick-and-place/simulation_runtime.py`。
+下面的核心执行循环来自提供的 `simulation_runtime.py`。
 程序只在到达 `grasp` waypoint 后附着方块，并且只在到达 `place` waypoint 后释放。
 
 ```python
@@ -269,8 +272,8 @@ confidence。为有效的初始和最终观测，以及所有拒绝情况添加�
 
 ### 参考实现：严格校验结果
 
-`work-product/verification/multimodal-pick-and-place/contracts.py` 中经过验证的
-parser 会拒绝额外字段、非 boolean 标志和无效的 confidence：
+提供的 `contracts.py` 中经过验证的 parser 会拒绝额外字段、非 boolean 标志和
+无效的 confidence：
 
 ```python
 OBSERVATION_FIELDS = {
@@ -363,9 +366,7 @@ nodes:
 
 ### 参考实现：置信度门控状态转换
 
-判断逻辑来自
-`work-product/verification/multimodal-pick-and-place/controller.py`，是可以独立测试的
-普通 Python 代码：
+判断逻辑来自提供的 `controller.py`，是可以独立测试的普通 Python 代码：
 
 ```python
 def on_analysis(
@@ -420,9 +421,8 @@ timeout。使用下面的视觉指令：
 
 ### 参考实现：Ollama 视觉请求
 
-`work-product/verification/multimodal-pick-and-place/vision_client.py` 中经过验证的代码
-把 PNG 编码为 base64，要求 Ollama 按 `SCHEMA` 生成响应，并再次使用 Python 校验
-返回文本：
+提供的 `vision_client.py` 中经过验证的代码把 PNG 编码为 base64，要求 Ollama 按
+`SCHEMA` 生成响应，并再次使用 Python 校验返回文本：
 
 ```python
 def analyze_image(image_path: Path, timeout: float = 120.0) -> ObservationResult:
@@ -458,7 +458,7 @@ def analyze_image(image_path: Path, timeout: float = 120.0) -> ObservationResult
 输入：
 
 ```bash
-cd work-product/verification/multimodal-pick-and-place
+cd multimodal-pick-and-place-reference
 
 python - <<'PY'
 import json
@@ -490,19 +490,16 @@ PY
 
 ### 运行 Dora Dataflow
 
-保持另一个终端中的 Ollama 服务运行，然后执行：
+保持另一个终端中的 Ollama 服务运行，然后使用提供的脚本。它会创建或复用固定版本
+环境，把该环境的 Python 放到 `PATH` 最前面，运行单元测试，启动 Dora dataflow，
+并要求日志中出现 `TASK_SUCCESS`：
 
 ```bash
-cd work-product/verification/multimodal-pick-and-place
+cd multimodal-pick-and-place-reference
 
 export OLLAMA_MODEL=qwen3-vl:8b-instruct
 export OLLAMA_URL=http://127.0.0.1:11434
-export WEEK7_TRAJECTORY="$PWD/outputs/trajectory/trajectory.json"
-export WEEK7_OUTPUT="$PWD/outputs/dora-run"
-
-mkdir -p outputs/logs
-set -o pipefail
-dora run dataflow.yml 2>&1 | tee outputs/logs/dora-run.log
+bash run.sh
 ```
 
 在另一个终端采样 GPU 使用情况，并且不列出无关进程名称：
@@ -564,6 +561,89 @@ ffprobe -v error \
     <figcaption>最终腕部 RGB 验证输入</figcaption>
   </figure>
 </div>
+
+## 完整工程源码
+
+下载压缩包是获取 meshes 和 URDF 最方便的方式。教程使用的完整文本源码也直接展示
+在这里。
+
+### `scene.py`
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/scene.py}}
+```
+
+### `trajectory.py`
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/trajectory.py}}
+```
+
+### `simulation_runtime.py`
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/simulation_runtime.py}}
+```
+
+### `contracts.py`
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/contracts.py}}
+```
+
+### `controller.py`
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/controller.py}}
+```
+
+### `vision_client.py`
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/vision_client.py}}
+```
+
+### `dataflow.yml`
+
+```yaml
+{{#include ../assets/multimodal-pick-and-place/source/dataflow.yml}}
+```
+
+### Dora Nodes
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/controller_node.py}}
+```
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/simulation_node.py}}
+```
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/vision_node.py}}
+```
+
+### 轨迹准备和录制脚本
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/prepare_trajectory.py}}
+```
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/record_demo.py}}
+```
+
+### `environment.yml`
+
+```yaml
+{{#include ../assets/multimodal-pick-and-place/source/environment.yml}}
+```
+
+### `run.sh`
+
+```bash
+{{#include ../assets/multimodal-pick-and-place/source/run.sh}}
+```
 
 ## 排查问题
 

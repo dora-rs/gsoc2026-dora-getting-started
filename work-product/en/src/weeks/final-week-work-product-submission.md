@@ -1,5 +1,11 @@
 # Verification and Extension
 
+## Version Information
+
+| Component | Version / Environment |
+| --- | --- |
+| Tutorial environment | Reuse the validated environment from the preceding runnable chapters |
+
 This chapter verifies the complete example from a clean environment, records
 its expected outputs and resource use, and identifies safe extension points for
 new sensors, inference providers, robot models, and planning strategies.

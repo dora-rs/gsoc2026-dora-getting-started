@@ -14,10 +14,6 @@
 | SLAM Toolbox | 2.6.10 |
 | Dora CLI 和 Python API | 0.5.0 |
 
-本章使用验证时最新的 Dora 稳定版 `v0.5.0`。
-[Dora releases 页面](https://github.com/dora-rs/dora/releases)可能会出现更新的候选版本；
-除非需要主动测试预发布 API，否则本教程优先使用稳定版本。
-
 ## 下载
 
 - [完整激光雷达、SLAM、Nav2 与 Dora 参考工程](../assets/lidar-slam-navigation/lidar-slam-navigation-reference.zip)
@@ -90,7 +86,7 @@ Dora 管理任务状态：检查所需数据、发送目标、接收反馈，并
 Docker GPU 支持、ROS 2 distribution、Webots、webots_ros2_tiago、Navigation2、
 SLAM Toolbox、Dora CLI 和 Dora Python API。
 
-检查当前官方文档和稳定版本，推荐原生安装或隔离的 GPU Docker 环境。暂时不要安装或
+检查当前官方安装文档，推荐原生安装或隔离的 GPU Docker 环境。暂时不要安装或
 删除任何内容。不要输出用户名、home 路径、私有 hostname、IP 地址、token、序列号或
 无关进程信息。
 ```

@@ -1,0 +1,17 @@
+name: habitat-camera-sensors
+channels:
+  - conda-forge
+  - aihabitat
+dependencies:
+  - python=3.9
+  - habitat-sim=0.3.3
+  - withbullet
+  - opencv
+  - ffmpeg
+  - imageio
+  - imageio-ffmpeg
+  - numpy
+  - scipy
+  - trimesh
+  - pillow
+  - matplotlib

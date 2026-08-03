@@ -42,7 +42,7 @@
   <a class="roadmap-item" href="weeks/week-04-camera-data-visual-feedback.html"><span>仿真</span><strong>相机传感器</strong><em>使用 Habitat-Sim 从仿真 wrist camera 生成 RGB 和 depth data。</em></a>
   <a class="roadmap-item" href="weeks/week-07-multimodal-scene-understanding.html"><span>场景感知</span><strong>用多模态模型分析视觉信息</strong><em>使用本地多模态模型把腕部摄像机图像转换成结构化 JSON。</em></a>
   <a class="roadmap-item" href="weeks/week-08-sensor-data-scene-interaction.html"><span>导航</span><strong>激光雷达、SLAM 与 Dora 导航</strong><em>构建激光占据地图，并让 Dora 协调 Nav2 完成导航任务。</em></a>
-  <a class="roadmap-item" href="weeks/week-09-llm-action-path-planning.html"><span>动作规划</span><strong>LLM 动作规划</strong><em>使用大语言模型规划动作路径。</em></a>
+  <a class="roadmap-item" href="weeks/week-09-llm-action-path-planning.html"><span>动作规划</span><strong>LLM 工具与 Skill 规划</strong><em>把自然语言任务转换成经过校验的 JSON skill 序列，并由 Dora 执行。</em></a>
   <a class="roadmap-item" href="weeks/week-10-agent-task-planning.html"><span>Agent</span><strong>Agent 任务规划</strong><em>集成 agent 工具，实现自动化任务规划。</em></a>
   <a class="roadmap-item" href="weeks/week-11-adora-octos-integration.html"><span>系统集成</span><strong>adora 与 Octos</strong><em>探索 adora 与 Octos 的高级集成，构建更智能的机器人控制体验。</em></a>
   <a class="roadmap-item" href="weeks/week-12-final-consolidation.html"><span>完整系统</span><strong>端到端机器人工作流</strong><em>连接感知、规划、动作、可视化和运行时检查。</em></a>

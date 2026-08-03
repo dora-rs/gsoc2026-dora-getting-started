@@ -1,0 +1,10 @@
+nodes:
+  - id: controller
+    path: controller.py
+    outputs:
+      - scene_state
+
+  - id: visualizer
+    path: visualizer.py
+    inputs:
+      scene_state: controller/scene_state

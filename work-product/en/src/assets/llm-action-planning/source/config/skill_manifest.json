@@ -1,0 +1,66 @@
+{
+  "schema": "week9.skill-manifest.v1",
+  "skills": [
+    {
+      "name": "navigate_to",
+      "description": "Navigate the mobile base to a named location.",
+      "arguments": {
+        "location": {
+          "type": "string",
+          "enum": ["home", "main_switch"]
+        }
+      },
+      "result": {
+        "status": {
+          "enum": ["succeeded", "failed"]
+        }
+      }
+    },
+    {
+      "name": "observe_switch",
+      "description": "Capture the latest RGB frame and classify the named switch.",
+      "arguments": {
+        "switch_id": {
+          "type": "string",
+          "enum": ["main_switch"]
+        }
+      },
+      "result": {
+        "status": {
+          "enum": ["succeeded", "failed"]
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "state": {
+          "enum": ["on", "off", "unknown"]
+        },
+        "confidence": {
+          "type": "number"
+        }
+      }
+    },
+    {
+      "name": "set_switch_state",
+      "description": "Run the validated arm trajectory for a visible nearby switch.",
+      "arguments": {
+        "switch_id": {
+          "type": "string",
+          "enum": ["main_switch"]
+        },
+        "state": {
+          "type": "string",
+          "enum": ["on", "off"]
+        }
+      },
+      "result": {
+        "status": {
+          "enum": ["succeeded", "failed"]
+        },
+        "state": {
+          "enum": ["on", "off"]
+        }
+      }
+    }
+  ]
+}
