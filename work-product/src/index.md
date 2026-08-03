@@ -1,4 +1,4 @@
-# Dora Getting Started
+# Building Dora Robotics Applications and Systems with AI
 
 Choose a language to read the tutorial.
 
@@ -6,12 +6,12 @@ Choose a language to read the tutorial.
   <a class="landing-card" href="en/introduction.html">
     <span class="landing-kicker">English</span>
     <strong>Read in English</strong>
-    <span>A practical Dora introduction with installation steps and a verified Hello World dataflow.</span>
+    <span>Build Dora robotics workflows with simulation, perception, planning, Agents, and multi-Agent coordination.</span>
   </a>
   <a class="landing-card" href="zh/introduction.html">
     <span class="landing-kicker">中文</span>
     <strong>阅读中文版本</strong>
-    <span>从安装到 Hello World dataflow 的 Dora 入门教程，并包含本地验证信息。</span>
+    <span>使用仿真、感知、规划、Agent 与多 Agent 协作构建 Dora 机器人应用和系统。</span>
   </a>
 </div>
 

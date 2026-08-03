@@ -227,7 +227,7 @@ else:
 self.publisher.publish(command)
 ```
 
-#### Complete LiDAR exploration controller
+### Complete LiDAR exploration controller
 
 
 ```python

@@ -145,7 +145,7 @@ Do not modify the supplied Webots scene.
 The validator treats the LLM output as untrusted input. A plan is executable
 only after `validate_plan(plan).require_valid()` succeeds.
 
-#### Complete plan validator
+### Complete plan validator
 
 
 ```python
@@ -222,7 +222,7 @@ A validated model response looks like this:
 }
 ```
 
-#### Complete Ollama planning and vision client
+### Complete Ollama planning and vision client
 
 
 ```python
@@ -262,7 +262,7 @@ The mission state machine, rather than the model, evaluates `when` conditions.
 If the first observation reports `off`, both the arm action and second
 observation are skipped, and the robot returns home.
 
-#### Complete mission state machine
+### Complete mission state machine
 
 
 ```python
@@ -270,7 +270,7 @@ observation are skipped, and the robot returns home.
 ```
 
 
-#### Complete Dora planner node
+### Complete Dora planner node
 
 
 ```python
@@ -278,7 +278,7 @@ observation are skipped, and the robot returns home.
 ```
 
 
-#### Complete Dora executor node
+### Complete Dora executor node
 
 
 ```python
@@ -286,7 +286,7 @@ observation are skipped, and the robot returns home.
 ```
 
 
-#### Complete Dora reporter node
+### Complete Dora reporter node
 
 
 ```python
@@ -333,7 +333,7 @@ After the arm action, it observed `state: "off"` with confidence `0.95`:
 
 <img src="../assets/llm-action-planning/media/switch-off-observation.jpg" alt="RGB switch image with the structured off-state verification" width="1920" height="540">
 
-#### Complete ROS skill runtime
+### Complete ROS skill runtime
 
 
 ```python
@@ -417,7 +417,7 @@ The validated run completed all five skill steps, visually confirmed
 The archive is the easiest way to use these files. They are also shown here so
 the robot behavior can be reviewed without downloading anything.
 
-#### Navigation control and mecanum wheel conversion
+### Navigation control and mecanum wheel conversion
 
 
 ```python
@@ -425,7 +425,7 @@ the robot behavior can be reviewed without downloading anything.
 ```
 
 
-#### Webots robot, sensor, navigation, and arm controller
+### Webots robot, sensor, navigation, and arm controller
 
 
 ```python
@@ -433,7 +433,7 @@ the robot behavior can be reviewed without downloading anything.
 ```
 
 
-#### Fixed scene-camera controller
+### Fixed scene-camera controller
 
 
 ```python
@@ -446,7 +446,7 @@ the robot behavior can be reviewed without downloading anything.
 These remaining text files are included for inspection. The Webots world and
 model assets stay as downloads because they are consumed as scene assets.
 
-#### Container environment
+### Container environment
 
 
 ```dockerfile
@@ -454,7 +454,7 @@ model assets stay as downloads because they are consumed as scene assets.
 ```
 
 
-#### Container and Webots launch scripts
+### Container and Webots launch scripts
 
 
 ```bash
@@ -470,7 +470,7 @@ model assets stay as downloads because they are consumed as scene assets.
 ```
 
 
-#### Structured data contracts
+### Structured data contracts
 
 
 ```python
@@ -478,7 +478,7 @@ model assets stay as downloads because they are consumed as scene assets.
 ```
 
 
-#### Plan and mission tests
+### Plan and mission tests
 
 
 ```python
@@ -490,7 +490,7 @@ model assets stay as downloads because they are consumed as scene assets.
 ```
 
 
-#### Vision and navigation tests
+### Vision and navigation tests
 
 
 ```python

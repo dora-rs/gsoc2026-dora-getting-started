@@ -1,0 +1,22 @@
+{
+  "observer_home": {
+    "x": -3.3,
+    "y": 1.35,
+    "yaw": 0.0
+  },
+  "observer_station": {
+    "x": 3.3,
+    "y": 1.35,
+    "yaw": 0.0
+  },
+  "operator_home": {
+    "x": -3.3,
+    "y": -1.4,
+    "yaw": 0.0
+  },
+  "control_station": {
+    "x": 3.4,
+    "y": -1.4,
+    "yaw": 0.0
+  }
+}

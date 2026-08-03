@@ -9,7 +9,5 @@
 - [激光雷达、SLAM 建图与 Dora 导航](weeks/week-08-sensor-data-scene-interaction.md)
 - [使用大语言模型规划动作路径](weeks/week-09-llm-action-path-planning.md)
 - [集成 Agents SDK 实现自动化任务规划](weeks/week-10-agent-task-planning.md)
-- [adora 与 Octos 高级集成](weeks/week-11-adora-octos-integration.md)
-- [端到端机器人工作流](weeks/week-12-final-consolidation.md)
-- [验证与扩展](weeks/final-week-work-product-submission.md)
+- [使用 Octos 构建多 Agent 连续过程监督](weeks/week-11-adora-octos-integration.md)
 - [参考资料](references.md)

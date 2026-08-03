@@ -1,12 +1,13 @@
 # Introduction
 
-This book is a practical getting-started guide for Dora. It starts with the
-smallest useful dataflow, then gradually adds visualization, reusable scene
-assets, sensor feedback, multimodal perception, and task planning.
+This book is a practical guide to building Dora robotics applications and
+systems with AI. It starts with the smallest useful dataflow, then gradually
+adds visualization, reusable simulation scenes, sensor feedback, multimodal
+perception, task planning, Agents, and multi-Agent coordination.
 
-The goal is not to list every API. The goal is to help a new user build a mental
-model of how Dora programs are organized, run a verified example, and then keep
-expanding that example into a more capable embodied-AI workflow.
+The goal is not to list every API. It is to help you understand how Dora
+programs are organized, use AI to build and inspect runnable examples, and
+connect those examples into increasingly capable robotics workflows.
 
 ## Tutorial Approach
 
@@ -44,10 +45,9 @@ installation and Hello World dataflow. The next chapter introduces Rerun through
 a static scene, and the chapter after that uses Dora to make the same scene
 move. Later chapters continue from that foundation.
 
-When a chapter includes commands, run them in the verification directory named at
-the top of that chapter. When the tutorial mentions an AI coding assistant, ask
-it to check the latest official documentation before it chooses package names,
-commands, or APIs.
+When a chapter includes commands, run them from its reference project directory.
+When the tutorial uses an AI coding assistant, ask it to check the latest
+official documentation before choosing package names, commands, or APIs.
 
 ## Learning Roadmap
 
@@ -56,7 +56,7 @@ builds on the runnable code, verification method, and concepts introduced
 before it.
 
 <div class="roadmap-grid">
-  <a class="roadmap-item" href="weeks/week-01-dora-introduction-installation-hello-world.html"><span>Foundations</span><strong>Dora and Hello World</strong><em>Dora and adora introduction, installation guide, and Hello World example.</em></a>
+  <a class="roadmap-item" href="weeks/week-01-dora-introduction-installation-hello-world.html"><span>Foundations</span><strong>Dora and Hello World</strong><em>Dora introduction, installation guide, and Hello World example.</em></a>
   <a class="roadmap-item" href="weeks/week-02-rerun-scene-with-dora.html"><span>Visualization</span><strong>Rerun Static Scene</strong><em>Rerun visualization introduction, installation, initialization, and first static 3D scene.</em></a>
   <a class="roadmap-item" href="weeks/week-03-ai-assistant-rerun-workflow.html"><span>Motion</span><strong>Dora-Controlled Motion</strong><em>Use Dora and an AI assistant workflow to make the Rerun scene move.</em></a>
   <a class="roadmap-item" href="weeks/week-04-camera-data-visual-feedback.html"><span>Simulation</span><strong>Camera Sensors</strong><em>Use Habitat-Sim to generate RGB and depth data from a simulated wrist camera.</em></a>
@@ -64,9 +64,7 @@ before it.
   <a class="roadmap-item" href="weeks/week-08-sensor-data-scene-interaction.html"><span>Navigation</span><strong>LiDAR, SLAM, and Dora Navigation</strong><em>Build a LiDAR occupancy map and let Dora coordinate a Nav2 navigation task.</em></a>
   <a class="roadmap-item" href="weeks/week-09-llm-action-path-planning.html"><span>Planning</span><strong>LLM Tool and Skill Planning</strong><em>Turn a natural-language task into a validated JSON skill sequence and execute it with Dora.</em></a>
   <a class="roadmap-item" href="weeks/week-10-agent-task-planning.html"><span>Agents</span><strong>Agent Task Planning</strong><em>Integrate agent tooling for automated task planning.</em></a>
-  <a class="roadmap-item" href="weeks/week-11-adora-octos-integration.html"><span>Integration</span><strong>adora and Octos</strong><em>Explore advanced adora and Octos integration for intelligent robot control.</em></a>
-  <a class="roadmap-item" href="weeks/week-12-final-consolidation.html"><span>Complete System</span><strong>End-to-End Robotics Workflow</strong><em>Connect perception, planning, actions, visualization, and runtime checks.</em></a>
-  <a class="roadmap-item" href="weeks/final-week-work-product-submission.html"><span>Next Steps</span><strong>Verification and Extension</strong><em>Verify the complete example and identify practical ways to extend it.</em></a>
+  <a class="roadmap-item" href="weeks/week-11-adora-octos-integration.html"><span>Multi-Agent Systems</span><strong>Continuous Supervision with Octos</strong><em>Coordinate observation, operation, and supervision through Dora to regulate temperature and pressure over time.</em></a>
 </div>
 
 Use the references page when you want to compare the tutorial against upstream

@@ -1,0 +1,576 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/robots/kuka/youbot/protos/Youbot.proto"
+
+WorldInfo {
+  info [
+    "Octos multi-agent process supervision validation scene"
+  ]
+  basicTimeStep 32
+  contactProperties [
+    ContactProperties {
+      material1 "InteriorWheelMat"
+      coulombFriction [
+        0
+        2
+        0
+      ]
+      frictionRotation -0.785398 0
+      forceDependentSlip [
+        10
+        0
+      ]
+    }
+    ContactProperties {
+      material1 "ExteriorWheelMat"
+      coulombFriction [
+        0
+        2
+        0
+      ]
+      frictionRotation 0.785398 0
+      forceDependentSlip [
+        10
+        0
+      ]
+    }
+  ]
+}
+Viewpoint {
+  orientation 0.737 0.306 0.603 1.22
+  position 8.6 -8.9 8.2
+  followType "None"
+}
+Background {
+  skyColor [
+    0.68 0.75 0.84
+  ]
+}
+DirectionalLight {
+  ambientIntensity 0.74
+  direction -0.45 -0.35 -1
+  intensity 1.12
+}
+Robot {
+  translation 0 0 9
+  rotation -0.57735 0.57735 0.57735 2.0944
+  children [
+    Camera {
+      name "scene_camera"
+      fieldOfView 1.13
+      width 960
+      height 540
+      near 0.1
+    }
+  ]
+  name "Fixed process camera"
+  controller "scene_camera_controller"
+}
+Solid {
+  translation 0 0 -0.04
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.34 0.37 0.39
+        roughness 0.78
+        metalness 0.05
+      }
+      geometry Box {
+        size 9 6.4 0.08
+      }
+    }
+  ]
+  name "factory floor"
+  boundingObject Box {
+    size 9 6.4 0.08
+  }
+}
+Solid {
+  translation 0 3.2 0.9
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.72 0.76 0.78
+        roughness 0.82
+      }
+      geometry Box {
+        size 9 0.08 1.8
+      }
+    }
+  ]
+  name "north wall"
+  boundingObject Box {
+    size 9 0.08 1.8
+  }
+}
+Solid {
+  translation 0 -3.2 0.9
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.72 0.76 0.78
+        roughness 0.82
+      }
+      geometry Box {
+        size 9 0.08 1.8
+      }
+    }
+  ]
+  name "south wall"
+  boundingObject Box {
+    size 9 0.08 1.8
+  }
+}
+Solid {
+  translation -4.5 0 0.9
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.68 0.72 0.75
+        roughness 0.82
+      }
+      geometry Box {
+        size 0.08 6.4 1.8
+      }
+    }
+  ]
+  name "west wall"
+  boundingObject Box {
+    size 0.08 6.4 1.8
+  }
+}
+Solid {
+  translation 4.5 0 0.9
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.68 0.72 0.75
+        roughness 0.82
+      }
+      geometry Box {
+        size 0.08 6.4 1.8
+      }
+    }
+  ]
+  name "east wall"
+  boundingObject Box {
+    size 0.08 6.4 1.8
+  }
+}
+Solid {
+  translation 0 0 0.006
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.93 0.78 0.08
+        emissiveColor 0.08 0.065 0.005
+        roughness 0.7
+      }
+      geometry Box {
+        size 8.4 0.045 0.012
+      }
+    }
+  ]
+  name "lane divider"
+}
+Solid {
+  translation 0 2.45 0.008
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.08 0.58 0.78
+        roughness 0.72
+      }
+      geometry Box {
+        size 8.3 0.05 0.014
+      }
+    }
+  ]
+  name "observer lane edge"
+}
+Solid {
+  translation 0 -2.45 0.008
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.94 0.58 0.08
+        roughness 0.72
+      }
+      geometry Box {
+        size 8.3 0.05 0.014
+      }
+    }
+  ]
+  name "operator lane edge"
+}
+Solid {
+  translation 3.4 1.35 0.012
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.04 0.42 0.58
+        emissiveColor 0.01 0.08 0.1
+        roughness 0.6
+      }
+      geometry Box {
+        size 0.95 0.86 0.024
+      }
+    }
+  ]
+  name "observer docking marker"
+}
+Solid {
+  translation 3.4 -1.4 0.012
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.72 0.35 0.04
+        emissiveColor 0.08 0.025 0.005
+        roughness 0.6
+      }
+      geometry Box {
+        size 0.95 1.25 0.024
+      }
+    }
+  ]
+  name "operator control marker"
+}
+DEF PRESSURE_DOCK Solid {
+  translation 4 1.35 0.42
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.08 0.12 0.15
+        metalness 0.48
+        roughness 0.3
+      }
+      geometry Box {
+        size 0.22 0.74 0.68
+      }
+    }
+    Transform {
+      translation -0.15 0 0
+      rotation 0 1 0 1.5708
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.08 0.65 0.95
+            emissiveColor 0.02 0.24 0.38
+            metalness 0.62
+            roughness 0.2
+          }
+          geometry Cylinder {
+            height 0.16
+            radius 0.17
+          }
+        }
+      ]
+    }
+    Transform {
+      translation -0.25 0 0
+      rotation 0 1 0 1.5708
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.03 0.05 0.06
+            roughness 0.25
+          }
+          geometry Cylinder {
+            height 0.05
+            radius 0.08
+          }
+        }
+      ]
+    }
+  ]
+  name "pressure sensor docking port"
+  boundingObject Box {
+    size 0.22 0.74 0.68
+  }
+}
+Robot {
+  children [
+    DEF TEMPERATURE_DISPLAY Display {
+      translation 3.92 1.9 0.98
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColorMap ImageTexture {
+              filtering 0
+            }
+            roughness 0.42
+            metalness 0
+          }
+          geometry IndexedFaceSet {
+            coord Coordinate {
+              point [
+                0 -0.62 0.31
+                0 -0.62 -0.31
+                0 0.62 -0.31
+                0 0.62 0.31
+              ]
+            }
+            texCoord TextureCoordinate {
+              point [
+                0 1
+                0 0
+                1 0
+                1 1
+              ]
+            }
+            coordIndex [
+              3, 2, 1, 0
+            ]
+            texCoordIndex [
+              0, 1, 2, 3
+            ]
+          }
+        }
+        Transform {
+          translation 0.06 0 0
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.035 0.05 0.06
+                metalness 0.45
+                roughness 0.3
+              }
+              geometry Box {
+                size 0.1 1.34 0.72
+              }
+            }
+          ]
+        }
+      ]
+      name "temperature_display"
+      width 512
+      height 256
+    }
+  ]
+  name "Process display supervisor"
+  controller "plant_display_controller"
+  supervisor TRUE
+}
+DEF CONTROL_PANEL Solid {
+  translation 4 -1.4 0.56
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.075 0.09 0.105
+        metalness 0.52
+        roughness 0.28
+      }
+      geometry Box {
+        size 0.22 1.25 0.9
+      }
+    }
+    Transform {
+      translation -0.15 -0.28 0
+      rotation 0 1 0 1.5708
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.1 0.64 0.92
+            metalness 0.55
+            roughness 0.2
+          }
+          geometry Cylinder {
+            height 0.12
+            radius 0.14
+          }
+        }
+      ]
+    }
+    DEF COOLING_SWITCH_LEVER Transform {
+      translation -0.25 -0.28 0
+      rotation 0 1 0 -0.55
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.08 0.68 0.95
+            metalness 0.25
+            roughness 0.3
+          }
+          geometry Box {
+            size 0.18 0.075 0.06
+          }
+        }
+      ]
+    }
+    Transform {
+      translation -0.15 0.28 0
+      rotation 0 1 0 1.5708
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.96 0.62 0.08
+            metalness 0.55
+            roughness 0.2
+          }
+          geometry Cylinder {
+            height 0.12
+            radius 0.14
+          }
+        }
+      ]
+    }
+    DEF RELIEF_SWITCH_LEVER Transform {
+      translation -0.25 0.28 0
+      rotation 0 1 0 -0.55
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.98 0.58 0.06
+            metalness 0.25
+            roughness 0.3
+          }
+          geometry Box {
+            size 0.18 0.075 0.06
+          }
+        }
+      ]
+    }
+    Transform {
+      translation -0.16 -0.28 0.27
+      rotation 0 1 0 1.5708
+      children [
+        Shape {
+          appearance DEF COOLING_INDICATOR PBRAppearance {
+            baseColor 0.025 0.03 0.035
+            emissiveColor 0.025 0.03 0.035
+            roughness 0.18
+          }
+          geometry Cylinder {
+            height 0.13
+            radius 0.065
+          }
+        }
+      ]
+    }
+    Transform {
+      translation -0.16 0.28 0.27
+      rotation 0 1 0 1.5708
+      children [
+        Shape {
+          appearance DEF RELIEF_INDICATOR PBRAppearance {
+            baseColor 0.025 0.03 0.035
+            emissiveColor 0.025 0.03 0.035
+            roughness 0.18
+          }
+          geometry Cylinder {
+            height 0.13
+            radius 0.065
+          }
+        }
+      ]
+    }
+  ]
+  name "cooling and relief control panel"
+  boundingObject Box {
+    size 0.22 1.25 0.9
+  }
+}
+Solid {
+  translation 0.5 2.4 0.34
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.12 0.16 0.18
+        metalness 0.35
+        roughness 0.5
+      }
+      geometry Box {
+        size 0.8 0.48 0.68
+      }
+    }
+  ]
+  name "process pipeline observer obstacle"
+  boundingObject Box {
+    size 0.8 0.48 0.68
+  }
+}
+Solid {
+  translation 0.75 -2.4 0.41
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.18 0.22 0.24
+        metalness 0.3
+        roughness 0.52
+      }
+      geometry Box {
+        size 0.95 0.62 0.82
+      }
+    }
+  ]
+  name "process cabinet operator obstacle"
+  boundingObject Box {
+    size 0.95 0.62 0.82
+  }
+}
+DEF OBSERVER_ROBOT Youbot {
+  translation -3.3 1.35 0.12
+  rotation 0 0 1 0
+  name "Observer youBot"
+  controller "week11_robot_controller"
+  supervisor TRUE
+  bodySlot [
+    GPS {
+      name "gps"
+    }
+    InertialUnit {
+      name "imu"
+    }
+    Lidar {
+      translation 0 0 0.34
+      name "lidar"
+      horizontalResolution 180
+      fieldOfView 6.28318
+      numberOfLayers 1
+      minRange 0.08
+      maxRange 8
+    }
+    Camera {
+      translation 0.08 -0.32 0.72
+      rotation 0 0 1 0.65
+      name "front_camera"
+      fieldOfView 1.35
+      width 640
+      height 360
+      near 0.03
+    }
+  ]
+}
+DEF OPERATOR_ROBOT Youbot {
+  translation -3.3 -1.4 0.12
+  rotation 0 0 1 0
+  name "Operator youBot"
+  controller "week11_robot_controller"
+  supervisor TRUE
+  bodySlot [
+    GPS {
+      name "gps"
+    }
+    InertialUnit {
+      name "imu"
+    }
+    Lidar {
+      translation 0 0 0.34
+      name "lidar"
+      horizontalResolution 180
+      fieldOfView 6.28318
+      numberOfLayers 1
+      minRange 0.08
+      maxRange 8
+    }
+    Camera {
+      translation 0.08 -0.32 0.48
+      rotation 0 0 1 0
+      name "front_camera"
+      fieldOfView 1.45
+      width 320
+      height 180
+      near 0.03
+    }
+  ]
+}

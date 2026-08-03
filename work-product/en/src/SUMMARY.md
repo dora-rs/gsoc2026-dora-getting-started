@@ -9,7 +9,5 @@
 - [LiDAR, SLAM Mapping, and Navigation with Dora](weeks/week-08-sensor-data-scene-interaction.md)
 - [Plan Action Paths with Large Language Models](weeks/week-09-llm-action-path-planning.md)
 - [Integrate the Agents SDK for Automated Task Planning](weeks/week-10-agent-task-planning.md)
-- [Advanced adora and Octos Integration](weeks/week-11-adora-octos-integration.md)
-- [End-to-End Robotics Workflow](weeks/week-12-final-consolidation.md)
-- [Verification and Extension](weeks/final-week-work-product-submission.md)
+- [Build Multi-Agent Continuous Process Supervision with Octos](weeks/week-11-adora-octos-integration.md)
 - [References](references.md)

@@ -1,0 +1,71 @@
+# Dora 与 Octos 连续过程监督
+
+这个参考工程使用两台仿真移动机械臂持续监督温度和压力：
+
+- Observer 机器人停靠传感器站，通过 Dora 读取压力，并使用 RGB 图像和本地
+  多模态模型读取温度；
+- Operator 机器人调用具名动作控制冷却和泄压开关；
+- Supervisor 使用 Octos 和本地代码模型生成并复核受限的自适应策略。
+
+模型选择传感器、观察时机和开关请求；Dora 传递状态与动作回执；确定性校验和
+仿真安全联锁继续负责可靠执行与硬安全边界。
+
+## 环境要求
+
+- Ubuntu 22.04、NVIDIA GPU 和可用的 X11 桌面
+- Docker Engine 与 NVIDIA Container Toolkit
+- Dora CLI 和 Python 包 0.5.0
+- 容器提供的 Webots R2025a 与 ROS 2 Humble
+- Octos 2.0.2
+- Ollama 0.32.1
+- `qwen3-vl:8b-instruct` 与 `qwen2.5-coder:7b`
+
+## 准备宿主机
+
+```bash
+npm install -g @octos-org/octos@2.0.2
+octos --version
+
+ollama pull qwen3-vl:8b-instruct
+ollama pull qwen2.5-coder:7b
+
+docker build -t octos-process-supervision:humble .
+chmod +x run-container.sh launch-webots.sh
+```
+
+## 运行应用
+
+终端 1：
+
+```bash
+./run-container.sh
+./launch-webots.sh
+```
+
+终端 2：
+
+```bash
+docker exec -it octos-process-supervision bash
+cd /workspace/dora
+dora run week11_dataflow.yml
+```
+
+宿主机终端 3：
+
+```bash
+python3 tools/run_octos_multi_agent.py
+```
+
+任务没有自然结束条件。观察到足够的冷却与泄压循环后按 `Ctrl+C`；退出路径会先
+请求关闭两个控制开关。
+
+## 测试
+
+在容器内运行：
+
+```bash
+cd /workspace
+python3 -m pytest -q
+```
+
+运行输出保存在 `outputs/`，并由 Git 忽略。
