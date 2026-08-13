@@ -11,32 +11,23 @@ by the tutorial.
 - NVIDIA driver compatible with the Webots R2025a container
 - Dora CLI 1.0.0-rc.4 and `dora-rs==1.0.0rc4`, installed in the container
 - Python 3.11.14 for Dora sidecars; system Python 3.10 for ROS 2 and application workers
-- Ollama 0.12.0 or newer on the host
+- Ollama 0.32.1 on the host
 - `qwen3-vl:8b-instruct` pulled in Ollama
 
-## Run
+## Reproduce
+
+Pull the pinned host model, read `VERSIONS.md`, `TUTORIAL_CONTRACT.md`, and
+`ASSET_GUIDE.md`, then use the single supported project entry:
 
 ```bash
 ollama pull qwen3-vl:8b-instruct
-docker build -t dora-llm-action:humble .
-chmod +x run-container.sh launch-webots.sh
-./run-container.sh
+bash tutorial.sh run
 ```
 
-In the container, start Webots:
-
-```bash
-./launch-webots.sh
-```
-
-In a second container shell, run tests and the Dora dataflow:
-
-```bash
-cd /workspace
-/usr/bin/python3 -m pytest -q
-cd dora
-dora run dataflow.yml
-```
+The entry builds the container image when missing, starts Webots and Dora,
+runs the tests and mission, verifies the visual state transition and return
+home, and cleans up. Component scripts are implementation references, not
+alternative reproduction entries.
 
 The planner calls Ollama through `http://127.0.0.1:11434` by default because
 the container uses host networking. Override `OLLAMA_URL`, `OLLAMA_MODEL`, or

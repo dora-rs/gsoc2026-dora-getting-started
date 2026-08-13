@@ -68,6 +68,48 @@ controls-off period. The supervision loop itself can continue running.
   </figure>
 </div>
 
+## Choose a Build Route
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">Create route</span>
+  <strong>Build continuous multi-Agent supervision</strong>
+  <p>Use this to design roles, shared process state, adaptive policy code, and robot execution together.</p>
+</div>
+
+```text
+Create a Webots R2025a process cell with two mobile manipulators and stations
+far apart. Observer docks at a pressure sensor and reads a synchronized
+temperature display through RGB vision. Operator controls separate cooling and
+relief switches. Temperature and pressure rise continuously; safe ranges are
+30-60 C and 160-200 kPa, with visible trends and valve states.
+
+Connect process simulation, robot skills, observations, receipts, and state
+through Dora 1.0.0-rc.4. Configure Octos 2.0.2 Observer, Operator, and
+Supervisor roles. Let the roles decide observation/model/tool timing from
+trends; Supervisor may generate a restricted strategy function that is
+validated before activation. Record multiple successful control cycles, both
+valves off at exit, role events, strategy provenance, tests, screenshots, and
+an application-only video through one entry. Do not hard-code the final policy
+as ordinary mission logic.
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">Reproduce route</span>
+  <strong>Run the verified Octos supervision system</strong>
+  <p>Use this to study role coordination and coding-to-action with the complete process cell supplied.</p>
+</div>
+
+```text
+Use the supplied Octos multi-Agent project exactly as packaged. Read
+VERSIONS.md, TUTORIAL_CONTRACT.md, ASSET_GUIDE.md, and READER_PROMPT.md. Keep
+all locks, profiles, skills, scene assets, models, and policies unchanged. Run
+only bash tutorial.sh run and wait for it to finish. Verify 145 tests, all three
+role-start events, an activated generated strategy, successful switch receipts,
+at least one completed safe control cycle, both switches off at exit, a
+non-empty video, final PASS, and clean git status. Do not substitute a normal
+Python controller for Octos decisions.
+```
+
 ## Why Octos
 
 [Octos](https://octos-org.github.io/octos/) is an open-source Agent platform

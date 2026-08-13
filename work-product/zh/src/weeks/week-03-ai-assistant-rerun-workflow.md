@@ -31,6 +31,38 @@
 
 <video controls muted loop src="../assets/week2-rerun-scene/rerun_viewer_recording.mp4"></video>
 
+## 选择实现路线
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">创造路线</span>
+  <strong>为静态场景加入 Dora 运动控制</strong>
+  <p>适合自行设计 dataflow、状态 contract 和轨迹。</p>
+</div>
+
+```text
+根据上一章静态 Rerun 场景的规格，创建 Dora 1.0.0-rc.4 dataflow，controller 和
+visualizer 必须是独立节点。定义结构化 scene-state output，包含帧序号、机器人和
+小车 transform。设计确定且无碰撞的轨迹：人形机器人先出发，两个对象依次绕过
+正方体、接近圆柱体并停止；小车稍后出发，保证运动过程容易观察。
+
+固定 Rerun 0.33.0，不修改静态坐标和模型缩放。增加轨迹测试、唯一入口、RRD 和
+960x540 H.264 Viewer 录屏；视频必须从初始位置开始，并到达两个最终 waypoint。
+观察运行时标记和产物后才能报告成功。
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">复现路线</span>
+  <strong>运行已验证的 Dora 运动工程</strong>
+  <p>适合把注意力放在 Dora 如何驱动已有场景上。</p>
+</div>
+
+```text
+使用提供的 Rerun 与 Dora 工程，不修改模型、坐标、路径、版本或脚本。读取
+VERSIONS.md、TUTORIAL_CONTRACT.md、ASSET_GUIDE.md 和 READER_PROMPT.md。
+报告唯一入口和验收标记，运行一次，检查 controller/visualizer 运行标记、非空 RRD、
+录屏尺寸与时长、最终 waypoint 和 git status。退出码为 0 不能单独证明成功。
+```
+
 ## 检查 Dora 控制运动
 
 继续使用上面下载的参考工程。运动实现已经包含在工程中，因此让助手解释并验证它，

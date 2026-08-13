@@ -24,6 +24,30 @@ The examples are written so they can be copied, inspected, and modified. Local
 paths, usernames, tokens, private hostnames, and machine-specific IDs are kept
 out of the tutorial text.
 
+## Two Ways to Build Every Example
+
+Each project can be approached through one of two prompt routes. They teach the
+same architecture and finish at the same acceptance checks, but begin from a
+different amount of supplied work.
+
+<div class="route-overview">
+  <section class="route-overview__item route-overview__item--create">
+    <span class="route-overview__label">Create route</span>
+    <strong>Build from scratch</strong>
+    <p>Ask the assistant to create the scene, assets, dataflow, interfaces, tests, and run scripts from an explicit specification. This route is more exploratory and needs a stronger model, more time, and a willingness to debug.</p>
+  </section>
+  <section class="route-overview__item route-overview__item--reproduce">
+    <span class="route-overview__label">Reproduce route</span>
+    <strong>Start from verified assets</strong>
+    <p>Give the assistant the downloadable project and ask it to follow the pinned version matrix, single entry command, and acceptance markers. This route is more reliable and is the best way to build a working mental model quickly.</p>
+  </section>
+</div>
+
+The two routes are not competing tracks. A useful progression is to reproduce
+the example first, inspect the working system, and then return to the create
+route to rebuild or change one layer. Every chapter marks the two prompts
+clearly so they cannot be confused.
+
 ## Who This Is For
 
 This book is intended for:
@@ -45,9 +69,16 @@ installation and Hello World dataflow. The next chapter introduces Rerun through
 a static scene, and the chapter after that uses Dora to make the same scene
 move. Later chapters continue from that foundation.
 
-When a chapter includes commands, run them from its reference project directory.
-When the tutorial uses an AI coding assistant, ask it to check the latest
-official documentation before choosing package names, commands, or APIs.
+When using the create route, ask the assistant to consult official documentation
+and verify every external dependency. When using the reproduce route, the
+chapter's `VERSIONS.md` and lock files are authoritative: do not let the
+assistant silently upgrade packages, replace assets, or invent a second launch
+path.
+
+In both routes, completion means observed evidence, not an assistant saying
+"done." Check the generated files, runtime markers, and final state described by
+the chapter. If an entry runs in the background, wait for that exact process to
+exit before deciding whether it passed.
 
 ## Learning Roadmap
 

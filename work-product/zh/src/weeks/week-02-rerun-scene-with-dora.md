@@ -33,6 +33,38 @@
 
 ![Rerun Viewer 静态场景截图](../assets/week2-rerun-scene/rerun_viewer_screenshot.png)
 
+## 选择实现路线
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">创造路线</span>
+  <strong>创建模型与静态场景</strong>
+  <p>适合探索 Rerun 场景层级与资产流水线。</p>
+</div>
+
+```text
+使用 Python 3.11 创建固定到 Rerun 0.33.0 的工程。制作两个可复用 glTF 资产：
+小型人形机器人和轮式小车，必须带清晰材质，不能是白模。创建静态右手 Z-up 场景，
+包含地面、一个正方体障碍、一个圆柱体目标和两个模型，主体互不重叠。模型生成过程
+必须确定性，并与场景记录逻辑分离。
+
+保存非空 .rrd，打开 Rerun Viewer，只截取 Viewer 窗口，生成 960x540 截图和短 H.264
+录屏。提供固定依赖、唯一运行入口、资产与场景测试和明确验收标记。实现前先给出
+场景层级与坐标。
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">复现路线</span>
+  <strong>使用已验证的 Rerun 资产</strong>
+  <p>适合不把模型制作和场景搭建作为当前学习重点的读者。</p>
+</div>
+
+```text
+解压提供的 Rerun 参考工程，读取 VERSIONS.md、TUTORIAL_CONTRACT.md、
+ASSET_GUIDE.md 和 READER_PROMPT.md。严格保留 glTF 模型、坐标、依赖、dataflow 和
+运行脚本。报告唯一入口与验收标记，只运行该入口，再检查 RRD、截图、录屏、
+运行时标记和干净的 git status。不得重新生成或替换模型；缺少任何产物都报告 FAIL。
+```
+
 ## Rerun 是什么
 
 Rerun 是面向 robotics、computer vision 和 physical AI 系统的可视化与日志工具。程序可以记录 transform、box、image、point、text、tensor、时间序列状态等带类型的数据。Rerun Viewer 可以实时查看这些数据，也可以打开保存下来的 `.rrd` 录制文件。

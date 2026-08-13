@@ -10,30 +10,20 @@ The supplied `worlds/default.wbt` is the official TIAGo office world from
 `webots_ros2` tag `2025.0.0`. The installed `webots_ros2_tiago` package supplies
 its matching robot PROTO and launch configuration.
 
-## Run
+## Reproduce
+
+Read `VERSIONS.md`, `TUTORIAL_CONTRACT.md`, and `ASSET_GUIDE.md`, then use the
+single supported entry:
 
 ```bash
-docker build -t dora-lidar-navigation:humble .
-chmod +x run-container.sh launch-baseline.sh launch-nav2-live.sh
-./run-container.sh
+bash tutorial.sh run
 ```
 
-In the container:
-
-```bash
-./launch-baseline.sh
-python3 explore_with_lidar.py 75
-mkdir -p maps
-ros2 run nav2_map_server map_saver_cli -f maps/office
-```
-
-Start `launch-nav2-live.sh` in another container shell, then run:
-
-```bash
-cd /workspace/dora
-/usr/bin/python3 -m pytest -q
-dora run dataflow.yml
-```
+The entry builds the pinned container image when it is missing, owns the
+Webots/ROS/Dora lifecycle, saves the map, waits for Nav2 to become active, and
+verifies the structured mission result. The component launch scripts remain in
+the project so the implementation can be inspected; they are not alternative
+reproduction entries.
 
 Official source:
 

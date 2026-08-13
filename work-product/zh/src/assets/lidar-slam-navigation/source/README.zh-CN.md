@@ -10,30 +10,16 @@ Dora nodes 使用 Python 3.11.14；ROS 2 Humble subscribers 与 Nav2 action clie
 官方办公室场景。安装的 `webots_ros2_tiago` 软件包提供与其匹配的机器人
 PROTO 和启动配置。
 
-## 运行
+## 复现
+
+先阅读 `VERSIONS.md`、`TUTORIAL_CONTRACT.md` 和 `ASSET_GUIDE.md`，再使用唯一入口：
 
 ```bash
-docker build -t dora-lidar-navigation:humble .
-chmod +x run-container.sh launch-baseline.sh launch-nav2-live.sh
-./run-container.sh
+bash tutorial.sh run
 ```
 
-在容器中：
-
-```bash
-./launch-baseline.sh
-python3 explore_with_lidar.py 75
-mkdir -p maps
-ros2 run nav2_map_server map_saver_cli -f maps/office
-```
-
-在另一个容器终端中启动 `launch-nav2-live.sh`，然后运行：
-
-```bash
-cd /workspace/dora
-/usr/bin/python3 -m pytest -q
-dora run dataflow.yml
-```
+镜像不存在时，入口会构建固定容器，并管理 Webots、ROS、Dora、地图保存、Nav2
+active 等待与结构化结果验收。组件脚本保留用于阅读实现，不是其他复现入口。
 
 官方源文件：
 

@@ -61,6 +61,42 @@ cd octos-multi-agent-supervision
   </figure>
 </div>
 
+## 选择实现路线
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">创造路线</span>
+  <strong>创建连续多 Agent 监督系统</strong>
+  <p>适合同时设计角色、共享过程状态、自适应策略代码和机器人执行。</p>
+</div>
+
+```text
+创建 Webots R2025a 过程单元，使用两台移动机械臂，观察站和控制站相距较远。
+Observer 在压力传感器处 docking，并通过 RGB 视觉读取同步温度显示；Operator 控制
+独立的 cooling 和 relief 开关。温度与压力持续上升，安全区间为 30-60 C 和
+160-200 kPa，界面必须清楚显示趋势和阀门状态。
+
+通过 Dora 1.0.0-rc.4 连接 process simulation、robot skills、observation、receipt 和
+state。配置 Octos 2.0.2 的 Observer、Operator 和 Supervisor。各角色根据趋势自行
+决定 observation/model/tool 的调用时机；Supervisor 可以生成受限 strategy function，
+但必须先验证再激活。通过唯一入口记录多次成功控制循环、退出时双阀关闭、角色事件、
+策略来源、测试、截图和仅应用窗口视频。不得把最终策略硬编码为普通 mission logic。
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">复现路线</span>
+  <strong>运行已验证的 Octos 监督系统</strong>
+  <p>适合使用完整过程单元学习角色协作与 coding-to-action。</p>
+</div>
+
+```text
+完全按原样使用提供的 Octos 多 Agent 工程。读取 VERSIONS.md、
+TUTORIAL_CONTRACT.md、ASSET_GUIDE.md 和 READER_PROMPT.md。保留所有 lock、profile、
+skill、scene asset、model 和 policy。只运行 bash tutorial.sh run，并等待它结束。验证
+145 项测试、三个 role-start event、激活的生成策略、成功 switch receipt、至少一轮
+安全控制循环、退出时双阀关闭、非空视频、最终 PASS 和干净的 git status。不得用
+普通 Python controller 替代 Octos 决策。
+```
+
 ## 为什么选择 Octos
 
 [Octos](https://octos-org.github.io/octos/) 是开源 Agent 平台。它把模型、

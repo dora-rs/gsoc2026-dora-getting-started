@@ -47,6 +47,38 @@
   <source src="../assets/habitat-camera-sensors/external_rgb_depth_side_by_side.mp4" type="video/mp4">
 </video>
 
+## 选择实现路线
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">创造路线</span>
+  <strong>搭建仿真 Camera 场景与传感器</strong>
+  <p>适合理解机器人几何、transform 与传感器规格如何组合。</p>
+</div>
+
+```text
+使用隔离的 Python 3.9 环境创建 Habitat-Sim 0.3.3 工程。搭建包含地面、分离彩色方块
+和 Franka Panda 的 GPU 渲染场景；Panda 必须使用官方 visual meshes。扩展 URDF，
+添加固定 wrist_camera_link。配置 640x480 wrist RGB、metric depth sensor 和外部
+overview camera。让多个机械臂关节运动，使腕部视角发生变化，同时主要主体保持可见。
+
+提供唯一运行入口，只打开应用预览窗口，保存原始 observation、截图和 H.264 视频，
+并规范为浏览器兼容格式。增加 sensor shape、finite depth、transform 绑定、输出尺寸和
+非空画面测试。所有媒体检查通过后才能报告成功。
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">复现路线</span>
+  <strong>运行已验证的 Habitat Camera 工程</strong>
+  <p>适合直接获得可用 RGB/depth 数据，而不重新制作机器人资产。</p>
+</div>
+
+```text
+解压提供的 Camera 工程，读取 VERSIONS.md、TUTORIAL_CONTRACT.md、ASSET_GUIDE.md
+和 READER_PROMPT.md。保持 GLB、URDF、环境、sensor 和 run script 不变，只运行
+文档中的唯一入口。结束后检查 git status、所有截图大小、视频 codec、尺寸、时长和
+每个实际观察到的 Verified 标记。不得替换缺失资产或跳过失败检查；报告准确阶段。
+```
+
 ## Habitat-Sim 是什么
 
 Habitat-Sim 是 simulator。它负责创建虚拟 3D 世界，并从这个世界里渲染传感器观测，包括 RGB camera image 和 depth image。当你希望教程使用传感器数据，但又不想先搭建真实测试环境时，它提供的就是这层能力。

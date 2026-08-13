@@ -1,0 +1,12 @@
+nodes:
+  - id: talker
+    path: talker.py
+    inputs:
+      tick: dora/timer/secs/1
+    outputs:
+      - greeting
+
+  - id: listener
+    path: listener.py
+    inputs:
+      greeting: talker/greeting

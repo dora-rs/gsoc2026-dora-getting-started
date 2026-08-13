@@ -18,12 +18,13 @@ remain responsible for execution and hard safety limits.
 - Ubuntu 22.04 with an NVIDIA GPU and working X11 display
 - Docker Engine and NVIDIA Container Toolkit
 - Dora CLI 1.0.0-rc.4 and `dora-rs==1.0.0rc4`
+- Python 3.11.14 for Dora sidecars; system Python 3.10 for ROS 2 and application workers
 - Webots R2025a and ROS 2 Humble, supplied by the container
 - Octos 2.0.2
 - Ollama 0.32.1
 - `qwen3-vl:8b-instruct` and `qwen2.5-coder:7b`
 
-## Prepare the Host
+## Reproduce
 
 ```bash
 npm install -g @octos-org/octos@2.0.2
@@ -31,33 +32,13 @@ octos --version
 
 ollama pull qwen3-vl:8b-instruct
 ollama pull qwen2.5-coder:7b
-
-docker build -t octos-process-supervision:humble .
-chmod +x run-container.sh launch-webots.sh
+bash tutorial.sh run
 ```
 
-## Run the Application
-
-Terminal 1:
-
-```bash
-./run-container.sh
-./launch-webots.sh
-```
-
-Terminal 2:
-
-```bash
-docker exec -it octos-process-supervision bash
-cd /workspace/dora
-dora run process_dataflow.yml
-```
-
-Terminal 3 on the host:
-
-```bash
-/usr/bin/python3 tools/run_octos_multi_agent.py
-```
+Read `VERSIONS.md`, `TUTORIAL_CONTRACT.md`, and `ASSET_GUIDE.md` before the
+run. The entry builds the image when missing and owns Webots, Dora, all three
+Octos roles, recording, verification, and cleanup. Component scripts remain
+for source inspection and are not alternative reproduction entries.
 
 The task has no natural completion. Press `Ctrl+C` after observing the desired
 number of cooling and relief cycles. The shutdown path requests both controls

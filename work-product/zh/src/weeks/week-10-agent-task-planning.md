@@ -49,6 +49,40 @@ Agent。Agent 不会一次性生成固定动作计划，而是在每次工具返
 
 <img src="../assets/agent-sdk-task-planning/media/scene-start.jpg" alt="Webots 开关场景，移动机械臂位于起点" width="1920" height="540">
 
+## 选择实现路线
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">创造路线</span>
+  <strong>创建逐步选择机器人工具的 Agent</strong>
+  <p>适合把一次性规划改造成 observe-act-observe 循环。</p>
+</div>
+
+```text
+为任务“观察指示灯；如果亮着就关闭开关，确认灯灭后返回 home”创建 Webots R2025a
+和 Dora 1.0.0-rc.4 工程。使用官方 youBot、清晰指示灯、named locations、稳定 camera
+视角和经过验证的机械臂姿态。navigation、arm、vision、stop 和 state 必须是独立
+Dora 节点，并位于 FastAPI/Pydantic Robot API 后方。
+
+集成 OpenAI Agents SDK 0.19.0，通过 Ollama-compatible qwen3-vl:8b-instruct
+运行。只暴露原子 named tools 和新鲜的结构化结果，不暴露坐标、轮速或关节参数。
+增加幂等、timeout、stale-state 拒绝、唯一入口、contract tests、before/after 图片、
+tool-call log、最终 home 状态证据和应用录屏。Agent 必须根据上一个结果选择下一个工具。
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">复现路线</span>
+  <strong>运行已验证的 Agents SDK 工程</strong>
+  <p>适合观察一个可运行 Agent loop 及其安全边界。</p>
+</div>
+
+```text
+解压提供的 Agents SDK 工程，读取 VERSIONS.md、TUTORIAL_CONTRACT.md、
+ASSET_GUIDE.md 和 READER_PROMPT.md。保留所有源码、lock、模型、pose 和 contract。
+只运行 bash tutorial.sh run；只有明确的瞬时仿真 timeout 才允许原样重试一次。验证 44 项
+测试、lit=true 后 lit=false、实际 tool-call 序列、[DONE]、两张证据图、最终 location
+和 arm pose 都为 home、PASS 和干净的 git status。不得修改工程来让失败运行通过。
+```
+
 ## Agent 不只是聊天
 
 普通聊天模型接收一段文字并返回一段文字。即使回答中写出了合理步骤，它也不会

@@ -42,6 +42,42 @@ nodes、测试和启动脚本。
 TIAGo Lite 模型具有移动底盘、机械臂和夹爪，以及二维激光雷达。本章只控制移动底盘，
 机械臂会保留给后续的导航与操作任务。
 
+## 选择实现路线
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">创造路线</span>
+  <strong>组合 LiDAR、SLAM、Nav2 与 Dora</strong>
+  <p>适合理解导航技术栈中的每一个 readiness 边界。</p>
+</div>
+
+```text
+创建 Ubuntu 22.04 工程，使用 Webots R2025a、ROS 2 Humble、官方 TIAGo office
+world、SLAM Toolbox、Nav2 和 Dora 1.0.0-rc.4。使用移动底盘和 2D LiDAR，机械臂
+保持不动。创建简单且可避障的探索 controller，保存非空 occupancy map，再在实时
+地图上启动 Nav2。
+
+创建 Dora 节点，桥接 scan、odometry、map、localization、goal feedback 和结构化
+mission result。发送 named goal 前，必须等待相关 topic、transform、
+navigate_to_pose action，以及 bt_navigator lifecycle 进入 active。提供唯一容器入口、
+测试、地图、截图、建图/导航录屏，并明确检查 map、sensor count、goal acceptance 和
+SUCCEEDED 状态。
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">复现路线</span>
+  <strong>运行已验证的导航技术栈</strong>
+  <p>适合先获得可靠的 SLAM 与导航闭环，再学习 ROS launch 细节。</p>
+</div>
+
+```text
+解压提供的 LiDAR/SLAM/Nav2/Dora 工程，读取 VERSIONS.md、TUTORIAL_CONTRACT.md、
+ASSET_GUIDE.md 和 READER_PROMPT.md。保留官方 world、容器镜像、Python runtime
+分层、goal 和脚本。只运行 bash tutorial.sh run，并等待该进程真正结束。检查地图文件、
+mission-result.json、正数的 scan/odometry/known-cell count、goal_sent、
+goal_accepted、SUCCEEDED、最终 PASS 和干净的 git status。不得单独运行 ROS/Dora
+组件，也不得绕过 lifecycle 检查。
+```
+
 ## 开始之前
 
 本章命令面向 Ubuntu 22.04 和 ROS 2 Humble。仿真可以直接安装在系统中，也可以运行在

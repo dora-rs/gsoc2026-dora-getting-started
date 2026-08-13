@@ -45,6 +45,44 @@ The TIAGo Lite model has a mobile base, a mounted arm and gripper, and a 2D
 LiDAR. This chapter controls only the mobile base; the arm remains available
 for a later navigation-and-manipulation task.
 
+## Choose a Build Route
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">Create route</span>
+  <strong>Assemble LiDAR, SLAM, Nav2, and Dora</strong>
+  <p>Use this to understand every readiness boundary in the navigation stack.</p>
+</div>
+
+```text
+Create an Ubuntu 22.04 project using Webots R2025a, ROS 2 Humble, the official
+TIAGo office world, SLAM Toolbox, Nav2, and Dora 1.0.0-rc.4. Use the mobile base
+and 2D LiDAR; leave the arm idle. Build a small collision-aware exploration
+controller, save a non-empty occupancy map, then start Nav2 on the live map.
+
+Create Dora nodes that bridge scan, odometry, map, localization, goal feedback,
+and a structured mission result. Wait for required topics, transforms, the
+navigate_to_pose action, and the bt_navigator lifecycle state to be active
+before sending a named goal. Provide one containerized entry, focused tests,
+map artifacts, screenshots, mapping/navigation recordings, and explicit PASS
+checks for map data, sensor counts, goal acceptance, and SUCCEEDED state.
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">Reproduce route</span>
+  <strong>Run the verified navigation stack</strong>
+  <p>Use this when you want a reliable SLAM and navigation loop before studying ROS launch details.</p>
+</div>
+
+```text
+Extract the supplied LiDAR/SLAM/Nav2/Dora project. Read VERSIONS.md,
+TUTORIAL_CONTRACT.md, ASSET_GUIDE.md, and READER_PROMPT.md. Preserve the official
+world, container image, Python runtime split, goal, and scripts. Run only
+bash tutorial.sh run and wait for that process to exit. Inspect the map files,
+mission-result.json, positive scan/odometry/known-cell counts, goal_sent,
+goal_accepted, SUCCEEDED, final PASS, and clean git status. Do not run ROS or
+Dora components separately or work around a failed lifecycle check.
+```
+
 ## Before You Begin
 
 The commands target Ubuntu 22.04 with ROS 2 Humble. Run the simulator either

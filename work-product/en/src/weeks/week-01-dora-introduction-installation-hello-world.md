@@ -12,6 +12,10 @@
 | pyarrow | 24.0.0 |
 | PyYAML | 6.0.3 |
 
+## Downloads
+
+- [Verified Dora Hello World project](../assets/dora-hello-world/dora-hello-world-reference.zip)
+
 ## Goal
 
 By the end of this chapter, a new user can explain what Dora is, install a
@@ -24,6 +28,43 @@ The example is intentionally small:
 - `dataflow.yml` wires the nodes together.
 - `run.ps1` creates an isolated environment, installs Dora, runs the dataflow,
   and checks the expected output.
+
+## Choose a Build Route
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">Create route</span>
+  <strong>Build the smallest Dora application from scratch</strong>
+  <p>Use this when you want the assistant to create and explain every file.</p>
+</div>
+
+```text
+Create a minimal Dora 1.0.0-rc.4 Hello World project without using an existing
+example. Target CPython 3.11 and dora-rs==1.0.0rc4. Create talker.py,
+listener.py, dataflow.yml, pinned requirements, and one run script for this OS.
+The talker must publish an Apache Arrow string after timer input; the listener
+must print it. Keep the environment inside the project, verify the official CLI
+archive checksum, and do not alter a global Dora installation.
+
+Before writing files, show the dataflow and file plan. After implementation,
+run it for four seconds and report the observed listener line, exact versions,
+generated paths, and source diff. Do not claim success unless the listener
+output is present in the runtime log.
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">Reproduce route</span>
+  <strong>Run the verified project as supplied</strong>
+  <p>Use this for the fastest and most reliable first Dora run.</p>
+</div>
+
+```text
+Extract the supplied Dora Hello World project. Read VERSIONS.md,
+TUTORIAL_CONTRACT.md, ASSET_GUIDE.md, and READER_PROMPT.md before acting.
+Treat the source and pinned versions as immutable. Report the single supported
+entry, generated paths, and exact acceptance marker, then run only that entry.
+Do not install or launch components separately. Verify the runtime marker and
+git status; if either is missing, report FAIL and the exact stage.
+```
 
 ## What Dora Is
 

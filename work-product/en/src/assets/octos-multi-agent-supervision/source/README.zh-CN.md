@@ -21,7 +21,7 @@
 - Ollama 0.32.1
 - `qwen3-vl:8b-instruct` 与 `qwen2.5-coder:7b`
 
-## 准备宿主机
+## 复现
 
 ```bash
 npm install -g @octos-org/octos@2.0.2
@@ -29,36 +29,12 @@ octos --version
 
 ollama pull qwen3-vl:8b-instruct
 ollama pull qwen2.5-coder:7b
-
-docker build -t octos-process-supervision:humble .
-chmod +x run-container.sh launch-webots.sh
+bash tutorial.sh run
 ```
 
-## 运行应用
-
-终端 1：
-
-```bash
-./run-container.sh
-./launch-webots.sh
-```
-
-终端 2：
-
-```bash
-docker exec -it octos-process-supervision bash
-cd /workspace/dora
-dora run process_dataflow.yml
-```
-
-宿主机终端 3：
-
-```bash
-/usr/bin/python3 tools/run_octos_multi_agent.py
-```
-
-任务没有自然结束条件。观察到足够的冷却与泄压循环后按 `Ctrl+C`；退出路径会先
-请求关闭两个控制开关。
+运行前阅读 `VERSIONS.md`、`TUTORIAL_CONTRACT.md` 和 `ASSET_GUIDE.md`。镜像不存在时，
+入口会自行构建，并管理 Webots、Dora、三个 Octos 角色、录屏、验收与清理。
+组件脚本只用于阅读实现，不是其他复现入口。
 
 ## 测试
 

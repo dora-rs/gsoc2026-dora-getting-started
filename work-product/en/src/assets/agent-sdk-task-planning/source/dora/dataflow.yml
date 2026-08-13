@@ -65,6 +65,7 @@ nodes:
       DORA_WORKER_SCRIPT: /workspace/dora/arm_node.py
       DORA_WORKER_CWD: /workspace/dora
       DORA_WORKER_PYTHON: /usr/bin/python3
+      AGENT_TASK_ARM_TIMEOUT_S: "240"
       DORA_WORKER_PYTHONPATH: /workspace:/workspace/dora:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages
 
   - id: vision

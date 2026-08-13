@@ -12,6 +12,10 @@
 | pyarrow | 24.0.0 |
 | PyYAML | 6.0.3 |
 
+## 下载
+
+- [已验证的 Dora Hello World 工程](../assets/dora-hello-world/dora-hello-world-reference.zip)
+
 ## 目标
 
 读完本章后，新用户应该能够说明 Dora 是什么，安装一个可复现的本地环境，并运行一个由两个节点组成的 Hello World dataflow。
@@ -22,6 +26,38 @@
 - `listener.py` 接收消息并打印。
 - `dataflow.yml` 把两个节点连起来。
 - `run.ps1` 创建隔离环境、安装 Dora、运行 dataflow，并检查预期输出。
+
+## 选择实现路线
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">创造路线</span>
+  <strong>从零创建最小 Dora 应用</strong>
+  <p>适合希望让助手创建并解释每个文件的读者。</p>
+</div>
+
+```text
+不要使用现有示例，从零创建一个最小的 Dora 1.0.0-rc.4 Hello World 工程。
+使用 CPython 3.11 和 dora-rs==1.0.0rc4。创建 talker.py、listener.py、
+dataflow.yml、固定版本的 requirements，以及适合当前操作系统的唯一运行脚本。
+talker 必须在收到 timer input 后发布 Apache Arrow 字符串，listener 必须打印它。
+环境只能创建在工程目录中；校验官方 CLI 压缩包的 checksum，不修改全局 Dora。
+
+写文件前先给出 dataflow 和文件计划。实现后运行四秒，报告实际观察到的 listener
+输出、准确版本、生成目录和源码 diff。运行日志中没有 listener 输出时不能声称成功。
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">复现路线</span>
+  <strong>按原样运行已验证工程</strong>
+  <p>适合最快、最可靠地完成第一次 Dora 运行。</p>
+</div>
+
+```text
+解压提供的 Dora Hello World 工程。操作前读取 VERSIONS.md、
+TUTORIAL_CONTRACT.md、ASSET_GUIDE.md 和 READER_PROMPT.md。源码和固定版本不可修改。
+先报告唯一入口、生成目录和准确验收标记，再只运行该入口。不要单独安装或启动组件。
+检查运行时标记和 git status；任一条件缺失都要报告 FAIL 和准确阶段。
+```
 
 ## Dora 是什么
 

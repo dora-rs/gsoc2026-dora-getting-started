@@ -48,6 +48,44 @@ Dora connects the complete task:
 The simulation motion is deliberately deterministic. The experiment evaluates
 visual judgment and Dora orchestration, not grasp-policy uncertainty.
 
+## Choose a Build Route
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">Create route</span>
+  <strong>Create the vision-gated manipulation system</strong>
+  <p>Use this to build the scene, trajectory, contracts, and Dora orchestration as one project.</p>
+</div>
+
+```text
+Create a reproducible Habitat-Sim manipulation project with a Franka Panda,
+an RGB wrist camera, and three separated red, yellow, and blue cubes visible
+from the home pose. Implement a deterministic trajectory that picks the red
+cube, places it on the blue cube, and returns home. Keep Habitat-Sim Python 3.9
+isolated from Dora 1.0.0-rc.4 on Python 3.11.
+
+Connect simulation, a local qwen3-vl:8b-instruct vision node, and a controller
+through Dora. Require strict JSON with red_visible, blue_visible, red_on_blue,
+and confidence. Gate motion on the before result and success on the after
+result. Add schema tests, confidence checks, one run entry, four clear images,
+and overview/wrist/side-by-side videos. Never replace visual evidence with
+hidden simulator state.
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">Reproduce route</span>
+  <strong>Run the validated vision-gated task</strong>
+  <p>Use this to focus on perception contracts and Dora control flow.</p>
+</div>
+
+```text
+Use the supplied multimodal pick-and-place project exactly as packaged. Read
+VERSIONS.md, TUTORIAL_CONTRACT.md, ASSET_GUIDE.md, and READER_PROMPT.md. Confirm
+that the pinned Ollama model is available, report the single entry and runtime
+acceptance markers, then execute only that entry. Inspect the focused test
+result, before/after JSON, TASK_SUCCESS, required images and videos, and clean
+git status. Do not change the trajectory, threshold, model, schema, or assets.
+```
+
 ## Before You Begin
 
 The commands in this chapter target Ubuntu/Linux and assume that the downloaded

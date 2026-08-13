@@ -2,7 +2,24 @@
 
 This example verifies the dora-rs installation and Hello World dataflow.
 
-Run from this directory:
+## Linux tutorial entry
+
+Read TUTORIAL_CONTRACT.md, VERSIONS.md, and ASSET_GUIDE.md first. The only
+supported Linux entry is:
+
+```bash
+./tutorial.sh preflight
+./tutorial.sh run --seconds 4
+```
+
+The run command creates a project-local CPython 3.11 environment, installs
+the pinned requirements, downloads the checksum-verified Dora 1.0.0-rc.4
+CLI, runs the bounded dataflow, and verifies listener output.
+
+Use `./tutorial.sh verify` to repeat acceptance without reinstalling, and
+`./tutorial.sh clean` to remove only generated files from this project.
+
+Run from Windows PowerShell in this directory:
 
 ```powershell
 ./run.ps1
@@ -11,6 +28,10 @@ Run from this directory:
 The script creates `.venv`, installs `requirements.txt`, downloads the pinned
 Dora CLI after verifying its checksum, runs the dataflow for four seconds, and
 checks for `listener received: Hello from dora-rs`.
+
+For AI-assisted reproduction, begin with `VERSIONS.md`,
+`TUTORIAL_CONTRACT.md`, `ASSET_GUIDE.md`, and `READER_PROMPT.md`. The project
+has one supported Windows entry: `./run.ps1 -Seconds 4`.
 
 Generated files:
 

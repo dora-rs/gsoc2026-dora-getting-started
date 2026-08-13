@@ -43,6 +43,41 @@ Dora 把完整任务连接起来：
 仿真动作被特意设计为确定性过程。本实验验证的是视觉判断和 Dora 编排，而不是抓取
 策略本身的不确定性。
 
+## 选择实现路线
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">创造路线</span>
+  <strong>创建视觉门控的操作系统</strong>
+  <p>适合把场景、轨迹、contract 和 Dora 编排作为一个完整工程搭建。</p>
+</div>
+
+```text
+创建可复现的 Habitat-Sim 操作工程，包含 Franka Panda、RGB 腕部摄像机，以及互相
+分离的红、黄、蓝三个方块；机械臂 home 状态必须能看到三个方块。实现确定性轨迹，
+夹取红色方块、放到蓝色方块上，并返回 home。Habitat-Sim 使用隔离 Python 3.9，
+Dora 1.0.0-rc.4 使用 Python 3.11。
+
+通过 Dora 连接仿真、本地 qwen3-vl:8b-instruct vision node 和 controller。视觉结果
+必须是严格 JSON，包含 red_visible、blue_visible、red_on_blue 和 confidence。
+before 结果决定是否执行动作，after 结果决定是否成功。增加 schema 与置信度测试、
+唯一入口、四张清晰图片，以及 overview/wrist/side-by-side 视频。不得用隐藏的仿真
+状态代替视觉证据。
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">复现路线</span>
+  <strong>运行已验证的视觉门控任务</strong>
+  <p>适合重点理解感知 contract 与 Dora 控制流程。</p>
+</div>
+
+```text
+完全按原样使用提供的多模态抓取与放置工程。读取 VERSIONS.md、
+TUTORIAL_CONTRACT.md、ASSET_GUIDE.md 和 READER_PROMPT.md。确认固定的 Ollama
+模型可用，报告唯一入口和运行时验收标记，再只执行该入口。检查测试结果、before/after
+JSON、TASK_SUCCESS、所需图片和视频以及干净的 git status。不得修改轨迹、阈值、
+模型、schema 或资产。
+```
+
 ## 开始之前
 
 本章命令面向 Ubuntu/Linux，并假设终端位于下载后解压的参考工程目录。继续使用

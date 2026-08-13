@@ -1,5 +1,6 @@
 import re
 import unittest
+import zipfile
 from pathlib import Path
 
 
@@ -25,6 +26,76 @@ def visible_markdown(text: str) -> str:
 
 
 class BookReleaseTests(unittest.TestCase):
+    def test_every_chapter_has_both_prompt_routes(self):
+        failures = []
+        for root in BOOK_ROOTS:
+            for path in sorted((root / "weeks").glob("*.md")):
+                text = path.read_text(encoding="utf-8")
+                counts = (
+                    text.count('class="prompt-route prompt-route--create"'),
+                    text.count('class="prompt-route prompt-route--reproduce"'),
+                )
+                if counts != (1, 1):
+                    failures.append(
+                        f"{path.relative_to(ROOT).as_posix()}: create={counts[0]}, reproduce={counts[1]}"
+                    )
+        self.assertEqual(failures, [])
+
+    def test_download_archives_include_asset_contracts(self):
+        required = {
+            "ASSET_GUIDE.md",
+            "READER_PROMPT.md",
+            "TUTORIAL_CONTRACT.md",
+            "VERSIONS.md",
+        }
+        archive_names = {
+            "dora-hello-world-reference.zip",
+            "rerun-scene-reference.zip",
+            "habitat-camera-sensors-reference.zip",
+            "multimodal-pick-and-place-reference.zip",
+            "lidar-slam-navigation-reference.zip",
+            "llm-action-planning-reference.zip",
+            "agent-sdk-task-planning-reference.zip",
+            "octos-multi-agent-supervision-reference.zip",
+        }
+        failures = []
+        for root in BOOK_ROOTS:
+            archives = {path.name: path for path in (root / "assets").rglob("*.zip")}
+            self.assertTrue(archive_names.issubset(archives), root)
+            for name in sorted(archive_names):
+                with zipfile.ZipFile(archives[name]) as archive:
+                    members = {member.removeprefix("./") for member in archive.namelist()}
+                missing = sorted(required - members)
+                if missing:
+                    failures.append(f"{root.parent.name}/{name}: {', '.join(missing)}")
+        self.assertEqual(failures, [])
+
+    def test_complex_asset_entries_build_missing_images(self):
+        packages = {
+            "lidar-slam-navigation": "lidar-slam-navigation-reference.zip",
+            "llm-action-planning": "llm-action-planning-reference.zip",
+            "agent-sdk-task-planning": "agent-sdk-task-planning-reference.zip",
+            "octos-multi-agent-supervision": "octos-multi-agent-supervision-reference.zip",
+        }
+        for root in BOOK_ROOTS:
+            for package in packages:
+                entry = root / "assets" / package / "source" / "tutorial.sh"
+                with self.subTest(root=root, package=package):
+                    text = entry.read_text(encoding="utf-8")
+                    self.assertIn('docker build --tag "$IMAGE" "$ROOT"', text)
+
+                    archive_path = root / "assets" / package / packages[package]
+                    with zipfile.ZipFile(archive_path) as archive:
+                        member = next(
+                            name
+                            for name in archive.namelist()
+                            if name.removeprefix("./") == "tutorial.sh"
+                        )
+                        archived_entry = archive.read(member).decode("utf-8")
+                    self.assertIn(
+                        'docker build --tag "$IMAGE" "$ROOT"', archived_entry
+                    )
+
     def test_no_obsolete_dora_packages_or_versions(self):
         obsolete = re.compile(r"\b0\.5\.0\b|dora-rs-cli")
         failures = []

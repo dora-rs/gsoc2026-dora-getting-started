@@ -66,6 +66,45 @@ Named routes and a preset arm trajectory keep the physical actions simple and
 repeatable. The LLM decides the semantic sequence and branch; it does not
 control the robot at motor level.
 
+## Choose a Build Route
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">Create route</span>
+  <strong>Create the scene, skill API, and structured planner</strong>
+  <p>Use this to design the boundary between semantic planning and deterministic robot control.</p>
+</div>
+
+```text
+Create a Webots R2025a scene with an official KUKA youBot, a stable forward
+camera, a fixed overview camera, simple obstacles, and a clearly visible switch
+that starts ON. Define named locations and a validated arm trajectory that can
+press the switch reliably. Expose only semantic skills: navigate, observe,
+move_arm_to_named_pose, press_switch, return_home, and stop.
+
+Use qwen3-vl:8b-instruct through Ollama to turn "Turn off the main switch, then
+return home" into one strict JSON action sequence with conditional branches.
+Validate the complete plan before Dora executes it. Verify ON before action,
+OFF afterward, and home at completion. Provide one entry, tests, structured
+audit files, two evidence images, and an application-window recording. The
+model must never output coordinates, wheel speeds, or joint angles.
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">Reproduce route</span>
+  <strong>Run the verified planning project</strong>
+  <p>Use this to study the JSON plan and skill boundary without recreating Webots geometry.</p>
+</div>
+
+```text
+Use the supplied action-planning project without changing versions, the world,
+named skills, model, or trajectories. Read VERSIONS.md, TUTORIAL_CONTRACT.md,
+ASSET_GUIDE.md, and READER_PROMPT.md. Run only bash tutorial.sh run. Inspect the 26
+test result, generated plan and audit, ON observation, OFF verification,
+successful return_home, final SUCCEEDED/PASS markers, images, and clean git
+status. If any external marker is absent, report FAIL rather than inferring
+success from the source or exit code.
+```
+
 ## Inspect the Reference Project
 
 Use the provided scene instead of asking an assistant to invent geometry or

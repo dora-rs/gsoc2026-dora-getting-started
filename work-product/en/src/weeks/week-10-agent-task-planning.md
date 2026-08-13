@@ -53,6 +53,45 @@ each tool returns:
 
 <img src="../assets/agent-sdk-task-planning/media/scene-start.jpg" alt="Webots switch scene with the mobile manipulator at its home position" width="1920" height="540">
 
+## Choose a Build Route
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">Create route</span>
+  <strong>Build an Agent that chooses one robot tool at a time</strong>
+  <p>Use this to replace one-shot planning with an observe-act-observe loop.</p>
+</div>
+
+```text
+Create a Webots R2025a and Dora 1.0.0-rc.4 project for the task: inspect the
+indicator; if lit, turn off its switch, verify it is off, and return home. Use
+the official youBot, a readable indicator, named locations, stable camera
+views, and validated arm poses. Put navigation, arm, vision, stop, and state in
+separate Dora nodes behind a FastAPI/Pydantic Robot API.
+
+Integrate OpenAI Agents SDK 0.19.0 with an Ollama-compatible
+qwen3-vl:8b-instruct model. Expose only atomic named tools and fresh structured
+results; never expose coordinates, wheel speeds, or joints. Add idempotency,
+timeouts, stale-state rejection, one run entry, contract tests, before/after
+images, tool-call logs, final home-state evidence, and an application recording.
+The Agent must choose the next tool from the previous result.
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">Reproduce route</span>
+  <strong>Run the verified Agents SDK project</strong>
+  <p>Use this to inspect a working agent loop and its safety boundary.</p>
+</div>
+
+```text
+Extract the supplied Agents SDK project and read VERSIONS.md,
+TUTORIAL_CONTRACT.md, ASSET_GUIDE.md, and READER_PROMPT.md. Preserve all source,
+locks, models, poses, and contracts. Run only bash tutorial.sh run and allow at
+most one unchanged retry for a clearly transient simulation timeout. Verify 44
+tests, lit=true then lit=false, the actual tool-call sequence, [DONE], two
+evidence images, final location and arm pose home, PASS, and clean git status.
+Never edit the project to make a failed run pass.
+```
+
 ## An Agent Is More Than Chat
 
 A chat model receives text and returns text. Even when its answer contains

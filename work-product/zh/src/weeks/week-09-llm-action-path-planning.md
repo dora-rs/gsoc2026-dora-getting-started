@@ -61,6 +61,40 @@ skill manifest 提供 `navigate_to`、`observe_switch` 和
 具名路线和预设机械臂轨迹让物理动作简单且可复现。LLM 决定语义层的动作
 顺序与条件分支，但不会在电机层控制机器人。
 
+## 选择实现路线
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">创造路线</span>
+  <strong>创建场景、Skill API 与结构化规划器</strong>
+  <p>适合设计语义规划和确定性机器人控制之间的边界。</p>
+</div>
+
+```text
+创建 Webots R2025a 场景，使用官方 KUKA youBot、稳定的前向摄像机、固定 overview
+camera、简单障碍和清晰可见且初始为 ON 的开关。定义 named locations 和能可靠按下
+开关的机械臂轨迹。只暴露语义 skill：navigate、observe、
+move_arm_to_named_pose、press_switch、return_home 和 stop。
+
+通过 Ollama 使用 qwen3-vl:8b-instruct，把“关闭主开关，然后返回 home”转换成包含
+条件分支的严格 JSON 动作序列。完整 plan 必须先通过 validator，再由 Dora 执行。
+验证动作前 ON、动作后 OFF、完成后 home。提供唯一入口、测试、结构化 audit、两张
+证据图和仅应用窗口录屏。模型不得输出坐标、轮速或关节角度。
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">复现路线</span>
+  <strong>运行已验证的规划工程</strong>
+  <p>适合在不重建 Webots 几何的情况下学习 JSON plan 与 Skill 边界。</p>
+</div>
+
+```text
+使用提供的动作规划工程，不修改版本、world、named skills、模型或轨迹。读取
+VERSIONS.md、TUTORIAL_CONTRACT.md、ASSET_GUIDE.md 和 READER_PROMPT.md。
+只运行 bash tutorial.sh run。检查 26 项测试、生成的 plan 和 audit、ON observation、
+OFF verification、成功 return_home、最终 SUCCEEDED/PASS、图片和干净的 git status。
+任何外部标记缺失都要报告 FAIL，不能根据源码或退出码推断成功。
+```
+
 ## 检查参考工程
 
 请使用提供的场景，不要让助手自行猜测场景几何或机器人尺寸。将压缩包解压到新目录

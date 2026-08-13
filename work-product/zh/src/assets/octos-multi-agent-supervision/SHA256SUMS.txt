@@ -1,2 +1,1 @@
-079372c3f6a712018de14957df31e51ab5db825d6cfd3ee9693051f81b908d16  octos-multi-agent-supervision-reference.zip
-3675fc6bc5e2a95454a8c35df651f601c8686417e3edfec679d97fcf90e6261f  media/octos-process-supervision.mp4
+86b1f0e25e437294ebf19a237eac984f17103c3fd9bb02e4038064f2e6c01826  octos-multi-agent-supervision-reference.zip

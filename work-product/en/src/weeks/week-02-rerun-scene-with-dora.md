@@ -37,6 +37,42 @@ assets, and Viewer workflow before adding Dora-controlled motion.
 
 ![Rerun Viewer static scene screenshot](../assets/week2-rerun-scene/rerun_viewer_screenshot.png)
 
+## Choose a Build Route
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">Create route</span>
+  <strong>Create the models and static scene</strong>
+  <p>Use this to explore Rerun's scene hierarchy and asset pipeline.</p>
+</div>
+
+```text
+Create a pinned Rerun 0.33.0 project for Python 3.11. Build two reusable glTF
+assets: a small humanoid robot and a wheeled car with visible materials, not
+white placeholder meshes. Create a static right-handed Z-up scene containing a
+floor, one cube obstacle, one cylinder goal, and both models arranged with no
+overlap. Keep model generation deterministic and separate from scene logging.
+
+Save a non-empty .rrd file, open the Rerun Viewer, and capture only the Viewer
+window as a 960x540 screenshot and short H.264 recording. Add pinned
+dependencies, one run entry, focused asset/scene tests, and explicit acceptance
+markers. Show the hierarchy and coordinates before implementation.
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">Reproduce route</span>
+  <strong>Use the verified Rerun assets</strong>
+  <p>Use this when model generation and scene composition are not the learning goal.</p>
+</div>
+
+```text
+Extract the supplied Rerun reference project. Read VERSIONS.md,
+TUTORIAL_CONTRACT.md, ASSET_GUIDE.md, and READER_PROMPT.md. Preserve the glTF
+models, coordinates, dependencies, dataflow, and run script exactly. Report the
+single entry and acceptance markers, run only that entry, then inspect the RRD,
+screenshot, recording, runtime markers, and clean git status. Never regenerate
+or substitute the models. Report FAIL if any required artifact is missing.
+```
+
 ## What Rerun Is
 
 Rerun is a visualization and logging toolkit for robotics, computer vision, and
