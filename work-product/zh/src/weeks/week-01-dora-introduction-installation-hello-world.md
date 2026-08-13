@@ -216,10 +216,10 @@ listener received: Hello from dora-rs #3 from greeting
 
 ## 使用编程助手继续
 
-本章开头的两种路线提示词可以交给任意能力合适的编程助手。授予文件或终端权限前，
-先阅读[准备工作：LLM、Agent 与编程助手](preparation-llms-agents-coding-assistants.md)，
-完成模型选择、思考强度与权限设置，并验证连接；然后回到这里选择创造路线或已验证
-资产路线。
+本章开头的两种路线提示词可以交给任意能力合适的编程助手。如果需要更换模型、思考
+强度、权限或 Provider 连接，请回看
+[准备工作：LLM、Agent 与编程助手](preparation-llms-agents-coding-assistants.md)。
+
 ## 来源
 
 - Dora repository: <https://github.com/dora-rs/dora>
@@ -230,5 +230,4 @@ listener received: Hello from dora-rs #3 from greeting
 
 ## 下一步
 
-准备工作章节会先介绍 LLM、Agent、编程助手，以及推荐的 OctosCode 与 DeepSeek
-配置，然后教程再进入 3D 可视化。
+下一章会在当前 Dora 环境中加入 Rerun，并创建第一个静态 3D 场景。

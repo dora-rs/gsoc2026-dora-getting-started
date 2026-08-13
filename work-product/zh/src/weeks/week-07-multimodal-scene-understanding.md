@@ -102,7 +102,7 @@ FFmpeg 和 FFprobe 只用于准备和检查教程素材。生成文件统一保�
 [Habitat-Sim](https://aihabitat.org/docs/habitat-sim/) 提供 GPU 渲染、articulated
 object 关节控制和 RGB sensor，并且可以复用上一章的 Panda 场景和真实视觉模型。
 
-[Dora](https://dora-rs.ai/docs/) 把 controller、simulator 和 model 表达为输入输出
+[Dora](https://dora-rs.ai/) 把 controller、simulator 和 model 表达为输入输出
 明确的节点。视觉模型只负责提出观测，普通程序逻辑决定任务是否继续。
 
 [Ollama](https://ollama.com/) 为本地运行

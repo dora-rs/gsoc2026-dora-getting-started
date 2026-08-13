@@ -216,4 +216,5 @@ keys, usernames, hostnames, and absolute paths out of files and output.
 
 ## 下一步
 
-下一章会在 Hello World 已建立的 Dora 环境上加入 Rerun，并创建一个静态 3D 场景。
+下一章会介绍 Dora、安装固定版本的工具链，并使用本章准备好的助手工作流运行第一个
+Hello World dataflow。

@@ -1,8 +1,8 @@
 # Summary
 
 - [Introduction](introduction.md)
-- [dora-rs Introduction, Installation, and Hello World](weeks/week-01-dora-introduction-installation-hello-world.md)
 - [Preparation: LLMs, Agents, and Coding Assistants](weeks/preparation-llms-agents-coding-assistants.md)
+- [dora-rs Introduction, Installation, and Hello World](weeks/week-01-dora-introduction-installation-hello-world.md)
 - [Rerun Introduction and Static Scene](weeks/week-02-rerun-scene-with-dora.md)
 - [Dora-Controlled Motion in a Rerun Scene](weeks/week-03-ai-assistant-rerun-workflow.md)
 - [Camera Sensors in a Simulated Scene](weeks/week-04-camera-data-visual-feedback.md)

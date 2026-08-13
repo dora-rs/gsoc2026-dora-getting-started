@@ -237,5 +237,5 @@ same evidence before accepting completion.
 
 ## Next Step
 
-The next chapter adds Rerun and builds a static 3D scene on top of the Dora
-environment created in the Hello World chapter.
+The next chapter introduces Dora, installs the pinned toolchain, and runs the
+first Hello World dataflow with the assistant workflow prepared here.

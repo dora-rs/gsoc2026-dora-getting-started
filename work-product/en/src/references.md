@@ -8,7 +8,7 @@ These sources were checked while preparing this tutorial.
 | Dora v1.0.0-rc.4 release | <https://github.com/dora-rs/dora/releases/tag/v1.0.0-rc.4> |
 | Dora CLI guide | <https://dora-rs.ai/dora/operations/cli> |
 | Dora Python API | <https://dora-rs.ai/dora/languages/python> |
-| Dora crates.io package | <https://crates.io/crates/dora-cli/1.0.0-rc.4> |
+| Dora CLI crate documentation | <https://docs.rs/crate/dora-cli/1.0.0-rc.4> |
 | Dora PyPI package | <https://pypi.org/project/dora-rs/1.0.0rc4/> |
 | Adora archive and consolidation notice | <https://github.com/dora-rs/adora> |
 | Codex CLI | <https://learn.chatgpt.com/docs/codex/cli> |

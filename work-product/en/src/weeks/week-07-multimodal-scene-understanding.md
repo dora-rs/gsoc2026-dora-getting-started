@@ -114,7 +114,7 @@ inference node with a cloud API near the end of the chapter.
 articulated-object joint control, and RGB sensors. The Panda scene and real
 visual meshes can be reused from the previous camera chapter.
 
-[Dora](https://dora-rs.ai/docs/) expresses the controller, simulator, and model
+[Dora](https://dora-rs.ai/) expresses the controller, simulator, and model
 as nodes with explicit inputs and outputs. The vision model proposes an
 observation; ordinary program logic decides whether the task may continue.
 

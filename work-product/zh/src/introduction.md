@@ -65,8 +65,8 @@ dataflow 开始，然后逐步加入可视化、可复用仿真场景、传感�
 这份路线图把教程组织成一条连续的学习路径。每个主题都会建立在前面已经完成的可运行代码、验证方法和概念之上。
 
 <div class="roadmap-grid">
-  <a class="roadmap-item" href="weeks/week-01-dora-introduction-installation-hello-world.html"><span>基础</span><strong>Dora 与 Hello World</strong><em>Dora 介绍、安装指南和 Hello World 示例。</em></a>
   <a class="roadmap-item" href="weeks/preparation-llms-agents-coding-assistants.html"><span>准备</span><strong>LLM、Agent 与编程助手</strong><em>选择模型和助手，配置权限，并将 OctosCode 连接到 DeepSeek。</em></a>
+  <a class="roadmap-item" href="weeks/week-01-dora-introduction-installation-hello-world.html"><span>基础</span><strong>Dora 与 Hello World</strong><em>Dora 介绍、安装指南和 Hello World 示例。</em></a>
   <a class="roadmap-item" href="weeks/week-02-rerun-scene-with-dora.html"><span>可视化</span><strong>Rerun 静态场景</strong><em>Rerun 可视化介绍、安装、初始化，以及第一个静态 3D 场景。</em></a>
   <a class="roadmap-item" href="weeks/week-03-ai-assistant-rerun-workflow.html"><span>运动控制</span><strong>Dora 控制运动</strong><em>使用 Dora 和 AI 助手工作流，让 Rerun 场景动起来。</em></a>
   <a class="roadmap-item" href="weeks/week-04-camera-data-visual-feedback.html"><span>仿真</span><strong>相机传感器</strong><em>使用 Habitat-Sim 从仿真 wrist camera 生成 RGB 和 depth data。</em></a>

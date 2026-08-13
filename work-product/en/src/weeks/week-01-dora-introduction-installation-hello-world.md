@@ -236,10 +236,10 @@ not copied into public documentation.
 ## Continue with a Coding Assistant
 
 The route prompts near the beginning of this chapter work with any capable coding
-assistant. Before granting file or shell access, read
-[Preparation: LLMs, Agents, and Coding Assistants](preparation-llms-agents-coding-assistants.md)
-to choose a model, set reasoning effort and permissions, and test the connection.
-Then return here and use either the create route or the verified-asset route.
+assistant. If you need to change models, reasoning effort, permissions, or the
+provider connection, revisit
+[Preparation: LLMs, Agents, and Coding Assistants](preparation-llms-agents-coding-assistants.md).
+
 ## Sources
 
 - Dora repository: <https://github.com/dora-rs/dora>
@@ -250,6 +250,5 @@ Then return here and use either the create route or the verified-asset route.
 
 ## Next Step
 
-The preparation chapter explains LLMs, Agents, coding assistants, and the
-recommended OctosCode and DeepSeek setup before the tutorial moves into 3D
-visualization.
+The next chapter adds Rerun to the working Dora environment and creates the
+first static 3D scene.
