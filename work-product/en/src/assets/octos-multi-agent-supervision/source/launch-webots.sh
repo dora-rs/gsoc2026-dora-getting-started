@@ -8,4 +8,4 @@ exec webots \
   --stdout \
   --stderr \
   --mode=realtime \
-  /workspace/worlds/week11_process_supervision.wbt
+  /workspace/worlds/process_supervision.wbt

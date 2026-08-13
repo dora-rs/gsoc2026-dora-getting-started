@@ -1,6 +1,6 @@
 import pytest
 
-from week11_runtime.contracts import (
+from process_runtime.contracts import (
     PressureReading,
     TemperatureObservation,
     build_process_snapshot,

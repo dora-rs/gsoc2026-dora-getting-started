@@ -7,7 +7,7 @@ from pathlib import Path
 from dora import Node
 
 
-OUTPUT = Path(os.getenv("WEEK9_OUTPUT_DIR", "/workspace/outputs")) / "mission-events.jsonl"
+OUTPUT = Path(os.getenv("ACTION_PLANNING_OUTPUT_DIR", "/workspace/outputs")) / "mission-events.jsonl"
 
 
 def main():

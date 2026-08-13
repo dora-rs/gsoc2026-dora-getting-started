@@ -1,6 +1,6 @@
 import pytest
 
-from week11_runtime.control_plan import (
+from process_runtime.control_plan import (
     execute_control_plan,
     execute_control_plan_once,
 )

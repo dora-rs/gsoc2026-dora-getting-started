@@ -1,0 +1,117 @@
+#!/usr/bin/env python3
+import json
+import os
+import sys
+import time
+import urllib.error
+import urllib.request
+from pathlib import Path
+
+
+SOURCE_ROOT = Path.cwd()
+if not (SOURCE_ROOT / "process_runtime").is_dir():
+    nested_source = SOURCE_ROOT / "src"
+    if (nested_source / "process_runtime").is_dir():
+        SOURCE_ROOT = nested_source
+    else:
+        SOURCE_ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(SOURCE_ROOT))
+
+from process_runtime.switch_actions import (  # noqa: E402
+    execute_switch_actions_once,
+)
+
+
+API = os.getenv("PROCESS_DORA_API", "http://127.0.0.1:8111").rstrip("/")
+RECEIPT_DIR = SOURCE_ROOT / "outputs" / "switch-action-receipts"
+
+
+def call(method: str, path: str, payload: dict | None = None) -> dict:
+    body = None
+    headers = {}
+    if payload is not None:
+        body = json.dumps(payload).encode("utf-8")
+        headers["Content-Type"] = "application/json"
+    request = urllib.request.Request(
+        API + path, data=body, headers=headers, method=method
+    )
+    with urllib.request.urlopen(request, timeout=125) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+
+def execute(tool_name: str, arguments: dict) -> dict:
+    if tool_name == "get_status":
+        return call("GET", "/v1/status")
+    if tool_name == "navigate_robot":
+        return call("POST", "/v1/navigate", arguments)
+    if tool_name == "read_pressure":
+        return call("POST", "/v1/observe", {"target": "pressure"})
+    if tool_name == "read_temperature":
+        return call("POST", "/v1/observe", {"target": "temperature"})
+    if tool_name == "apply_switch_actions":
+        action_id = arguments.get("action_id")
+        actions = arguments.get("actions")
+        if not isinstance(actions, list):
+            raise ValueError("actions must be an array")
+        status = call("GET", "/v1/status")
+        process = status.get("process", {})
+        current_state = {
+            "cooling": bool(process.get("cooling_on")),
+            "relief": bool(process.get("relief_open")),
+        }
+        return execute_switch_actions_once(
+            action_id,
+            actions,
+            current_state=current_state,
+            receipt_dir=RECEIPT_DIR,
+            set_switch=lambda switch, enabled: call(
+                "POST",
+                "/v1/switch",
+                {"switch": switch, "enabled": enabled},
+            ),
+        )
+    if tool_name == "report_activity":
+        return call("POST", "/v1/activity", arguments)
+    if tool_name == "wait_seconds":
+        seconds = arguments.get("seconds")
+        if (
+            not isinstance(seconds, int)
+            or isinstance(seconds, bool)
+            or not 1 <= seconds <= 120
+        ):
+            raise ValueError("seconds must be an integer from 1 to 120")
+        time.sleep(seconds)
+        return {"waited_seconds": seconds}
+    raise ValueError(f"unknown tool: {tool_name}")
+
+
+def main() -> None:
+    if len(sys.argv) != 2:
+        print(
+            json.dumps(
+                {"output": "expected one tool name", "success": False}
+            )
+        )
+        raise SystemExit(2)
+    try:
+        arguments = json.load(sys.stdin)
+        result = execute(sys.argv[1], arguments)
+        print(
+            json.dumps(
+                {
+                    "output": json.dumps(result, separators=(",", ":")),
+                    "success": True,
+                }
+            )
+        )
+    except (ValueError, OSError, urllib.error.URLError) as error:
+        print(
+            json.dumps(
+                {"output": str(error), "success": False}
+            )
+        )
+        raise SystemExit(1)
+
+
+if __name__ == "__main__":
+    main()

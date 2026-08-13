@@ -9,7 +9,8 @@ by the tutorial.
 - Ubuntu 22.04 x86_64 with an X11 desktop
 - Docker with NVIDIA Container Toolkit when GPU rendering is used
 - NVIDIA driver compatible with the Webots R2025a container
-- Dora CLI 0.5.0 at `${HOME}/.cargo/bin/dora`
+- Dora CLI 1.0.0-rc.4 and `dora-rs==1.0.0rc4`, installed in the container
+- Python 3.11.14 for Dora sidecars; system Python 3.10 for ROS 2 and application workers
 - Ollama 0.12.0 or newer on the host
 - `qwen3-vl:8b-instruct` pulled in Ollama
 
@@ -17,7 +18,7 @@ by the tutorial.
 
 ```bash
 ollama pull qwen3-vl:8b-instruct
-docker build -t week9-webots-llm:humble .
+docker build -t dora-llm-action:humble .
 chmod +x run-container.sh launch-webots.sh
 ./run-container.sh
 ```
@@ -32,14 +33,14 @@ In a second container shell, run tests and the Dora dataflow:
 
 ```bash
 cd /workspace
-pytest -q
+/usr/bin/python3 -m pytest -q
 cd dora
 dora run dataflow.yml
 ```
 
 The planner calls Ollama through `http://127.0.0.1:11434` by default because
 the container uses host networking. Override `OLLAMA_URL`, `OLLAMA_MODEL`, or
-`WEEK9_OUTPUT_DIR` when needed.
+`ACTION_PLANNING_OUTPUT_DIR` when needed.
 
 The world pins the official Webots R2025a
 [youBot model](https://github.com/cyberbotics/webots/tree/R2025a/projects/robots/kuka/youbot).

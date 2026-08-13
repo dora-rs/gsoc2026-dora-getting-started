@@ -1,6 +1,6 @@
 import pytest
 
-from week10_runtime.arm_transitions import (
+from agent_runtime.arm_transitions import (
     TransitionRejected,
     switch_state_after_press,
     validate_arm_transition,

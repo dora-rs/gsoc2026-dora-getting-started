@@ -16,7 +16,7 @@ def finite_min(values, default):
 
 class LidarExplorer(Node):
     def __init__(self, duration):
-        super().__init__("week8_lidar_explorer")
+        super().__init__("navigation_lidar_explorer")
         self.duration = duration
         self.started_at = time.monotonic()
         self.scan = None

@@ -20,13 +20,13 @@ from common import read_json_event, send_json
 
 class NavigationRuntime:
     def __init__(self):
-        self.node = rclpy.create_node("week10_navigation_runtime")
+        self.node = rclpy.create_node("agent_navigation_runtime")
         self.status = None
         self.command = self.node.create_publisher(
-            String, "/week10/nav_command", 10
+            String, "/agent_task/nav_command", 10
         )
         self.node.create_subscription(
-            String, "/week10/nav_status", self._on_status, 10
+            String, "/agent_task/nav_status", self._on_status, 10
         )
 
     def _on_status(self, message):
@@ -51,7 +51,7 @@ class NavigationRuntime:
             )
         )
         deadline = time.monotonic() + float(
-            os.getenv("WEEK10_NAVIGATION_TIMEOUT_S", "180")
+            os.getenv("AGENT_TASK_NAVIGATION_TIMEOUT_S", "180")
         )
         while time.monotonic() < deadline:
             rclpy.spin_once(self.node, timeout_sec=0.1)
@@ -99,7 +99,7 @@ def main():
                     dora,
                     "result",
                     result,
-                    "week10.action-result.v1",
+                    "agent_task.action-result.v1",
                 )
     finally:
         runtime.node.destroy_node()

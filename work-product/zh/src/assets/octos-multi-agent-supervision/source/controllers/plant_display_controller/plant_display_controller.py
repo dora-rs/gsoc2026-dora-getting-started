@@ -14,19 +14,19 @@ TIME_STEP = 32
 WORKSPACE = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(WORKSPACE))
 
-from week11_runtime.plant_model import (
+from process_runtime.plant_model import (
     PlantModel,
     plant_config_from_environment,
 )
-from week11_runtime.control_cycles import (
+from process_runtime.control_cycles import (
     ControlCycleTracker,
     ControlEngagementTracker,
 )
-from week11_runtime.scene_display import gauge_fill_width
+from process_runtime.scene_display import gauge_fill_width
 class PlantDisplayController:
     def __init__(self) -> None:
         self.robot = Supervisor()
-        self.node = rclpy.create_node("week11_plant_display")
+        self.node = rclpy.create_node("process_plant_display")
         self.model = PlantModel(plant_config_from_environment(os.environ))
         self.model.start()
         self.cycle_tracker = ControlCycleTracker()
@@ -43,32 +43,32 @@ class PlantDisplayController:
         self.operator_location = "home"
         self.agent_action = "Waiting for Octos"
         self.state_pub = self.node.create_publisher(
-            String, "/week11/plant/state", 10
+            String, "/process/plant/state", 10
         )
         self.pressure_pub = self.node.create_publisher(
-            String, "/week11/plant/pressure", 10
+            String, "/process/plant/pressure", 10
         )
         self.node.create_subscription(
             String,
-            "/week11/operator/switch_event",
+            "/process/operator/switch_event",
             self.on_switch_event,
             10,
         )
         self.node.create_subscription(
             String,
-            "/week11/observer/state",
+            "/process/observer/state",
             self.on_observer_state,
             10,
         )
         self.node.create_subscription(
             String,
-            "/week11/operator/state",
+            "/process/operator/state",
             self.on_operator_state,
             10,
         )
         self.node.create_subscription(
             String,
-            "/week11/agent_activity",
+            "/process/agent_activity",
             self.on_agent_activity,
             10,
         )

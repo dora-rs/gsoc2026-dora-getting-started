@@ -1,10 +1,10 @@
 import numpy as np
 
-from tools.record_week11_video import recorder_should_stop
-from week11_runtime.control_cycles import StableCompletionGate
-from week11_runtime.recording_layout import (
+from process_runtime.control_cycles import StableCompletionGate
+from process_runtime.recording_layout import (
     compose_recording_frame,
     engagement_progress_labels,
+    recorder_should_stop,
     robot_status_label,
     valve_indicator_color,
 )

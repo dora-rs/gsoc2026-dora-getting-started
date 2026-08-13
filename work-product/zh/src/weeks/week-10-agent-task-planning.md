@@ -9,12 +9,13 @@
 | NVIDIA 驱动 | 580.159.03 |
 | Webots | R2025a |
 | ROS 2 | Humble |
-| Dora CLI 和 Python API | 0.5.0 |
+| Dora CLI 和 Python API | 1.0.0-rc.4 |
 | OpenAI Agents SDK | `openai-agents==0.19.0` |
 | Robot API | FastAPI 0.140.13，Pydantic 2.13.4 |
 | 本地模型引擎 | Ollama 0.32.1 |
 | 本地模型 | `qwen3-vl:8b-instruct` |
-| Python | 3.10.12 |
+| Dora 运行时 Python | 3.11.14 |
+| ROS 2 / 应用 worker Python | 3.10.12 |
 
 ## 下载
 
@@ -73,7 +74,7 @@ Agent 由**模型、指令、工具和运行循环**组成。OpenAI Agents SDK �
 | Agent 编排 | OpenAI Agents SDK | 提供 `Agent`、`Runner`、函数工具和回合限制 |
 | Agent 模型 | Ollama + Qwen3-VL 8B | 本地完成工具选择，也复用于 RGB 指示灯识别 |
 | 机器人接口 | FastAPI + Pydantic | 给 Agent 提供严格、可校验的原子动作 |
-| 数据流 | Dora 0.5.0 | 分离状态、导航、机械臂、视觉和停止节点 |
+| 数据流 | Dora 1.0.0-rc.4 | 分离状态、导航、机械臂、视觉和停止节点 |
 | 仿真 | Webots R2025a + ROS 2 Humble | 运行 KUKA youBot、相机、开关和已验证轨迹 |
 
 Agents SDK 默认可以连接 OpenAI 模型；本工程使用
@@ -170,10 +171,10 @@ gateway node 把它发送给导航、机械臂或视觉 node；node 的结构化
 先让编程助手理解提供的工程，不要重新生成场景或替换机器人：
 
 ```text
-检查这个提供的 Webots R2025a、ROS 2 Humble、Dora 0.5.0 和
+检查这个提供的 Webots R2025a、ROS 2 Humble、Dora 1.0.0-rc.4 和
 OpenAI Agents SDK 参考工程。
 
-说明 worlds、controllers、dora、robot_api、week10_runtime、config、
+说明 worlds、controllers、dora、robot_api、agent_runtime、config、
 agent_tools.py、agent_cli.py 和 tests 的职责。画出从 Agent 工具调用到
 Dora node，再到 Webots controller 和结构化结果返回的路径。
 
@@ -209,13 +210,17 @@ Docker、NVIDIA Container Toolkit、Dora、Ollama 和 X11 DISPLAY。
 
 ```bash
 ollama pull qwen3-vl:8b-instruct
-docker build -t week10-agent-sdk:humble .
+docker build -t dora-agent-sdk:humble .
 chmod +x run-container.sh launch-webots.sh
-python3 -m pytest -q
+/usr/bin/python3 -m pytest -q
 ```
 
 24 GB 显存的验证机器可以同时运行 Webots、Qwen3-VL 和录屏。显存较小的设备应
 先关闭录屏并观察 `nvidia-smi`；不要通过降低输出约束来换取更小的模型占用。
+
+容器中的 Dora 使用 Python 3.11 virtual environment；ROS 2、FastAPI、Agents SDK
+和应用 workers 使用系统 Python 3.10。通用 JSONL sidecar 把每个 worker 接入 Dora
+inputs 和 outputs，同时保持两套依赖隔离。
 
 ### 加载提供的场景
 
@@ -266,7 +271,17 @@ navigation、arm、vision、stop 分别处理一种能力。每个动作都携�
 {{#include ../assets/agent-sdk-task-planning/source/dora/dataflow.yml}}
 ```
 
-`gateway_node.py` 同时在 `127.0.0.1:8000` 启动 Robot API。它不会把 API
+通用 sidecar 是运行在 Python 3.11 中、面向 Dora 的进程：
+
+```python
+{{#include ../assets/agent-sdk-task-planning/source/dora/runtime_bridge/sidecar_node.py}}
+```
+
+```python
+{{#include ../assets/agent-sdk-task-planning/source/dora/runtime_bridge/sidecar_bridge.py}}
+```
+
+`gateway_node.py` worker 同时在 `127.0.0.1:8000` 启动 Robot API。它不会把 API
 暴露到外部网络。
 
 ### 定义严格的 Robot API
@@ -358,7 +373,7 @@ Agent 每次决策前读取新状态；先观察指示灯；只有 visible=true 
 保持 Webots 窗口运行，在第二个终端进入容器并启动 Dora：
 
 ```bash
-docker exec -it week10-agent-sdk bash
+docker exec -it dora-agent-sdk bash
 cd /workspace/dora
 dora run dataflow.yml
 ```
@@ -366,7 +381,7 @@ dora run dataflow.yml
 在第三个终端检查 API 已经收到新鲜状态：
 
 ```bash
-docker exec -it week10-agent-sdk bash
+docker exec -it dora-agent-sdk bash
 curl -s http://127.0.0.1:8000/v1/robot/state
 ```
 
@@ -374,9 +389,9 @@ curl -s http://127.0.0.1:8000/v1/robot/state
 然后运行任务：
 
 ```bash
-docker exec -it week10-agent-sdk bash
+docker exec -it dora-agent-sdk bash
 cd /workspace
-python3 agent_cli.py --task \
+/usr/bin/python3 agent_cli.py --task \
   "查看指示灯；如果亮着就关闭开关，确认灯灭后回到起点。"
 ```
 
@@ -406,7 +421,7 @@ python3 agent_cli.py --task \
 视觉 node 把 RGB 图像发送给本地 Qwen3-VL，并要求严格结构化输出：
 
 ```python
-{{#include ../assets/agent-sdk-task-planning/source/week10_runtime/indicator_vision.py:13:40}}
+{{#include ../assets/agent-sdk-task-planning/source/agent_runtime/indicator_vision.py:13:40}}
 ```
 
 模型必须返回 `visible`、`lit` 和 `confidence`。如果指示灯被遮挡，
@@ -442,7 +457,7 @@ python3 agent_cli.py --task \
 先运行不依赖 Webots 的测试：
 
 ```bash
-python3 -m pytest -q
+/usr/bin/python3 -m pytest -q
 ```
 
 参考工程包含 44 项测试，覆盖工具白名单、API contract、过期状态、重复请求、

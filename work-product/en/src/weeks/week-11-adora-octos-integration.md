@@ -9,7 +9,9 @@
 | NVIDIA driver | 580.159.03 |
 | Webots | R2025a |
 | ROS | ROS 2 Humble |
-| Dora CLI / Python | 0.5.0 |
+| Dora CLI / Python | 1.0.0-rc.4 |
+| Dora runtime Python | 3.11.14 |
+| ROS 2 / application worker Python | 3.10.12 |
 | Octos | 2.0.2 |
 | Ollama | 0.32.1 |
 | Observer / Operator model | `qwen3-vl:8b-instruct` |
@@ -227,11 +229,11 @@ Temperature must come from a fresh RGB image and a structured local-VLM result.
 Ask a coding assistant to understand the boundaries before changing the scene:
 
 ```text
-Inspect this provided Webots R2025a, ROS 2 Humble, Dora 0.5.0,
+Inspect this provided Webots R2025a, ROS 2 Humble, Dora 1.0.0-rc.4,
 Octos 2.0.2, and Ollama reference project.
 
-Explain the responsibilities of worlds, controllers, dora, week11_api,
-week11_runtime, octos-skills, tools, config, and tests. Trace Observer,
+Explain the responsibilities of worlds, controllers, dora, process_api,
+process_runtime, octos-skills, tools, config, and tests. Trace Observer,
 Operator, and Supervisor from an Octos Skill through a Dora node to Webots
 and back through a structured result.
 
@@ -241,8 +243,8 @@ Do not print user names, host names, private addresses, tokens, complete
 environment dumps, or local absolute paths.
 ```
 
-The assistant should identify `worlds/week11_process_supervision.wbt` as the
-scene entry, `dora/week11_dataflow.yml` as the runtime topology,
+The assistant should identify `worlds/process_supervision.wbt` as the
+scene entry, `dora/process_dataflow.yml` as the runtime topology,
 `octos-skills/` as the model-visible capability boundary, and
 `tools/run_octos_multi_agent.py` as a thin role and policy-lifecycle runner.
 
@@ -260,7 +262,7 @@ README.md, Dockerfile, and pyproject.toml as the version source.
 
 Keep installations that already satisfy the requirements. List each command
 and its impact before changing anything. Octos and Ollama run on the host;
-Webots, ROS 2, and Dora Python nodes run in the provided container.
+Webots, ROS 2 workers, and Python 3.11 Dora sidecars run in the provided container.
 Do not reveal tokens, complete environment variables, or private paths.
 ```
 
@@ -282,6 +284,11 @@ the visual phase before loading the Supervisor coding model, and reverses the
 switch after strategy generation. The two models therefore do not need to
 remain in VRAM together. Smaller models require fresh validation of visual
 JSON and policy replays.
+
+The container keeps Dora in a Python 3.11 virtual environment and runs ROS 2,
+the process API, and application workers with system Python 3.10. A generic
+JSONL sidecar connects every worker to Dora while preserving that dependency
+boundary.
 
 ### Load the Simulation Scene
 
@@ -318,7 +325,7 @@ Ask the assistant to verify that data flows through Dora instead of allowing
 the runner to read hidden simulation state:
 
 ```text
-Inspect dora/week11_dataflow.yml and its nodes.
+Inspect dora/process_dataflow.yml and its nodes.
 
 gateway owns only the local API, request correlation, and dispatch; state
 publishes sanitized state periodically; command handles only named navigation
@@ -334,10 +341,18 @@ paths that bypass Dora.
 The complete dataflow is:
 
 ```yaml
-{{#include ../assets/octos-multi-agent-supervision/source/dora/week11_dataflow.yml}}
+{{#include ../assets/octos-multi-agent-supervision/source/dora/process_dataflow.yml}}
 ```
 
-`gateway` exposes a local interface on `127.0.0.1:8111`. Dora's `state`,
+```python
+{{#include ../assets/octos-multi-agent-supervision/source/dora/runtime_bridge/sidecar_node.py}}
+```
+
+```python
+{{#include ../assets/octos-multi-agent-supervision/source/dora/runtime_bridge/sidecar_bridge.py}}
+```
+
+The `gateway` worker exposes a local interface on `127.0.0.1:8111`. Dora's `state`,
 `command`, `observation`, and `activity` nodes retain single responsibilities.
 
 ### Define the Octos Skill
@@ -345,7 +360,7 @@ The complete dataflow is:
 The Skill gives the Agents both robot capabilities and their safety semantics:
 
 ```text
-Inspect octos-skills/week11-process-supervision.
+Inspect octos-skills/process-supervision.
 
 Observer and Operator share this Skill. Confirm that SKILL.md assigns sensor
 ownership to Observer and switch ownership to Operator, and that the runner's
@@ -369,17 +384,17 @@ Profiles or tool-policy configurations and revalidate every role.
 The complete tool manifest is:
 
 ```json
-{{#include ../assets/octos-multi-agent-supervision/source/octos-skills/week11-process-supervision/manifest.json}}
+{{#include ../assets/octos-multi-agent-supervision/source/octos-skills/process-supervision/manifest.json}}
 ```
 
 The key adapter maps Octos tools to the local Dora API:
 
 ```python
-{{#include ../assets/octos-multi-agent-supervision/source/octos-skills/week11-process-supervision/main:42:87}}
+{{#include ../assets/octos-multi-agent-supervision/source/octos-skills/process-supervision/main:42:87}}
 ```
 
 At startup, the runner synchronizes these three Skill files into
-`.octos/skills/week11-process-supervision/` inside the project. This directory
+`.octos/skills/process-supervision/` inside the project. This directory
 is runtime output and is not included in the download.
 
 ### Configure Three Agents
@@ -455,7 +470,7 @@ exceptions, classes, and dynamic execution. The strategy runs in an isolated
 Python process and must pass bootstrap, upper-bound, and lower-bound replays:
 
 ```python
-{{#include ../assets/octos-multi-agent-supervision/source/week11_runtime/adaptive_policy.py:35:88}}
+{{#include ../assets/octos-multi-agent-supervision/source/process_runtime/adaptive_policy.py:35:88}}
 ```
 
 If a candidate is invalid, Supervisor receives a bounded number of structured
@@ -470,7 +485,7 @@ Keep Webots running. In a second terminal, enter the container and start Dora:
 ```bash
 docker exec -it octos-process-supervision bash
 cd /workspace/dora
-dora run week11_dataflow.yml
+dora run process_dataflow.yml
 ```
 
 In a third host terminal, inspect the local API:
@@ -485,13 +500,13 @@ process phase, but no current temperature or pressure truth. Start the three
 Octos Agents:
 
 ```bash
-python3 tools/run_octos_multi_agent.py
+/usr/bin/python3 tools/run_octos_multi_agent.py
 ```
 
 The binaries and models can also be explicit:
 
 ```bash
-python3 tools/run_octos_multi_agent.py \
+/usr/bin/python3 tools/run_octos_multi_agent.py \
   --octos "$(command -v octos)" \
   --ollama "$(command -v ollama)" \
   --vision-model qwen3-vl:8b-instruct \
@@ -559,7 +574,7 @@ Run the complete suite inside the container:
 
 ```bash
 cd /workspace
-python3 -m pytest -q
+/usr/bin/python3 -m pytest -q
 ```
 
 The reference run contains 145 tests covering Dora wiring, the local API,
@@ -570,7 +585,7 @@ replays, scene contracts, layout, and recording completion.
 Common problems:
 
 - **Octos cannot find the Skill:** run the runner from the project root and
-  check `.octos/skills/week11-process-supervision/manifest.json`.
+  check `.octos/skills/process-supervision/manifest.json`.
 - **An Agent cannot connect to Ollama:** confirm `ollama list` works and inspect
   local `127.0.0.1:11434/v1`. Do not expose the service externally to work
   around a local configuration problem.

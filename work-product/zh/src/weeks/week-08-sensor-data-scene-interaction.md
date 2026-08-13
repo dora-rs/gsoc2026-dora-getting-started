@@ -12,7 +12,9 @@
 | `webots_ros2_tiago` | 2025.0.0 |
 | Navigation2 | 1.1.20 |
 | SLAM Toolbox | 2.6.10 |
-| Dora CLI 和 Python API | 0.5.0 |
+| Dora CLI 和 Python API | 1.0.0-rc.4 |
+| Dora 运行时 Python | 3.11.14 |
+| ROS 2 worker Python | 3.10.12 |
 
 ## 下载
 
@@ -283,8 +285,12 @@ ros2 lifecycle get /bt_navigator
 - `mission-controller`：等待必需字段准备就绪，并调用 Nav2。
 - `result-reporter`：打印任务状态变化。
 
+Dora nodes 使用 Python 3.11；ROS 2 Humble 的 `rclpy` workers 保持使用系统
+Python 3.10。两个运行时通过小型 JSONL bridge 传递命令和结果，应用主数据流仍由
+Dora 管理。
+
 ```text
-为当前运行的 Webots 和 Nav2 系统实现一个 Dora 0.5.0 dataflow。
+为当前运行的 Webots 和 Nav2 系统实现一个 Dora 1.0.0-rc.4 dataflow。
 
 创建 sensor-bridge、mission-controller 和 result-reporter Python nodes。
 sensor node 订阅 /scan、/odom、/map、三个 TIAGo sonar topics 和
@@ -297,9 +303,10 @@ WAITING_FOR_SENSORS、READY、GOAL_SENT、NAVIGATING、SUCCEEDED 和 FAILED 状�
 并保存最终 JSON 结果。拒绝重复目标；报告 Nav2 拒绝、timeout、cancel 或非成功
 action status。
 
-当前环境中 Dora 0.5.0 的 Python API 没有暴露 ROS 2 Action client，因此在 Dora
-mission node 内使用 rclpy ActionClient。所有 readiness 和 result messages 仍通过
-Dora dataflow 传递。为 readiness gate 和 terminal states 添加 focused tests。
+Dora-facing nodes 使用 Python 3.11，ROS subscribers 与 rclpy ActionClient 运行在
+提供的 Python 3.10 workers 中；bridge 只交换结构化 JSONL 消息。所有 readiness 和
+result messages 仍通过 Dora dataflow 传递。为 readiness gate、worker protocol 和
+terminal states 添加 focused tests。
 ```
 
 ### 参考 Dataflow
@@ -347,8 +354,8 @@ future.add_done_callback(on_goal_response)
 
 当前 Dora 文档还介绍了原生和 YAML
 [ROS 2 topic、service 与 action bridges](https://dora-rs.ai/dora/advanced/ros2-bridge)。
-使用更新的 Dora 版本时，应先让助手比较新 API 和已经验证的 `rclpy` 集成，再决定是否
-修改 dataflow。
+本工程使用显式 worker 边界，让固定版本的 ROS 2 Humble 与 Dora Python 运行时可以
+分别复现。
 
 ### 完整 Dora 源码
 
@@ -357,6 +364,10 @@ future.add_done_callback(on_goal_response)
 
 ```python
 {{#include ../assets/lidar-slam-navigation/source/dora/sensor_bridge_node.py}}
+```
+
+```python
+{{#include ../assets/lidar-slam-navigation/source/dora/sensor_ros_worker.py}}
 ```
 
 
@@ -373,6 +384,16 @@ future.add_done_callback(on_goal_response)
 
 ```python
 {{#include ../assets/lidar-slam-navigation/source/dora/mission_controller_node.py}}
+```
+
+```python
+{{#include ../assets/lidar-slam-navigation/source/dora/navigation_ros_worker.py}}
+```
+
+#### 运行时 bridge protocol
+
+```python
+{{#include ../assets/lidar-slam-navigation/source/dora/bridge_protocol.py}}
 ```
 
 

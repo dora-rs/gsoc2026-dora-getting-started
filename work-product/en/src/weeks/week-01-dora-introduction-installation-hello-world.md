@@ -5,8 +5,8 @@
 | Component | Version / Environment |
 | --- | --- |
 | Operating system | Microsoft Windows 11 Pro, build 26200, x64 |
-| Dora CLI | 0.5.0 |
-| dora-rs Python package | `dora-rs==0.5.0` |
+| Dora CLI | 1.0.0-rc.4 |
+| dora-rs Python package | `dora-rs==1.0.0rc4` |
 | Python | CPython 3.11.14 via `uv` |
 | uv | 0.11.17 |
 | pyarrow | 24.0.0 |
@@ -54,7 +54,7 @@ upstream state is:
 For this tutorial, install and run the current Dora toolchain from the active Dora
 package names:
 
-- CLI package: `dora-rs-cli`
+- CLI command: `dora`, installed from the official release, installer, or `dora-cli` crate
 - Python API package: `dora-rs`
 - Python import name: `dora`
 
@@ -67,21 +67,21 @@ Official Dora materials list several installation paths:
 
 | Method | Best for | Command |
 | --- | --- | --- |
-| Python virtual environment | Reproducible tutorial work on Windows | `pip install dora-rs-cli dora-rs` |
+| Release archive + Python virtual environment | Reproducible, pinned tutorial work | Download Dora CLI `1.0.0-rc.4`, then `pip install dora-rs==1.0.0rc4` |
 | Cargo | Rust developers who want the CLI from crates.io | `cargo install dora-cli` |
 | Windows installer | User-level CLI install | `powershell -ExecutionPolicy ByPass -c "irm https://github.com/dora-rs/dora/releases/latest/download/dora-cli-installer.ps1 \| iex"` |
 | macOS/Linux installer | User-level CLI install | `curl --proto '=https' --tlsv1.2 -LsSf https://github.com/dora-rs/dora/releases/latest/download/dora-cli-installer.sh \| sh` |
 
-This chapter uses the Python virtual environment route because it keeps the
-verification self-contained and avoids changing any existing Dora source build on
-the machine.
+This chapter uses the pinned release archive together with a Python virtual
+environment. The CLI and Python API therefore use the same Dora release without
+changing an existing global installation.
 
 ## Local Verification Setup
 
 From the tutorial root:
 
 ```powershell
-cd verification/week1-hello-world
+cd verification/dora-hello-world
 ./run.ps1
 ```
 
@@ -89,10 +89,11 @@ The script performs these steps:
 
 1. Finds `uv`.
 2. Creates `.venv` with CPython 3.11 if it does not already exist.
-3. Installs pinned packages from `requirements.txt`.
-4. Prints Dora and Python package versions.
-5. Runs `dora run dataflow.yml --uv --stop-after 4s`.
-6. Fails if the listener output is not present.
+3. Downloads and verifies the Dora CLI `1.0.0-rc.4` archive.
+4. Installs pinned packages from `requirements.txt`.
+5. Prints Dora and Python package versions.
+6. Runs `dora run dataflow.yml --uv --stop-after 4s`.
+7. Fails if the listener output is not present.
 
 Expected success marker:
 
@@ -272,17 +273,15 @@ codex --sandbox workspace-write --ask-for-approval on-request --config sandbox_w
 
 ### Choose a Model
 
-Official Codex documentation recommends `gpt-5.5` for most Codex tasks,
-especially complex coding, research, computer use, and multi-step documentation
-work. Use `gpt-5.4-mini` when the task is lighter and speed or cost matters
-more than maximum reasoning depth. If your account exposes
-`gpt-5.3-codex-spark`, treat it as a fast iteration model rather than the first
-choice for careful end-to-end verification.
+Available models depend on the account and Codex release. Open `/model` and use
+the current recommended coding model for multi-file implementation and
+verification. Choose a faster model offered in the same menu for short edits or
+quick repository questions.
 
 Choose a model for one run:
 
 ```powershell
-codex --model gpt-5.5
+codex --model <model-id>
 ```
 
 Inside an active session, use:
@@ -295,7 +294,7 @@ To make the choice persistent for local CLI and IDE use, add this to
 `~/.codex/config.toml`:
 
 ```toml
-model = "gpt-5.5"
+model = "<model-id>"
 ```
 
 ### Choose Reasoning Effort
@@ -316,7 +315,7 @@ Practical defaults:
 Choose a reasoning effort for one run:
 
 ```powershell
-codex --model gpt-5.5 --config model_reasoning_effort='"high"'
+codex --model <model-id> --config model_reasoning_effort='"high"'
 ```
 
 Or persist it in `~/.codex/config.toml`:
@@ -403,17 +402,13 @@ listener output.
 ## Sources
 
 - Dora repository: <https://github.com/dora-rs/dora>
-- Dora installation guide: <https://dora-rs.ai/docs/guides/Installation/installing/>
-- Dora Python conversation guide: <https://dora-rs.ai/docs/guides/getting-started/conversation_py/>
-- Dora v0.5.0 release: <https://github.com/dora-rs/dora/releases/tag/v0.5.0>
+- Dora CLI guide: <https://dora-rs.ai/dora/operations/cli>
+- Dora Python API: <https://dora-rs.ai/dora/languages/python>
+- Dora v1.0.0-rc.4 release: <https://github.com/dora-rs/dora/releases/tag/v1.0.0-rc.4>
 - Adora archive notice: <https://github.com/dora-rs/adora>
-- Codex CLI setup: <https://developers.openai.com/codex/cli>
-- Codex CLI features: <https://developers.openai.com/codex/cli/features>
-- Codex CLI options: <https://developers.openai.com/codex/cli/reference>
-- Codex models: <https://developers.openai.com/codex/models>
-- Codex configuration basics: <https://developers.openai.com/codex/config-basic>
-- Codex approvals and security: <https://developers.openai.com/codex/agent-approvals-security>
-- Codex sandboxing: <https://developers.openai.com/codex/concepts/sandboxing>
+- Codex CLI: <https://learn.chatgpt.com/docs/codex/cli>
+- Codex models: <https://learn.chatgpt.com/docs/models>
+- Codex commands: <https://learn.chatgpt.com/docs/developer-commands?surface=cli>
 
 ## Next Step
 

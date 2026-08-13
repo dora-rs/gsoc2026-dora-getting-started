@@ -1,16 +1,17 @@
 # Multimodal Pick-and-Place Verification
 
 This directory contains the reproducible code behind the multimodal visual
-inspection chapter. It keeps simulation, model inference, and task control in
-separate Dora nodes.
+inspection chapter. Dora and model-control nodes run on Python 3.11; the
+Habitat-Sim worker runs on Python 3.9 behind a structured JSONL bridge.
 
 ## Verified Environment
 
 - Ubuntu 22.04.5 LTS, x86_64
 - NVIDIA driver 580.159.03
-- Dora CLI and Python API 0.5.0
+- Dora CLI 1.0.0-rc.4 and `dora-rs==1.0.0rc4`
 - Habitat-Sim 0.3.3
-- Python 3.9
+- Dora runtime Python 3.11.14
+- Habitat-Sim worker Python 3.9.23
 - NumPy 1.26.4
 - SciPy 1.13.1
 - OpenCV 4.12.0
@@ -27,6 +28,7 @@ separate Dora nodes.
 - `trajectory.py`: interpolation, joint validation, and IK helpers.
 - `prepare_trajectory.py`: validates camera visibility and solves waypoints.
 - `simulation_runtime.py`: deterministic motion and synchronized recording.
+- `simulation_bridge_node.py` and `simulation_worker.py`: isolated runtime boundary.
 - `*_node.py` and `dataflow.yml`: complete Dora application.
 - `tests/`: focused unit tests for contracts, state transitions, and motion.
 
@@ -35,7 +37,7 @@ validated trajectory, source scripts, and tests are the fixed reference inputs.
 
 ## Focused Verification
 
-The supplied run script creates or reuses an isolated micromamba environment.
+The supplied run script creates or reuses two isolated micromamba environments.
 Run the tests and simulator without a model service:
 
 ```bash

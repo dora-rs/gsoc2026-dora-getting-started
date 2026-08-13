@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILL = ROOT / "octos-skills" / "week11-process-supervision"
+SKILL = ROOT / "octos-skills" / "process-supervision"
 
 
 def test_octos_skill_exposes_named_process_and_independent_action_tools() -> None:

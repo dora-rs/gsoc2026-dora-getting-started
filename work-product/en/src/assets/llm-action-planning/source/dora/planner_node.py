@@ -10,7 +10,7 @@ from dora import Node
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from week9_validation.model_clients import request_action_plan
+from action_planning.model_clients import request_action_plan
 
 
 def main():

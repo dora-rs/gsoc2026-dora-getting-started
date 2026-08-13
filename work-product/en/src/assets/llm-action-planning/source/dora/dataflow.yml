@@ -1,19 +1,34 @@
 nodes:
   - id: planner
-    path: planner_node.py
+    path: runtime_bridge/sidecar_node.py
     inputs:
       tick: dora/timer/millis/500
     outputs:
       - plan
+    env:
+      DORA_WORKER_SCRIPT: /workspace/dora/planner_node.py
+      DORA_WORKER_CWD: /workspace/dora
+      DORA_WORKER_PYTHON: /usr/bin/python3
+      DORA_WORKER_PYTHONPATH: /workspace:/workspace/dora:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages
 
   - id: executor
-    path: executor_node.py
+    path: runtime_bridge/sidecar_node.py
     inputs:
       plan: planner/plan
     outputs:
       - status
+    env:
+      DORA_WORKER_SCRIPT: /workspace/dora/executor_node.py
+      DORA_WORKER_CWD: /workspace/dora
+      DORA_WORKER_PYTHON: /usr/bin/python3
+      DORA_WORKER_PYTHONPATH: /workspace:/workspace/dora:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages
 
   - id: reporter
-    path: reporter_node.py
+    path: runtime_bridge/sidecar_node.py
     inputs:
       status: executor/status
+    env:
+      DORA_WORKER_SCRIPT: /workspace/dora/reporter_node.py
+      DORA_WORKER_CWD: /workspace/dora
+      DORA_WORKER_PYTHON: /usr/bin/python3
+      DORA_WORKER_PYTHONPATH: /workspace:/workspace/dora:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages

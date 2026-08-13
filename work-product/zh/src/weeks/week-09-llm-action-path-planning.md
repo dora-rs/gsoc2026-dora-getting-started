@@ -9,10 +9,11 @@
 | NVIDIA 驱动 | 580.159.03 |
 | Webots | R2025a |
 | ROS 2 | Humble |
-| Dora CLI 和 Python API | 0.5.0 |
+| Dora CLI 和 Python API | 1.0.0-rc.4 |
 | 本地模型引擎 | Ollama 0.32.1 |
 | 规划与视觉模型 | `qwen3-vl:8b-instruct` |
-| Python | 3.10 |
+| Dora 运行时 Python | 3.11.14 |
+| ROS 2 worker Python | 3.10.12 |
 
 ## 下载
 
@@ -66,7 +67,7 @@ skill manifest 提供 `navigate_to`、`observe_switch` 和
 后，让助手检查工程，而不是重新生成：
 
 ```text
-检查这个提供的 Webots R2025a 与 Dora 0.5.0 参考工程。
+检查这个提供的 Webots R2025a 与 Dora 1.0.0-rc.4 参考工程。
 
 把 worlds/youbot_switch_office.wbt 和固定到 R2025a 的官方 youBot 模型
 视为可复现的场景源文件。不要替换机器人、重建场景、移动开关或修改相机姿态。
@@ -83,8 +84,8 @@ skill manifest 提供 `navigate_to`、`observe_switch` 和
 ```text
 准备这台 Ubuntu 22.04 计算机，用于运行提供的参考工程。
 
-使用 Webots R2025a、ROS 2 Humble、Dora CLI 与 Python API 0.5.0，以及
-Ollama。下载 qwen3-vl:8b-instruct，同时用于结构化动作规划和 RGB 开关识别。
+使用 Webots R2025a、ROS 2 Humble、Dora CLI 1.0.0-rc.4、
+dora-rs 1.0.0rc4 和 Ollama。下载 qwen3-vl:8b-instruct，同时用于结构化动作规划和 RGB 开关识别。
 Webots 与 ROS 依赖优先使用提供的 Dockerfile，Ollama 在主机运行。
 
 修改前先报告可用磁盘、内存、GPU 与驱动兼容性、现有版本和准备执行的准确命令。
@@ -96,7 +97,7 @@ Webots 与 ROS 依赖优先使用提供的 Dockerfile，Ollama 在主机运行�
 
 ```bash
 ollama pull qwen3-vl:8b-instruct
-docker build -t week9-webots-llm:humble .
+docker build -t dora-llm-action:humble .
 chmod +x run-container.sh launch-webots.sh
 ./run-container.sh
 ```
@@ -104,6 +105,9 @@ chmod +x run-container.sh launch-webots.sh
 容器使用 host 网络，因此默认 Ollama endpoint 是
 `http://127.0.0.1:11434`。请保持服务仅本机可访问，不要绑定到不受信任的
 网络。
+
+容器将运行时依赖隔离：Dora 与 JSONL sidecar nodes 使用 Python 3.11，ROS 2 和
+应用 workers 使用 ROS 2 Humble 提供的系统 Python 3.10。
 
 ## 定义 Skill API
 
@@ -138,7 +142,7 @@ arguments、save_as，以及只支持 eq/ne 的小型条件树。拒绝坐标、
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/week9_validation/plan_validator.py}}
+{{#include ../assets/llm-action-planning/source/action_planning/plan_validator.py}}
 ```
 
 
@@ -165,7 +169,7 @@ HTTP、解析、schema 或校验出现错误时都必须停止。模型绝不能
 
 ```json
 {
-  "schema": "week9.action-plan.v1",
+  "schema": "action-planning.plan.v1",
   "goal": "Turn off the main switch, then return home.",
   "steps": [
     {
@@ -213,7 +217,7 @@ HTTP、解析、schema 或校验出现错误时都必须停止。模型绝不能
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/week9_validation/model_clients.py}}
+{{#include ../assets/llm-action-planning/source/action_planning/model_clients.py}}
 ```
 
 
@@ -225,10 +229,22 @@ Dora graph 把规划、执行和结果记录分离：
 {{#include ../assets/llm-action-planning/source/dora/dataflow.yml}}
 ```
 
+每个 dataflow entry 都启动同一个小型 Python 3.11 sidecar，并通过环境变量指定对应的
+Python 3.10 worker。sidecar 使用 JSONL 转发 Dora events 和 outputs，因此规划和
+任务状态仍通过 Dora graph 传递。
+
+```python
+{{#include ../assets/llm-action-planning/source/dora/runtime_bridge/sidecar_node.py}}
+```
+
+```python
+{{#include ../assets/llm-action-planning/source/dora/runtime_bridge/sidecar_bridge.py}}
+```
+
 让助手围绕通过校验的计划构建编排层：
 
 ```text
-为提供的场景实现 Dora 0.5.0 应用。
+为提供的场景实现 Dora 1.0.0-rc.4 应用。
 
 创建三个 nodes：
 1. planner 读取 skill manifest，请求一份结构化计划，校验后只发布一次；
@@ -236,7 +252,8 @@ Dora graph 把规划、执行和结果记录分离：
    结果判断条件，并在失败时停止；
 3. reporter 把脱敏后的事件写入 JSONL。
 
-在 executor 的 skill runtime 内使用 rclpy 与提供的 Webots controller 通信。
+使用 Python 3.11 运行 Dora sidecars，并用 Python 3.10 运行提供的 planner、executor
+和 reporter workers。在 executor worker 内使用 rclpy 与提供的 Webots controller 通信。
 规划与任务状态继续通过 Dora outputs 传递。使用 request ID 关联命令和结果，
 设置 timeout，保存最终 JSON，并为开启、已经关闭、执行失败和动作后视觉验证
 分支添加测试。
@@ -249,7 +266,7 @@ Dora graph 把规划、执行和结果记录分离：
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/week9_validation/mission.py}}
+{{#include ../assets/llm-action-planning/source/action_planning/mission.py}}
 ```
 
 
@@ -317,7 +334,7 @@ set_switch_state 要求机器人位于开关工作空间内，再调用提供的
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/week9_validation/ros_skills.py}}
+{{#include ../assets/llm-action-planning/source/action_planning/ros_skills.py}}
 ```
 
 
@@ -334,7 +351,7 @@ cd /workspace
 
 ```bash
 cd /workspace
-pytest -q
+/usr/bin/python3 -m pytest -q
 cd dora
 dora run dataflow.yml
 ```
@@ -399,7 +416,7 @@ Dora dataflow。
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/controllers/week9_controller/navigation_control.py}}
+{{#include ../assets/llm-action-planning/source/controllers/action_controller/navigation_control.py}}
 ```
 
 
@@ -407,7 +424,7 @@ Dora dataflow。
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/controllers/week9_controller/week9_controller.py}}
+{{#include ../assets/llm-action-planning/source/controllers/action_controller/action_controller.py}}
 ```
 
 
@@ -452,7 +469,7 @@ Dora dataflow。
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/week9_validation/contracts.py}}
+{{#include ../assets/llm-action-planning/source/action_planning/contracts.py}}
 ```
 
 

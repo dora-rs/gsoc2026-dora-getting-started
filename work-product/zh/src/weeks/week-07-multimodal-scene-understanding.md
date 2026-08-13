@@ -7,15 +7,13 @@
 | 操作系统 | Ubuntu 22.04.5 LTS，x86_64 |
 | GPU | NVIDIA GeForce RTX 5090 Laptop GPU，24 GB VRAM |
 | NVIDIA driver | 580.159.03 |
-| Dora CLI 和 Python API | 0.5.0 |
+| Dora CLI 和 Python API | 1.0.0-rc.4 |
+| Dora 运行时 Python | 3.11.14 |
 | Habitat-Sim | 0.3.3 |
+| Habitat-Sim worker Python | 3.9.23 |
 | Ollama | 0.32.1 |
 | 本地模型 | `qwen3-vl:8b-instruct`，Q4_K_M |
 | 模型 digest | `0533d74300e4f9bc367d675d4e64ffd073d50ff16a2b4096cc2e8a1cf8c96319` |
-
-本示例使用 Dora `v0.5.0`。版本和模型可用性会变化，复现前应与
-[官方最新 release](https://github.com/dora-rs/dora/releases/latest)比较，并检查
-[官方安装文档](https://dora-rs.ai/dora/getting-started/installation.html)。
 
 ## 下载
 
@@ -312,8 +310,13 @@ def parse_observation(payload: str) -> ObservationResult:
 使用三个节点，每个节点只承担一类职责：
 
 - `controller`：管理任务状态机和置信度阈值。
-- `simulation`：捕获图像、执行验证轨迹并录制素材。
+- `simulation`：运行在 Dora Python 3.11 中的 bridge，把渲染和轨迹执行委托给
+  Habitat-Sim Python 3.9 worker。
 - `vision`：调用 Ollama 并校验响应。
+
+Habitat-Sim 0.3.3 与 Dora 1.0 支持的 Python 运行时不同。参考工程将两者隔离：Dora
+nodes 使用 Python 3.11，Habitat-Sim worker 使用 Python 3.9；JSONL bridge 只转发
+结构化命令、观测和错误，不形成第二条控制路径。
 
 这个同机示例通过 Dora 发布只包含 `phase` 和 `wrist_path` 的小型 JSON observation，
 `vision` node 从本地存储读取对应 PNG。模型只调用两次，分别发生在动作前和动作后；
@@ -321,14 +324,15 @@ def parse_observation(payload: str) -> ObservationResult:
 不同计算机上，应把本地路径替换为编码后的图像 bytes 或共享 object-storage URI。
 
 ```text
-把当前示例实现为 Dora 0.5.0 dataflow。
+把当前示例实现为 Dora 1.0.0-rc.4 dataflow。
 
 创建 controller、simulation 和 vision Python nodes，使用明确的 inputs 和 outputs。
 controller 先请求初始截图。只有红蓝方块可见、red_on_blue 为 false，并且
 confidence 至少为 0.8 时才能执行动作；动作完成后再请求最终截图。只有最终结果中
 两个方块可见、red_on_blue 为 true，并且 confidence 至少为 0.8 时才能报告成功。
 
-simulation node 管理 Habitat-Sim 和验证轨迹。vision node 管理模型请求和 schema
+simulation bridge 启动并管理提供的 Habitat-Sim worker；worker 管理 Habitat-Sim
+和验证轨迹。vision node 管理模型请求和 schema
 validation。timeout、服务错误、无效 JSON 或 schema failure 时，发布脱敏错误，不要
 编造观测。成功或失败后，所有节点都应正常退出。为 contract、状态转换、插值、
 关节限制和 attach/release 事件添加单元测试。
@@ -349,7 +353,7 @@ nodes:
       - command
 
   - id: simulation
-    path: simulation_node.py
+    path: simulation_bridge_node.py
     inputs:
       command: controller/command
     outputs:
@@ -490,9 +494,9 @@ PY
 
 ### 运行 Dora Dataflow
 
-保持另一个终端中的 Ollama 服务运行，然后使用提供的脚本。它会创建或复用固定版本
-环境，把该环境的 Python 放到 `PATH` 最前面，运行单元测试，启动 Dora dataflow，
-并要求日志中出现 `TASK_SUCCESS`：
+保持另一个终端中的 Ollama 服务运行，然后使用提供的脚本。它会创建或复用固定版本的
+Dora 与 Habitat 环境，下载并校验 Dora CLI，在 Habitat 环境中运行单元测试，使用
+Python 3.11 启动 Dora dataflow，并要求日志中出现 `TASK_SUCCESS`：
 
 ```bash
 cd multimodal-pick-and-place-reference
@@ -609,14 +613,18 @@ ffprobe -v error \
 {{#include ../assets/multimodal-pick-and-place/source/dataflow.yml}}
 ```
 
-### Dora Nodes
+### Dora Nodes 与 Habitat Worker
 
 ```python
 {{#include ../assets/multimodal-pick-and-place/source/controller_node.py}}
 ```
 
 ```python
-{{#include ../assets/multimodal-pick-and-place/source/simulation_node.py}}
+{{#include ../assets/multimodal-pick-and-place/source/simulation_bridge_node.py}}
+```
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/simulation_worker.py}}
 ```
 
 ```python
@@ -633,10 +641,14 @@ ffprobe -v error \
 {{#include ../assets/multimodal-pick-and-place/source/record_demo.py}}
 ```
 
-### `environment.yml`
+### 运行环境
 
 ```yaml
 {{#include ../assets/multimodal-pick-and-place/source/environment.yml}}
+```
+
+```yaml
+{{#include ../assets/multimodal-pick-and-place/source/environment-dora.yml}}
 ```
 
 ### `run.sh`

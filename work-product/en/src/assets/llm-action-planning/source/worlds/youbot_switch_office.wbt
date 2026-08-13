@@ -265,8 +265,8 @@ Solid {
 Youbot {
   translation -2.8 -1.8 0.12
   rotation 0 0 1 0
-  name "Week9 youBot"
-  controller "week9_controller"
+  name "Action Planning youBot"
+  controller "action_controller"
   supervisor TRUE
   bodySlot [
     GPS {

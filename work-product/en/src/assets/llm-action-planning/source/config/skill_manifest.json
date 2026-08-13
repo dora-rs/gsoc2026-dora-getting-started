@@ -1,5 +1,5 @@
 {
-  "schema": "week9.skill-manifest.v1",
+  "schema": "action_planning.skill-manifest.v1",
   "skills": [
     {
       "name": "navigate_to",

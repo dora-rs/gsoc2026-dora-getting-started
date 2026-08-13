@@ -6,7 +6,7 @@ import pytest
 
 
 ROOT = Path(__file__).resolve().parents[1]
-CONTROLLER = ROOT / "controllers" / "week10_controller"
+CONTROLLER = ROOT / "controllers" / "agent_controller"
 sys.path.insert(0, str(CONTROLLER))
 
 from navigation_control import compute_drive_command

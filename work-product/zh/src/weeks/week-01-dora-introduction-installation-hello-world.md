@@ -5,8 +5,8 @@
 | 组件 | 版本 / 环境 |
 | --- | --- |
 | 操作系统 | Microsoft Windows 11 Pro, build 26200, x64 |
-| Dora CLI | 0.5.0 |
-| dora-rs Python 包 | `dora-rs==0.5.0` |
+| Dora CLI | 1.0.0-rc.4 |
+| dora-rs Python 包 | `dora-rs==1.0.0rc4` |
 | Python | CPython 3.11.14 via `uv` |
 | uv | 0.11.17 |
 | pyarrow | 24.0.0 |
@@ -47,7 +47,7 @@ Dora 是面向机器人和 AI 应用的 dataflow 框架。一个 Dora 应用可�
 
 本教程使用当前活跃的 Dora 包名进行安装和运行：
 
-- CLI 包：`dora-rs-cli`
+- CLI 命令：`dora`，通过官方 release、安装脚本或 `dora-cli` crate 安装
 - Python API 包：`dora-rs`
 - Python import 名称：`dora`
 
@@ -59,19 +59,20 @@ Dora 官方资料列出了几种安装路径：
 
 | 方式 | 适合场景 | 命令 |
 | --- | --- | --- |
-| Python virtual environment | Windows 上可复现的教程验证 | `pip install dora-rs-cli dora-rs` |
+| Release 压缩包 + Python virtual environment | 固定版本、可复现的教程验证 | 下载 Dora CLI `1.0.0-rc.4`，再运行 `pip install dora-rs==1.0.0rc4` |
 | Cargo | 希望从 crates.io 安装 CLI 的 Rust 开发者 | `cargo install dora-cli` |
 | Windows installer | 用户级 CLI 安装 | `powershell -ExecutionPolicy ByPass -c "irm https://github.com/dora-rs/dora/releases/latest/download/dora-cli-installer.ps1 \| iex"` |
 | macOS/Linux installer | 用户级 CLI 安装 | `curl --proto '=https' --tlsv1.2 -LsSf https://github.com/dora-rs/dora/releases/latest/download/dora-cli-installer.sh \| sh` |
 
-本章采用 Python virtual environment 路径，因为它让验证过程自包含，也不会改变机器上已有的 Dora 源码构建。
+本章组合使用固定版本的 release 压缩包与 Python virtual environment，让 CLI 和
+Python API 对应同一个 Dora release，同时不改变机器上已有的全局安装。
 
 ## 本地验证
 
 从教程根目录运行：
 
 ```powershell
-cd verification/week1-hello-world
+cd verification/dora-hello-world
 ./run.ps1
 ```
 
@@ -79,10 +80,11 @@ cd verification/week1-hello-world
 
 1. 查找 `uv`。
 2. 如果本地还没有 `.venv`，用 CPython 3.11 创建它。
-3. 根据 `requirements.txt` 安装固定版本依赖。
-4. 打印 Dora 与 Python 包版本。
-5. 运行 `dora run dataflow.yml --uv --stop-after 4s`。
-6. 如果没有观察到 listener 输出，则失败退出。
+3. 下载并校验 Dora CLI `1.0.0-rc.4` 压缩包。
+4. 根据 `requirements.txt` 安装固定版本依赖。
+5. 打印 Dora 与 Python 包版本。
+6. 运行 `dora run dataflow.yml --uv --stop-after 4s`。
+7. 如果没有观察到 listener 输出，则失败退出。
 
 预期成功标记：
 
@@ -251,12 +253,14 @@ codex --sandbox workspace-write --ask-for-approval on-request --config sandbox_w
 
 ### 选择模型
 
-Codex 官方文档推荐大多数 Codex 任务从 `gpt-5.5` 开始，尤其适合复杂编码、调研、computer use，以及多步骤文档工作。任务较轻、并且更看重速度或成本时，可以选择 `gpt-5.4-mini`。如果账号中可用 `gpt-5.3-codex-spark`，更适合作为快速迭代模型，而不是严谨端到端验证的首选。
+可用模型会随账号权限和 Codex 版本变化。打开 `/model`，多文件实现和完整验证任务
+优先选择菜单中当前推荐的 coding model；短小修改或快速询问可以选择同一菜单里更快
+的模型。
 
 为单次运行指定模型：
 
 ```powershell
-codex --model gpt-5.5
+codex --model <model-id>
 ```
 
 在已打开的交互会话中，可以使用：
@@ -268,7 +272,7 @@ codex --model gpt-5.5
 如果希望 CLI 和 IDE 默认使用同一个模型，可以在 `~/.codex/config.toml` 中写入：
 
 ```toml
-model = "gpt-5.5"
+model = "<model-id>"
 ```
 
 ### 选择思考强度
@@ -284,7 +288,7 @@ model = "gpt-5.5"
 为单次运行指定思考强度：
 
 ```powershell
-codex --model gpt-5.5 --config model_reasoning_effort='"high"'
+codex --model <model-id> --config model_reasoning_effort='"high"'
 ```
 
 或在 `~/.codex/config.toml` 中持久化：
@@ -362,17 +366,13 @@ listener output.
 ## 来源
 
 - Dora repository: <https://github.com/dora-rs/dora>
-- Dora installation guide: <https://dora-rs.ai/docs/guides/Installation/installing/>
-- Dora Python conversation guide: <https://dora-rs.ai/docs/guides/getting-started/conversation_py/>
-- Dora v0.5.0 release: <https://github.com/dora-rs/dora/releases/tag/v0.5.0>
+- Dora CLI guide: <https://dora-rs.ai/dora/operations/cli>
+- Dora Python API: <https://dora-rs.ai/dora/languages/python>
+- Dora v1.0.0-rc.4 release: <https://github.com/dora-rs/dora/releases/tag/v1.0.0-rc.4>
 - Adora archive notice: <https://github.com/dora-rs/adora>
-- Codex CLI setup: <https://developers.openai.com/codex/cli>
-- Codex CLI features: <https://developers.openai.com/codex/cli/features>
-- Codex CLI options: <https://developers.openai.com/codex/cli/reference>
-- Codex models: <https://developers.openai.com/codex/models>
-- Codex configuration basics: <https://developers.openai.com/codex/config-basic>
-- Codex approvals and security: <https://developers.openai.com/codex/agent-approvals-security>
-- Codex sandboxing: <https://developers.openai.com/codex/concepts/sandboxing>
+- Codex CLI: <https://learn.chatgpt.com/docs/codex/cli>
+- Codex models: <https://learn.chatgpt.com/docs/models>
+- Codex commands: <https://learn.chatgpt.com/docs/developer-commands?surface=cli>
 
 ## 下一步
 

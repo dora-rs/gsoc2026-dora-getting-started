@@ -9,10 +9,11 @@
 | NVIDIA driver | 580.159.03 |
 | Webots | R2025a |
 | ROS 2 | Humble |
-| Dora CLI and Python API | 0.5.0 |
+| Dora CLI and Python API | 1.0.0-rc.4 |
 | Local model engine | Ollama 0.32.1 |
 | Planning and vision model | `qwen3-vl:8b-instruct` |
-| Python | 3.10 |
+| Dora runtime Python | 3.11.14 |
+| ROS 2 worker Python | 3.10.12 |
 
 ## Downloads
 
@@ -72,7 +73,7 @@ robot dimensions. Extract the archive into a new directory, then ask the
 assistant to inspect rather than regenerate it:
 
 ```text
-Inspect this supplied Webots R2025a and Dora 0.5.0 reference project.
+Inspect this supplied Webots R2025a and Dora 1.0.0-rc.4 reference project.
 
 Treat worlds/youbot_switch_office.wbt and the pinned official youBot R2025a
 model as the reproducible scene source. Do not replace the robot, rebuild the
@@ -91,7 +92,8 @@ Ask the assistant to install only what the supplied project needs:
 ```text
 Prepare this Ubuntu 22.04 computer to run the supplied reference project.
 
-Use Webots R2025a, ROS 2 Humble, Dora CLI and Python API 0.5.0, and Ollama.
+Use Webots R2025a, ROS 2 Humble, Dora CLI 1.0.0-rc.4,
+dora-rs 1.0.0rc4, and Ollama.
 Pull qwen3-vl:8b-instruct for both structured action planning and RGB switch
 classification. Prefer the supplied Dockerfile for Webots and ROS dependencies,
 while Ollama runs on the host.
@@ -106,7 +108,7 @@ The validated commands were:
 
 ```bash
 ollama pull qwen3-vl:8b-instruct
-docker build -t week9-webots-llm:humble .
+docker build -t dora-llm-action:humble .
 chmod +x run-container.sh launch-webots.sh
 ./run-container.sh
 ```
@@ -114,6 +116,10 @@ chmod +x run-container.sh launch-webots.sh
 The container uses host networking, so its default Ollama endpoint is
 `http://127.0.0.1:11434`. Keep the service local; do not bind it to an
 untrusted network.
+
+The container isolates the runtime requirements: Dora and the JSONL sidecar
+nodes use Python 3.11, while the ROS 2 and application workers use the system
+Python 3.10 environment supplied by ROS 2 Humble.
 
 ## Define the Skill API
 
@@ -149,7 +155,7 @@ only after `validate_plan(plan).require_valid()` succeeds.
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/week9_validation/plan_validator.py}}
+{{#include ../assets/llm-action-planning/source/action_planning/plan_validator.py}}
 ```
 
 
@@ -178,7 +184,7 @@ A validated model response looks like this:
 
 ```json
 {
-  "schema": "week9.action-plan.v1",
+  "schema": "action-planning.plan.v1",
   "goal": "Turn off the main switch, then return home.",
   "steps": [
     {
@@ -226,7 +232,7 @@ A validated model response looks like this:
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/week9_validation/model_clients.py}}
+{{#include ../assets/llm-action-planning/source/action_planning/model_clients.py}}
 ```
 
 
@@ -238,10 +244,23 @@ The Dora graph separates planning, execution, and reporting:
 {{#include ../assets/llm-action-planning/source/dora/dataflow.yml}}
 ```
 
+Each dataflow entry starts the same small Python 3.11 sidecar and names its
+Python 3.10 worker through environment variables. The sidecar forwards Dora
+events and outputs as JSONL, so planning and mission state still travel through
+the Dora graph.
+
+```python
+{{#include ../assets/llm-action-planning/source/dora/runtime_bridge/sidecar_node.py}}
+```
+
+```python
+{{#include ../assets/llm-action-planning/source/dora/runtime_bridge/sidecar_bridge.py}}
+```
+
 Ask the assistant to build the orchestration layer around the validated plan:
 
 ```text
-Implement the Dora 0.5.0 application for the supplied scene.
+Implement the Dora 1.0.0-rc.4 application for the supplied scene.
 
 Create three nodes:
 1. planner reads the skill manifest, requests one structured plan, validates it,
@@ -251,8 +270,10 @@ Create three nodes:
    on failure;
 3. reporter writes sanitized JSONL events.
 
-Use rclpy inside the executor's skill runtime to communicate with the supplied
-Webots controller. Keep planning and mission state on Dora outputs. Correlate
+Run the Dora sidecars with Python 3.11 and the supplied planner, executor, and
+reporter workers with Python 3.10. Use rclpy inside the executor worker to
+communicate with the Webots controller. Keep planning and mission state on
+Dora outputs. Correlate
 commands and results with request IDs, enforce timeouts, save the final JSON
 result, and add tests for the on, already-off, failure, and post-action visual
 verification branches.
@@ -266,7 +287,7 @@ observation are skipped, and the robot returns home.
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/week9_validation/mission.py}}
+{{#include ../assets/llm-action-planning/source/action_planning/mission.py}}
 ```
 
 
@@ -337,7 +358,7 @@ After the arm action, it observed `state: "off"` with confidence `0.95`:
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/week9_validation/ros_skills.py}}
+{{#include ../assets/llm-action-planning/source/action_planning/ros_skills.py}}
 ```
 
 
@@ -354,7 +375,7 @@ In a second terminal connected to the same container:
 
 ```bash
 cd /workspace
-pytest -q
+/usr/bin/python3 -m pytest -q
 cd dora
 dora run dataflow.yml
 ```
@@ -421,7 +442,7 @@ the robot behavior can be reviewed without downloading anything.
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/controllers/week9_controller/navigation_control.py}}
+{{#include ../assets/llm-action-planning/source/controllers/action_controller/navigation_control.py}}
 ```
 
 
@@ -429,7 +450,7 @@ the robot behavior can be reviewed without downloading anything.
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/controllers/week9_controller/week9_controller.py}}
+{{#include ../assets/llm-action-planning/source/controllers/action_controller/action_controller.py}}
 ```
 
 
@@ -474,7 +495,7 @@ model assets stay as downloads because they are consumed as scene assets.
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/week9_validation/contracts.py}}
+{{#include ../assets/llm-action-planning/source/action_planning/contracts.py}}
 ```
 
 

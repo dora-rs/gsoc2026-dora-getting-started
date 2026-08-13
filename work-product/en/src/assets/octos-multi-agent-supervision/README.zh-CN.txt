@@ -14,7 +14,7 @@
 
 - Ubuntu 22.04、NVIDIA GPU 和可用的 X11 桌面
 - Docker Engine 与 NVIDIA Container Toolkit
-- Dora CLI 和 Python 包 0.5.0
+- Dora CLI 1.0.0-rc.4 与 `dora-rs==1.0.0rc4`
 - 容器提供的 Webots R2025a 与 ROS 2 Humble
 - Octos 2.0.2
 - Ollama 0.32.1
@@ -47,13 +47,13 @@ chmod +x run-container.sh launch-webots.sh
 ```bash
 docker exec -it octos-process-supervision bash
 cd /workspace/dora
-dora run week11_dataflow.yml
+dora run process_dataflow.yml
 ```
 
 宿主机终端 3：
 
 ```bash
-python3 tools/run_octos_multi_agent.py
+/usr/bin/python3 tools/run_octos_multi_agent.py
 ```
 
 任务没有自然结束条件。观察到足够的冷却与泄压循环后按 `Ctrl+C`；退出路径会先
@@ -65,7 +65,7 @@ python3 tools/run_octos_multi_agent.py
 
 ```bash
 cd /workspace
-python3 -m pytest -q
+/usr/bin/python3 -m pytest -q
 ```
 
 运行输出保存在 `outputs/`，并由 Git 忽略。

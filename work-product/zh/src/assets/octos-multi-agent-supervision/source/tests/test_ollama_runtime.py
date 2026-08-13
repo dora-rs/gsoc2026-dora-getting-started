@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from week11_runtime.ollama_runtime import unload_model
+from process_runtime.ollama_runtime import unload_model
 
 
 def test_unload_model_uses_the_selected_ollama_binary() -> None:

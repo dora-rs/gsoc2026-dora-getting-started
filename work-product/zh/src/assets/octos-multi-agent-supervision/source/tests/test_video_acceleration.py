@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from week11_runtime.video_acceleration import build_ffmpeg_command
+from process_runtime.video_acceleration import build_ffmpeg_command
 
 
 def test_ffmpeg_command_accelerates_without_scaling_or_audio() -> None:

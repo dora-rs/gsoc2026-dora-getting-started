@@ -1,6 +1,6 @@
 import pytest
 
-from week11_runtime.switch_actions import execute_switch_actions_once
+from process_runtime.switch_actions import execute_switch_actions_once
 
 
 def test_independent_switch_actions_are_executed_once(tmp_path) -> None:

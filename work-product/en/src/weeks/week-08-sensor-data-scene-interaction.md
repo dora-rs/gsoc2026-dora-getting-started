@@ -12,7 +12,9 @@
 | `webots_ros2_tiago` | 2025.0.0 |
 | Navigation2 | 1.1.20 |
 | SLAM Toolbox | 2.6.10 |
-| Dora CLI and Python API | 0.5.0 |
+| Dora CLI and Python API | 1.0.0-rc.4 |
+| Dora runtime Python | 3.11.14 |
+| ROS 2 worker Python | 3.10.12 |
 
 ## Downloads
 
@@ -310,8 +312,12 @@ Use three narrow nodes:
 - `mission-controller`: waits for required fields and calls Nav2.
 - `result-reporter`: prints mission-state changes.
 
+The Dora nodes run with Python 3.11. ROS 2 Humble's `rclpy` workers remain on
+the system Python 3.10 runtime. A small JSONL bridge carries commands and
+results between those processes, while Dora remains the application dataflow.
+
 ```text
-Implement a Dora 0.5.0 dataflow for the running Webots and Nav2 system.
+Implement a Dora 1.0.0-rc.4 dataflow for the running Webots and Nav2 system.
 
 Create sensor-bridge, mission-controller, and result-reporter Python nodes.
 The sensor node must subscribe to /scan, /odom, /map, the three TIAGo sonar
@@ -325,10 +331,11 @@ Record WAITING_FOR_SENSORS, READY, GOAL_SENT, NAVIGATING, SUCCEEDED, and FAILED
 states. Save a final JSON result. Reject duplicate goals and report Nav2
 rejection, timeout, cancellation, or non-success action status.
 
-Dora 0.5.0's Python API in this environment does not expose the ROS 2 Action
-client, so use rclpy ActionClient inside the Dora mission node. Keep all
-readiness and result messages on the Dora dataflow. Add focused tests for the
-readiness gate and terminal states.
+Run the Dora-facing nodes with Python 3.11 and launch the ROS subscribers and
+rclpy ActionClient in supplied Python 3.10 workers. Exchange only structured
+JSONL messages through the bridge. Keep all readiness and result messages on
+the Dora dataflow. Add focused tests for the readiness gate, worker protocol,
+and terminal states.
 ```
 
 ### Reference Dataflow
@@ -377,8 +384,8 @@ future.add_done_callback(on_goal_response)
 
 Current Dora documentation also describes native and YAML
 [ROS 2 topic, service, and action bridges](https://dora-rs.ai/dora/advanced/ros2-bridge).
-When using a newer Dora version, ask the assistant to compare that API with the
-validated `rclpy` integration before changing the dataflow.
+This project uses an explicit worker boundary so the pinned ROS 2 Humble and
+Dora Python runtimes remain independently reproducible.
 
 ### Complete Dora Source
 
@@ -387,6 +394,10 @@ validated `rclpy` integration before changing the dataflow.
 
 ```python
 {{#include ../assets/lidar-slam-navigation/source/dora/sensor_bridge_node.py}}
+```
+
+```python
+{{#include ../assets/lidar-slam-navigation/source/dora/sensor_ros_worker.py}}
 ```
 
 
@@ -403,6 +414,16 @@ validated `rclpy` integration before changing the dataflow.
 
 ```python
 {{#include ../assets/lidar-slam-navigation/source/dora/mission_controller_node.py}}
+```
+
+```python
+{{#include ../assets/lidar-slam-navigation/source/dora/navigation_ros_worker.py}}
+```
+
+#### Runtime bridge protocol
+
+```python
+{{#include ../assets/lidar-slam-navigation/source/dora/bridge_protocol.py}}
 ```
 
 

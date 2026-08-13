@@ -11,7 +11,7 @@ from sensor_msgs.msg import Image
 
 class ImageCapture(Node):
     def __init__(self, topic: str, output: Path) -> None:
-        super().__init__("week11_image_capture")
+        super().__init__("process_image_capture")
         self.output = output
         self.saved = False
         self.create_subscription(Image, topic, self.on_image, 10)

@@ -1,4 +1,4 @@
-from week11_runtime.observation_gate import (
+from process_runtime.observation_gate import (
     observer_is_docked,
     pressure_is_available,
 )

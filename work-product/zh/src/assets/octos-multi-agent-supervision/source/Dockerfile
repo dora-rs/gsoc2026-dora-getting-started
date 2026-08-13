@@ -1,6 +1,8 @@
 FROM cyberbotics/webots:R2025a-ubuntu22.04
 
 ARG ROS_DISTRO=humble
+ARG DORA_CLI_VERSION=1.0.0-rc.4
+ARG DORA_PYTHON_VERSION=1.0.0rc4
 ENV ROS_DISTRO=${ROS_DISTRO}
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -27,7 +29,6 @@ RUN apt-get update \
         ros-${ROS_DISTRO}-cv-bridge \
         ros-${ROS_DISTRO}-ros-base \
     && python3 -m pip install --no-cache-dir \
-        "dora-rs==0.5.0" \
         "fastapi==0.140.13" \
         "httpx==0.28.1" \
         "pydantic==2.13.4" \
@@ -35,8 +36,29 @@ RUN apt-get update \
         "pytest>=7,<9" \
         "PyYAML>=6,<7" \
         "requests>=2.31,<3" \
+        "uv==0.11.17" \
         "uvicorn==0.51.0" \
     && rm -rf /var/lib/apt/lists/*
+
+RUN uv python install 3.11.14 \
+    && uv venv --python 3.11.14 /opt/dora-venv \
+    && uv pip install --python /opt/dora-venv/bin/python \
+        "dora-rs==${DORA_PYTHON_VERSION}" \
+        "pyarrow==24.0.0" \
+        "PyYAML==6.0.3" \
+    && mkdir -p /opt/uv/bin \
+    && mv /usr/local/bin/uv /opt/uv/bin/uv \
+    && if [ -e /usr/local/bin/uvx ]; then mv /usr/local/bin/uvx /opt/uv/bin/uvx; fi
+
+RUN curl -fsSL \
+        "https://github.com/dora-rs/dora/releases/download/v${DORA_CLI_VERSION}/dora-cli-x86_64-unknown-linux-gnu.tar.gz" \
+        -o /tmp/dora-cli.tar.gz \
+    && echo "251cb47b6e306049082c9d5fc30aa6e73c7be1ad27acfbcfff2f23be3202dd5a  /tmp/dora-cli.tar.gz" | sha256sum --check --status \
+    && tar -xzf /tmp/dora-cli.tar.gz -C /tmp \
+    && install -m 0755 /tmp/dora-cli-x86_64-unknown-linux-gnu/dora /usr/local/bin/dora \
+    && rm -rf /tmp/dora-cli.tar.gz /tmp/dora-cli-x86_64-unknown-linux-gnu
+
+ENV PATH="/opt/dora-venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 COPY ros-entrypoint.sh /ros-entrypoint.sh
 RUN chmod +x /ros-entrypoint.sh

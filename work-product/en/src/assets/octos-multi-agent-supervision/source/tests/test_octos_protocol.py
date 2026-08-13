@@ -1,6 +1,6 @@
 import pytest
 
-from week11_runtime.octos_protocol import (
+from process_runtime.octos_protocol import (
     parse_strategy_proposal,
     parse_octos_chat_response,
     parse_supervisor_decision,

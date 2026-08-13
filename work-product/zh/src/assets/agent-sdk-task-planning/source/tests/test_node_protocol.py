@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from week10_runtime.protocol import (
+from agent_runtime.protocol import (
     action_result,
     parse_controller_state,
 )

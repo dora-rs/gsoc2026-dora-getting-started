@@ -15,15 +15,15 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from common import send_json
-from week10_runtime.state_projection import public_robot_state
+from agent_runtime.state_projection import public_robot_state
 
 
 class StateRuntime:
     def __init__(self):
-        self.node = rclpy.create_node("week10_state_runtime")
+        self.node = rclpy.create_node("agent_state_runtime")
         self.latest = None
         self.node.create_subscription(
-            String, "/week10/robot_state", self._on_state, 10
+            String, "/agent_task/robot_state", self._on_state, 10
         )
 
     def _on_state(self, message):
@@ -55,7 +55,7 @@ def main():
                     dora,
                     "state",
                     runtime.latest.model_dump(mode="json"),
-                    "week10.robot-state.v1",
+                    "agent_task.robot-state.v1",
                 )
     finally:
         runtime.node.destroy_node()

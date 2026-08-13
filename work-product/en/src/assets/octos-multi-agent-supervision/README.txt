@@ -17,7 +17,7 @@ remain responsible for execution and hard safety limits.
 
 - Ubuntu 22.04 with an NVIDIA GPU and working X11 display
 - Docker Engine and NVIDIA Container Toolkit
-- Dora CLI and Python package 0.5.0
+- Dora CLI 1.0.0-rc.4 and `dora-rs==1.0.0rc4`
 - Webots R2025a and ROS 2 Humble, supplied by the container
 - Octos 2.0.2
 - Ollama 0.32.1
@@ -50,13 +50,13 @@ Terminal 2:
 ```bash
 docker exec -it octos-process-supervision bash
 cd /workspace/dora
-dora run week11_dataflow.yml
+dora run process_dataflow.yml
 ```
 
 Terminal 3 on the host:
 
 ```bash
-python3 tools/run_octos_multi_agent.py
+/usr/bin/python3 tools/run_octos_multi_agent.py
 ```
 
 The task has no natural completion. Press `Ctrl+C` after observing the desired
@@ -69,7 +69,7 @@ Inside the container:
 
 ```bash
 cd /workspace
-python3 -m pytest -q
+/usr/bin/python3 -m pytest -q
 ```
 
 Runtime output is written below `outputs/` and is ignored by Git.

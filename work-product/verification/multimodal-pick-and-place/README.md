@@ -8,9 +8,9 @@ separate Dora nodes.
 
 - Ubuntu 22.04.5 LTS, x86_64
 - NVIDIA driver 580.159.03
-- Dora CLI and Python API 0.5.0
+- Dora CLI 1.0.0-rc.4 and `dora-rs==1.0.0rc4`
 - Habitat-Sim 0.3.3
-- Python 3.9
+- Python 3.11 for Dora and Python 3.9 for Habitat-Sim
 - NumPy 1.26.4
 - SciPy 1.13.1
 - OpenCV 4.12.0

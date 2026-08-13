@@ -13,7 +13,7 @@ TIME_STEP = 32
 def main():
     rclpy.init(args=sys.argv)
     robot = Robot()
-    node = rclpy.create_node("week10_scene_camera_bridge")
+    node = rclpy.create_node("agent_scene_camera_bridge")
     camera = robot.getDevice("scene_camera")
     camera.enable(TIME_STEP)
     publisher = node.create_publisher(Image, "/scene_camera/image_raw", 10)

@@ -5,7 +5,8 @@
 | 组件 | 版本 / 环境 |
 | --- | --- |
 | 操作系统 | Ubuntu 22.04.5 LTS, x86_64 |
-| Python | CPython 3.10.12 |
+| Python | CPython 3.11.14 |
+| Dora CLI / Python 包 | `1.0.0-rc.4` / `dora-rs==1.0.0rc4` |
 | Rerun CLI 与 Python SDK | 0.33.0 |
 
 ## 下载

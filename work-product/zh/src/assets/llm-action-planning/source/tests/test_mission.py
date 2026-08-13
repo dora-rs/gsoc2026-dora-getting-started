@@ -1,7 +1,7 @@
 import unittest
 
 from test_plan_validator import canonical_plan
-from week9_validation.mission import MissionMachine
+from action_planning.mission import MissionMachine
 
 
 def complete(machine, result):
