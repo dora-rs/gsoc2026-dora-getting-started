@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BOOK_ROOTS = (ROOT / "en" / "src", ROOT / "zh" / "src")
 TEXT_SUFFIXES = {".md", ".txt", ".toml", ".yml", ".yaml", ".py", ".sh", ".ps1"}
 IGNORED_PARTS = {".venv", ".pytest_cache", "__pycache__", ".tools", "book"}
+NON_EXAMPLE_CHAPTERS = {"preparation-llms-agents-coding-assistants.md"}
 
 
 def text_files(root: Path):
@@ -30,6 +31,8 @@ class BookReleaseTests(unittest.TestCase):
         failures = []
         for root in BOOK_ROOTS:
             for path in sorted((root / "weeks").glob("*.md")):
+                if path.name in NON_EXAMPLE_CHAPTERS:
+                    continue
                 text = path.read_text(encoding="utf-8")
                 counts = (
                     text.count('class="prompt-route prompt-route--create"'),

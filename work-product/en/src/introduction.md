@@ -88,6 +88,7 @@ before it.
 
 <div class="roadmap-grid">
   <a class="roadmap-item" href="weeks/week-01-dora-introduction-installation-hello-world.html"><span>Foundations</span><strong>Dora and Hello World</strong><em>Dora introduction, installation guide, and Hello World example.</em></a>
+  <a class="roadmap-item" href="weeks/preparation-llms-agents-coding-assistants.html"><span>Preparation</span><strong>LLMs, Agents, and Coding Assistants</strong><em>Choose a model and assistant, configure permissions, and connect OctosCode to DeepSeek.</em></a>
   <a class="roadmap-item" href="weeks/week-02-rerun-scene-with-dora.html"><span>Visualization</span><strong>Rerun Static Scene</strong><em>Rerun visualization introduction, installation, initialization, and first static 3D scene.</em></a>
   <a class="roadmap-item" href="weeks/week-03-ai-assistant-rerun-workflow.html"><span>Motion</span><strong>Dora-Controlled Motion</strong><em>Use Dora and an AI assistant workflow to make the Rerun scene move.</em></a>
   <a class="roadmap-item" href="weeks/week-04-camera-data-visual-feedback.html"><span>Simulation</span><strong>Camera Sensors</strong><em>Use Habitat-Sim to generate RGB and depth data from a simulated wrist camera.</em></a>

@@ -118,6 +118,14 @@ and model Providers in one runtime. This chapter uses
 `octos chat --message` for repeatable Agent invocations and gives the three
 roles different models, role instructions, and orchestration responsibilities.
 
+Octos and OctosCode are related but serve different layers. **Octos** is the
+runtime that owns Profiles, models, Skills, tools, sessions, policies, and Agent
+execution. **OctosCode** is the terminal coding-assistant client built on that
+runtime; it helps a developer inspect and change a repository. The preparation
+chapter uses OctosCode as the development interface. This chapter uses Octos
+itself as the robot system's decision runtime, and OctosCode is not part of the
+continuous control loop.
+
 `adora` was an experimental environment for Dora's agentic-workflow design.
 That work has been consolidated into [Dora](https://github.com/dora-rs/dora),
 so this chapter uses the Dora CLI and dataflow directly and does not require a

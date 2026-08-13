@@ -104,6 +104,12 @@ Profile、Skill、工具策略、会话、沙箱和模型 Provider 组织在同�
 本章使用 `octos chat --message` 启动可重复的单次 Agent 执行，并为三个角色配置
 不同模型、角色指令与编排职责。
 
+Octos 与 OctosCode 属于同一套技术体系，但位于不同层。**Octos** 是管理 Profile、
+模型、Skill、工具、会话、策略和 Agent 执行的 runtime；**OctosCode** 是建立在该
+runtime 上的终端编程助手客户端，用来帮助开发者检查和修改代码仓库。准备工作章节
+使用 OctosCode 作为开发界面；本章则把 Octos 本身作为机器人系统的决策 runtime，
+OctosCode 不参与持续控制闭环。
+
 `adora` 曾用于验证 Dora 面向 agentic workflow 的实验性设计；相关工作已经
 整合回 [Dora](https://github.com/dora-rs/dora)，因此本章直接使用 Dora CLI 和
 dataflow，不需要安装独立的 adora 运行时。历史背景可查看

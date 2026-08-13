@@ -102,7 +102,10 @@ body {
 }
 
 .content main {
+  width: 100%;
+  min-width: 0;
   max-width: var(--content-max-width);
+  box-sizing: border-box;
   padding-top: 34px;
 }
 
@@ -156,6 +159,8 @@ body {
 }
 
 .table-wrapper {
+  width: 100%;
+  max-width: 100%;
   margin: 1.35rem 0;
   overflow-x: auto;
   border-radius: var(--dora-radius);
@@ -342,6 +347,12 @@ body {
 .content video.standard-demo-video {
   height: auto;
   aspect-ratio: 8 / 5;
+  object-fit: cover;
+}
+
+.content video.terminal-demo-video {
+  height: auto;
+  aspect-ratio: 1358 / 870;
   object-fit: cover;
 }
 

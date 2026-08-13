@@ -12,14 +12,23 @@
 | Dora PyPI 包 | <https://pypi.org/project/dora-rs/1.0.0rc4/> |
 | Adora 归档与合并说明 | <https://github.com/dora-rs/adora> |
 | Codex CLI | <https://learn.chatgpt.com/docs/codex/cli> |
-| Codex 模型 | <https://learn.chatgpt.com/docs/models> |
-| Codex 命令 | <https://learn.chatgpt.com/docs/developer-commands?surface=cli> |
+| OpenAI 模型 | <https://developers.openai.com/api/docs/models> |
+| Claude Platform | <https://platform.claude.com/docs/en/intro> |
+| Claude Code | <https://code.claude.com/docs/en/overview> |
+| DeepSeek API | <https://api-docs.deepseek.com/> |
+| DeepSeek 模型与价格 | <https://api-docs.deepseek.com/quick_start/pricing/> |
+| Gemini API | <https://ai.google.dev/gemini-api/docs> |
+| Gemini CLI | <https://github.com/google-gemini/gemini-cli> |
+| xAI API | <https://docs.x.ai/overview> |
+| OctosCode | <https://github.com/octos-org/octoscode> |
+| OpenCode | <https://opencode.ai/docs/> |
+| NIST CAISI DeepSeek V4 Pro 评测 | <https://www.nist.gov/news-events/news/2026/05/caisi-evaluation-deepseek-v4-pro> |
+| Artificial Analysis DeepSeek V4 Pro | <https://artificialanalysis.ai/models/deepseek-v4-pro> |
 | Rerun Python SDK 安装指南 | <https://rerun.io/docs/getting-started/install-rerun/python> |
 | Rerun log and ingest 指南 | <https://rerun.io/docs/getting-started/data-in> |
 | Rerun CLI manual | <https://rerun.io/docs/reference/cli> |
 | Rerun SDK PyPI 包 | <https://pypi.org/project/rerun-sdk/> |
 | Rerun GitHub 仓库 | <https://github.com/rerun-io/rerun> |
-| Claude Code 概览 | <https://docs.anthropic.com/en/docs/claude-code/overview> |
 | OpenClaw 仓库 | <https://github.com/openclaw/openclaw> |
 | Octos 仓库 | <https://github.com/octos-org/octos> |
 
