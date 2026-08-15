@@ -97,8 +97,8 @@ OFF verification、成功 return_home、最终 SUCCEEDED/PASS、图片和干净�
 
 ## 检查参考工程
 
-请使用提供的场景，不要让助手自行猜测场景几何或机器人尺寸。将压缩包解压到新目录
-后，让助手检查工程，而不是重新生成：
+请使用提供的场景，不要让编程助手自行猜测场景几何或机器人尺寸。将压缩包解压到新目录
+后，让编程助手检查工程，而不是重新生成：
 
 ```text
 检查这个提供的 Webots R2025a 与 Dora 1.0.0-rc.4 参考工程。
@@ -113,7 +113,7 @@ OFF verification、成功 return_home、最终 SUCCEEDED/PASS、图片和干净�
 
 ## 准备环境
 
-让助手只安装提供的工程所需的内容：
+让编程助手只安装提供的工程所需的内容：
 
 ```text
 准备这台 Ubuntu 22.04 计算机，用于运行提供的参考工程。
@@ -275,7 +275,7 @@ Python 3.10 worker。sidecar 使用 JSONL 转发 Dora events 和 outputs，因�
 {{#include ../assets/llm-action-planning/source/dora/runtime_bridge/sidecar_bridge.py}}
 ```
 
-让助手围绕通过校验的计划构建编排层：
+让编程助手围绕通过校验的计划构建编排层：
 
 ```text
 为提供的场景实现 Dora 1.0.0-rc.4 应用。
@@ -390,7 +390,7 @@ cd dora
 dora run dataflow.yml
 ```
 
-让助手验证完整流程：
+让编程助手验证完整流程：
 
 ```text
 端到端运行提供的动作规划工程。

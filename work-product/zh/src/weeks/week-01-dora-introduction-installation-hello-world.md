@@ -32,7 +32,7 @@
 <div class="prompt-route prompt-route--create">
   <span class="prompt-route__label">创造路线</span>
   <strong>从零创建最小 Dora 应用</strong>
-  <p>适合希望让助手创建并解释每个文件的读者。</p>
+  <p>适合希望让编程助手创建并解释每个文件的读者。</p>
 </div>
 
 ```text

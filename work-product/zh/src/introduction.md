@@ -7,6 +7,15 @@ dataflow 开始，然后逐步加入可视化、可复用仿真场景、传感�
 它的目标不是罗列所有 API，而是帮助你理解 Dora 程序如何组织，使用 AI 构建并
 检查可运行的示例，再把这些示例连接成能力逐步增强的机器人工作流。
 
+完成本教程后，你还将熟悉与编程助手协作的基本方法：清楚描述目标、约束和验收
+条件，让 AI 协助完成环境准备、代码实现、调试，以及重复且耗时的工程工作，同时
+保留对关键决策和运行结果的验证。
+
+## 视频教程
+
+- [中文视频教程（哔哩哔哩）](https://www.bilibili.com/video/BV1Ljb16cEty)
+- [英文视频教程（YouTube）](https://www.youtube.com/watch?v=vtcaegVVe0c&list=PLWAJx-bWTTEo)
+
 ## 教程思路
 
 每一章都围绕一个可运行的小切片展开：
@@ -27,12 +36,12 @@ dataflow 开始，然后逐步加入可视化、可复用仿真场景、传感�
   <section class="route-overview__item route-overview__item--create">
     <span class="route-overview__label">创造路线</span>
     <strong>从零开始搭建</strong>
-    <p>根据明确的需求，让助手创建场景、资产、dataflow、接口、测试和运行脚本。这条路线探索性更强，需要能力较强的模型、更多时间，也更适合喜欢调试和深入理解实现的开发者。</p>
+    <p>根据明确的需求，让编程助手创建场景、资产、dataflow、接口、测试和运行脚本。这条路线探索性更强，需要能力较强的模型、更多时间，也更适合喜欢调试和深入理解实现的开发者。</p>
   </section>
   <section class="route-overview__item route-overview__item--reproduce">
     <span class="route-overview__label">复现路线</span>
     <strong>使用已验证资产</strong>
-    <p>把可下载工程交给助手，让它严格使用固定版本、唯一入口和验收标记。这条路线成功率更高，适合能力较弱的助手，也适合希望快速跑通示例并建立整体思维模型的读者。</p>
+    <p>把可下载工程交给编程助手，让它严格使用固定版本、唯一入口和验收标记。这条路线成功率更高，适合能力较弱的编程助手，也适合希望快速跑通示例并建立整体思维模型的读者。</p>
   </section>
 </div>
 
@@ -53,11 +62,11 @@ dataflow 开始，然后逐步加入可视化、可复用仿真场景、传感�
 
 如果你刚接触 Dora，请从第一章开始。第一章建立安装和 Hello World dataflow 的基础；下一章通过静态场景引入 Rerun；再下一章使用 Dora 让同一个场景动起来。后续章节会继续沿着这个基础扩展。
 
-使用创造路线时，应要求助手查阅官方文档，并验证每个外部依赖。使用复现路线时，
-章节工程中的 `VERSIONS.md` 和 lock 文件是唯一版本依据，不要让助手自行升级依赖、
+使用创造路线时，应要求编程助手查阅官方文档，并验证每个外部依赖。使用复现路线时，
+章节工程中的 `VERSIONS.md` 和 lock 文件是唯一版本依据，不要让编程助手自行升级依赖、
 替换资产或创造第二套启动方式。
 
-两条路线都不能把助手声称“完成”当作成功。应检查章节列出的生成文件、运行时标记
+两条路线都不能把编程助手声称“完成”当作成功。应检查章节列出的生成文件、运行时标记
 和最终状态。如果入口在后台运行，必须等待该进程真正结束后再判断结果。
 
 ## 学习路线
@@ -65,10 +74,10 @@ dataflow 开始，然后逐步加入可视化、可复用仿真场景、传感�
 这份路线图把教程组织成一条连续的学习路径。每个主题都会建立在前面已经完成的可运行代码、验证方法和概念之上。
 
 <div class="roadmap-grid">
-  <a class="roadmap-item" href="weeks/preparation-llms-agents-coding-assistants.html"><span>准备</span><strong>LLM、Agent 与编程助手</strong><em>选择模型和助手，配置权限，并将 OctosCode 连接到 DeepSeek。</em></a>
+  <a class="roadmap-item" href="weeks/preparation-llms-agents-coding-assistants.html"><span>准备</span><strong>LLM、Agent 与编程助手</strong><em>选择模型和编程助手，配置权限，并将 OctosCode 连接到 DeepSeek。</em></a>
   <a class="roadmap-item" href="weeks/week-01-dora-introduction-installation-hello-world.html"><span>基础</span><strong>Dora 与 Hello World</strong><em>Dora 介绍、安装指南和 Hello World 示例。</em></a>
   <a class="roadmap-item" href="weeks/week-02-rerun-scene-with-dora.html"><span>可视化</span><strong>Rerun 静态场景</strong><em>Rerun 可视化介绍、安装、初始化，以及第一个静态 3D 场景。</em></a>
-  <a class="roadmap-item" href="weeks/week-03-ai-assistant-rerun-workflow.html"><span>运动控制</span><strong>Dora 控制运动</strong><em>使用 Dora 和 AI 助手工作流，让 Rerun 场景动起来。</em></a>
+  <a class="roadmap-item" href="weeks/week-03-ai-assistant-rerun-workflow.html"><span>运动控制</span><strong>Dora 控制运动</strong><em>使用 Dora 和 AI 编程助手工作流，让 Rerun 场景动起来。</em></a>
   <a class="roadmap-item" href="weeks/week-04-camera-data-visual-feedback.html"><span>仿真</span><strong>相机传感器</strong><em>使用 Habitat-Sim 从仿真 wrist camera 生成 RGB 和 depth data。</em></a>
   <a class="roadmap-item" href="weeks/week-07-multimodal-scene-understanding.html"><span>场景感知</span><strong>用多模态模型分析视觉信息</strong><em>使用本地多模态模型把腕部摄像机图像转换成结构化 JSON。</em></a>
   <a class="roadmap-item" href="weeks/week-08-sensor-data-scene-interaction.html"><span>导航</span><strong>激光雷达、SLAM 与 Dora 导航</strong><em>构建激光占据地图，并让 Dora 协调 Nav2 完成导航任务。</em></a>
@@ -77,4 +86,4 @@ dataflow 开始，然后逐步加入可视化、可复用仿真场景、传感�
   <a class="roadmap-item" href="weeks/week-11-adora-octos-integration.html"><span>多 Agent 系统</span><strong>Octos 持续过程监督</strong><em>让观察、操作和监督角色通过 Dora 协作，持续控制温度与压力。</em></a>
 </div>
 
-需要和 Dora、Rerun 或 AI 助手的上游资料对照时，可以查看参考资料页。
+需要和 Dora、Rerun 或 AI 编程助手的上游资料对照时，可以查看参考资料页。

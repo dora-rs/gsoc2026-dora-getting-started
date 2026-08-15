@@ -9,6 +9,17 @@ The goal is not to list every API. It is to help you understand how Dora
 programs are organized, use AI to build and inspect runnable examples, and
 connect those examples into increasingly capable robotics workflows.
 
+By the end of the tutorial, you will also understand how to work effectively
+with a coding assistant: describe goals, constraints, and acceptance criteria
+clearly; use AI to help with environment setup, implementation, debugging, and
+repetitive engineering work; and retain responsibility for validating key
+decisions and runtime results.
+
+## Video Tutorials
+
+- [English video series on YouTube](https://www.youtube.com/watch?v=vtcaegVVe0c&list=PLWAJx-bWTTEo)
+- [Chinese video series on Bilibili](https://www.bilibili.com/video/BV1Ljb16cEty)
+
 ## Tutorial Approach
 
 Each chapter is built around a runnable slice:

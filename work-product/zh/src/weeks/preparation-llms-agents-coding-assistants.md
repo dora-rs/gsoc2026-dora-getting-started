@@ -9,7 +9,7 @@
 | API 形式 | OpenAI 兼容的 Chat Completions |
 | 已验证桌面环境 | Ubuntu 24.04 LTS，x86_64 |
 
-模型目录、价格和助手版本变化很快。下文排序是面向本教程的实用起点，不是永久的
+模型目录、价格和编程助手版本变化很快。下文排序是面向本教程的实用起点，不是永久的
 全球排行榜。注册付费服务前，请重新检查对应文档。
 
 ## 什么是 LLM
@@ -47,16 +47,16 @@ DeepSeek 排在第三而不是第一，是因为成本只是可靠开发流程�
 [Artificial Analysis 实时模型页](https://artificialanalysis.ai/models/deepseek-v4-pro)
 和 [DeepSeek 当前价格](https://api-docs.deepseek.com/quick_start/pricing/)。
 
-## Agent 与助手类应用
+## Agent 与编程助手类应用
 
 **Agent** 在 LLM 外增加一个循环：理解目标、选择工具、观察结果、更新状态，再决定
 下一步。**编程助手**是你直接使用的应用，它把 Agent runtime 包装成终端、IDE、
 桌面或 Web 界面，并提供文件访问、命令执行、diff、权限、会话与审阅控制。
 
-<div class="architecture-flow" role="img" aria-label="用户任务进入编程助手，助手管理 Agent 循环，调用 LLM，并在工作区中使用经过授权的工具">
+<div class="architecture-flow" role="img" aria-label="用户任务进入编程助手，编程助手管理 Agent 循环，调用 LLM，并在工作区中使用经过授权的工具">
   <div class="architecture-node"><strong>你的任务</strong><small>目标与验收条件</small></div>
   <div class="architecture-arrow" aria-hidden="true">&rarr;</div>
-  <div class="architecture-node"><strong>助手应用</strong><small>终端、IDE、App 或 Web</small></div>
+  <div class="architecture-node"><strong>编程助手应用</strong><small>终端、IDE、App 或 Web</small></div>
   <div class="architecture-arrow" aria-hidden="true">&rarr;</div>
   <div class="architecture-node"><strong>Agent 循环</strong><small>规划、行动、观察、验证</small></div>
   <div class="architecture-arrow" aria-hidden="true">&rarr;</div>
@@ -65,14 +65,14 @@ DeepSeek 排在第三而不是第一，是因为成本只是可靠开发流程�
   <div class="architecture-node"><strong>工具</strong><small>文件、终端、测试与网络</small></div>
 </div>
 
-模型提供主要推理能力；助手决定如何组织上下文、开放哪些工具、怎样控制权限，以及
+模型提供主要推理能力；编程助手决定如何组织上下文、开放哪些工具、怎样控制权限，以及
 如何把执行结果送回模型。替换其中任何一层，都可能改变任务结果。
 
 ## 五个主流编程助手
 
 这里同样是面向本教程的推荐顺序，不是独立基准排行榜。
 
-| 顺序 | 助手 | 实用优势 | 官方文档 |
+| 顺序 | 编程助手 | 实用优势 | 官方文档 |
 | --- | --- | --- | --- |
 | 1 | Codex CLI | 仓库工作流成熟，可配置模型、思考强度、审批、沙箱和多种工具 | [Codex CLI 文档](https://learn.chatgpt.com/docs/codex/cli) |
 | 2 | Claude Code | 适合代码库探索、实现、测试和长时间运行任务的终端工作流 | [Claude Code 文档](https://code.claude.com/docs/en/overview) |
@@ -88,7 +88,7 @@ OctosCode 排在第三，是因为它用轻量终端工作流提供了完整控�
 
 ## 首先确认三个控制项
 
-无论使用哪个助手，在允许它修改仓库之前都应检查：
+无论使用哪个编程助手，在允许它修改仓库之前都应检查：
 
 - **模型**：多文件实现使用能力更强的编程模型；短问题可以使用更快的模型。
   OctosCode 中使用 `/model`；
@@ -98,7 +98,7 @@ OctosCode 排在第三，是因为它用轻量终端工作流提供了完整控�
   可信的环境中使用。OctosCode 中使用 `/permissions`。
 
 Codex 也通过 `/model`、`/permissions`、命令行参数和配置文件暴露这些概念。
-其他助手的名称不同，应查看各自安全文档，不要直接跨产品复制参数。
+其他编程助手的名称不同，应查看各自安全文档，不要直接跨产品复制参数。
 
 ## 安装 OctosCode
 
@@ -140,7 +140,7 @@ npm install -g @octos-org/octoscode
 
 ## 连接 DeepSeek V4 Pro 0813
 
-进入工程目录并启动助手：
+进入工程目录并启动编程助手：
 
 ```bash
 cd <your-project>
@@ -178,7 +178,7 @@ Do not run tools or modify files. Reply exactly with: CONNECTION OK
 
 ![OctosCode 已连接 deepseek-v4-pro 并返回预期标记](../assets/ai-assistant-preparation/octoscode-deepseek-connection.png)
 
-## 配合本教程使用助手
+## 配合本教程使用编程助手
 
 选择成功率更高的复现路线时，下载章节资产后先输入：
 
@@ -190,7 +190,7 @@ not claim success until the command, tests, and final status all pass. Keep API
 keys, usernames, hostnames, and absolute paths out of files and output.
 ```
 
-选择创造路线时，助手还要根据规格搭建更多场景和工程内容。应使用能力更强的模型，
+选择创造路线时，编程助手还要根据规格搭建更多场景和工程内容。应使用能力更强的模型，
 预留迭代时间，并坚持使用相同的验收证据判断是否完成。
 
 ## 故障排查
@@ -202,7 +202,7 @@ keys, usernames, hostnames, and absolute paths out of files and output.
 | Provider 测试返回 `401` | 重新创建 DeepSeek 密钥，并确认复制时没有空格 |
 | Provider 测试返回 `402` 或额度错误 | 在 DeepSeek 平台检查余额和账号限制 |
 | `/status` 显示了错误模型 | 用 `/model` 选择 `deepseek-v4-pro`，保存并重启本地 server |
-| 助手请求过宽权限 | 从只读开始，确实需要修改时再授予工作区写入 |
+| 编程助手请求过宽权限 | 从只读开始，确实需要修改时再授予工作区写入 |
 
 ## 来源
 
@@ -216,5 +216,5 @@ keys, usernames, hostnames, and absolute paths out of files and output.
 
 ## 下一步
 
-下一章会介绍 Dora、安装固定版本的工具链，并使用本章准备好的助手工作流运行第一个
+下一章会介绍 Dora、安装固定版本的工具链，并使用本章准备好的编程助手工作流运行第一个
 Hello World dataflow。

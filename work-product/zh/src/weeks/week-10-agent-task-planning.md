@@ -217,7 +217,7 @@ Dora node，再到 Webots controller 和结构化结果返回的路径。
 主机名、私有路径、网络地址、token 或无关环境变量。
 ```
 
-助手应该识别出三个位置定义在 `config/locations.json`，但这些坐标不会出现在
+编程助手应该识别出三个位置定义在 `config/locations.json`，但这些坐标不会出现在
 工具 schema 中。`config/skill_manifest.json` 给出了模型可以理解的能力边界：
 
 ```json
@@ -226,7 +226,7 @@ Dora node，再到 Webots controller 和结构化结果返回的路径。
 
 ### 准备本地模型与容器
 
-在带 NVIDIA GPU 的 Ubuntu 22.04 桌面上，让助手先检查资源和已有版本：
+在带 NVIDIA GPU 的 Ubuntu 22.04 桌面上，让编程助手先检查资源和已有版本：
 
 ```text
 为这个提供的参考工程准备运行环境。
@@ -286,7 +286,7 @@ inputs 和 outputs，同时保持两套依赖隔离。
 
 ### 定义 Dora Dataflow
 
-让助手检查每个能力是否有独立的 node 和输入输出：
+让编程助手检查每个能力是否有独立的 node 和输入输出：
 
 ```text
 检查 dora/dataflow.yml 和对应 Python nodes。
@@ -346,7 +346,7 @@ retryable、error_code、message、robot_state 和 result。
 
 ### 暴露 Agents SDK 工具
 
-让助手把 Robot API 客户端包装成函数工具：
+让编程助手把 Robot API 客户端包装成函数工具：
 
 ```text
 使用 OpenAI Agents SDK 的 @function_tool 包装本地 Robot API。
@@ -377,7 +377,7 @@ Agent 指令规定任务边界，而不是写死一份动作列表：
 {{#include ../assets/agent-sdk-task-planning/source/agent_tools.py:11:32}}
 ```
 
-让助手完成 Agent 入口：
+让编程助手完成 Agent 入口：
 
 ```text
 创建一个单 Agent 终端入口。

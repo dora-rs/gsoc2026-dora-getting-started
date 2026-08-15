@@ -264,13 +264,13 @@ Operator、Supervisor 从 Octos Skill 到 Dora node，再到 Webots
 完整环境变量或本机绝对路径。
 ```
 
-助手应识别出 `worlds/process_supervision.wbt` 是场景入口，
+编程助手应识别出 `worlds/process_supervision.wbt` 是场景入口，
 `dora/process_dataflow.yml` 是运行时拓扑，`octos-skills/` 定义模型可见能力，
 `tools/run_octos_multi_agent.py` 只负责启动角色、传递结果和管理策略生命周期。
 
 ### 准备环境
 
-让助手先检查硬件和已有安装，再执行固定版本的命令：
+让编程助手先检查硬件和已有安装，再执行固定版本的命令：
 
 ```text
 为这个参考工程准备 Ubuntu 22.04 环境。
@@ -332,7 +332,7 @@ workers 使用系统 Python 3.10。通用 JSONL sidecar 把每个 worker 接入 
 
 ### 定义 Dora Dataflow
 
-让助手检查数据是否真正通过 Dora，而不是由 runner 读取仿真内部变量：
+让编程助手检查数据是否真正通过 Dora，而不是由 runner 读取仿真内部变量：
 
 ```text
 检查 dora/process_dataflow.yml 及其节点。
@@ -404,7 +404,7 @@ runner 启动时会把这三个 Skill 文件同步到工程内的
 
 ### 配置三个 Agent
 
-让助手实现按角色编排和模型切换：
+让编程助手实现按角色编排和模型切换：
 
 ```text
 使用 Octos CLI 配置三个独立角色。
@@ -602,7 +602,7 @@ cd /workspace
 
 ## 课程小结
 
-这个案例已经初步呈现出现代机器人长期任务管理与机器人集群治理系统的雏形：多个
+这个案例已经初步呈现出现代机器人长任务管理与机器人集群治理系统的雏形：多个
 角色围绕一个持续目标分工协作，根据可观察数据调整策略，并通过 Dora 执行结构化、
 可验证、可审计的动作。
 

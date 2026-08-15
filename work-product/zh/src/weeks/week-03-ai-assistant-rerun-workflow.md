@@ -65,7 +65,7 @@ VERSIONS.md、TUTORIAL_CONTRACT.md、ASSET_GUIDE.md 和 READER_PROMPT.md。
 
 ## 检查 Dora 控制运动
 
-继续使用上面下载的参考工程。运动实现已经包含在工程中，因此让助手解释并验证它，
+继续使用上面下载的参考工程。运动实现已经包含在工程中，因此让编程助手解释并验证它，
 不要修改场景和模型资产：
 
 ```text
@@ -80,7 +80,7 @@ waypoint，并且 artifacts/dora_rerun_scene.rrd 非空。报告错误和脱敏�
 不要输出身份、网络或密钥信息。
 ```
 
-固定源码消除了场景生成差异，同时保留了有价值的助手工作流：检查 dataflow、运行、
+固定源码消除了场景生成差异，同时保留了有价值的编程助手工作流：检查 dataflow、运行、
 诊断错误并验证结果。
 
 ## Dora Dataflow
