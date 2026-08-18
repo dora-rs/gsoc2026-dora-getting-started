@@ -1,0 +1,12 @@
+name: multimodal-dora
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pillow
+  - requests
+  - pip
+  - pip:
+      - dora-rs==1.0.0rc4
+      - pyarrow==24.0.0
+      - PyYAML==6.0.3

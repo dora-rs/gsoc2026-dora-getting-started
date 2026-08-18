@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from week11_runtime.adaptive_policy import (
+from process_runtime.adaptive_policy import (
     run_strategy,
     save_strategy_version,
     validate_strategy_replays,

@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from week10_runtime.state_projection import public_robot_state
+from agent_runtime.state_projection import public_robot_state
 
 
 def test_public_state_keeps_motion_truth_but_hides_switch_ground_truth():

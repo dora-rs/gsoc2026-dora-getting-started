@@ -1,6 +1,6 @@
 nodes:
   - id: gateway
-    path: gateway_node.py
+    path: runtime_bridge/sidecar_node.py
     inputs:
       tick: dora/timer/millis/50
       state: state/state
@@ -13,38 +13,69 @@ nodes:
       - arm_request
       - observation_request
       - stop_request
+    env:
+      DORA_WORKER_SCRIPT: /workspace/dora/gateway_node.py
+      DORA_WORKER_CWD: /workspace/dora
+      DORA_WORKER_PYTHON: /usr/bin/python3
+      DORA_WORKER_PYTHONPATH: /workspace:/workspace/dora:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages
 
   - id: state
-    path: state_node.py
+    path: runtime_bridge/sidecar_node.py
     inputs:
       tick: dora/timer/millis/100
     outputs:
       - state
+    env:
+      DORA_WORKER_SCRIPT: /workspace/dora/state_node.py
+      DORA_WORKER_CWD: /workspace/dora
+      DORA_WORKER_PYTHON: /usr/bin/python3
+      DORA_WORKER_PYTHONPATH: /workspace:/workspace/dora:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages
 
   - id: navigation
-    path: navigation_node.py
+    path: runtime_bridge/sidecar_node.py
     inputs:
       navigate: gateway/navigation_request
     outputs:
       - result
+    env:
+      DORA_WORKER_SCRIPT: /workspace/dora/navigation_node.py
+      DORA_WORKER_CWD: /workspace/dora
+      DORA_WORKER_PYTHON: /usr/bin/python3
+      DORA_WORKER_PYTHONPATH: /workspace:/workspace/dora:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages
 
   - id: stop
-    path: stop_node.py
+    path: runtime_bridge/sidecar_node.py
     inputs:
       stop: gateway/stop_request
     outputs:
       - result
+    env:
+      DORA_WORKER_SCRIPT: /workspace/dora/stop_node.py
+      DORA_WORKER_CWD: /workspace/dora
+      DORA_WORKER_PYTHON: /usr/bin/python3
+      DORA_WORKER_PYTHONPATH: /workspace:/workspace/dora:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages
 
   - id: arm
-    path: arm_node.py
+    path: runtime_bridge/sidecar_node.py
     inputs:
       move: gateway/arm_request
     outputs:
       - result
+    env:
+      DORA_WORKER_SCRIPT: /workspace/dora/arm_node.py
+      DORA_WORKER_CWD: /workspace/dora
+      DORA_WORKER_PYTHON: /usr/bin/python3
+      AGENT_TASK_ARM_TIMEOUT_S: "240"
+      DORA_WORKER_PYTHONPATH: /workspace:/workspace/dora:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages
 
   - id: vision
-    path: vision_node.py
+    path: runtime_bridge/sidecar_node.py
     inputs:
       observe: gateway/observation_request
     outputs:
       - result
+    env:
+      DORA_WORKER_SCRIPT: /workspace/dora/vision_node.py
+      DORA_WORKER_CWD: /workspace/dora
+      DORA_WORKER_PYTHON: /usr/bin/python3
+      DORA_WORKER_PYTHONPATH: /workspace:/workspace/dora:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages

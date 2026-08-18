@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 CONTROLLER_DIR = (
-    Path(__file__).resolve().parents[1] / "controllers" / "week9_controller"
+    Path(__file__).resolve().parents[1] / "controllers" / "action_controller"
 )
 sys.path.insert(0, str(CONTROLLER_DIR))
 
@@ -35,7 +35,7 @@ class NavigationControlTests(unittest.TestCase):
 
     def test_controller_does_not_overwrite_dynamic_robot_pose(self):
         controller_source = (
-            CONTROLLER_DIR / "week9_controller.py"
+            CONTROLLER_DIR / "action_controller.py"
         ).read_text(encoding="utf-8")
 
         self.assertNotIn("translation_field", controller_source)
@@ -44,15 +44,15 @@ class NavigationControlTests(unittest.TestCase):
 
     def test_skill_timeouts_cover_slow_rendered_simulation(self):
         runtime_source = (
-            CONTROLLER_DIR.parents[1] / "week9_validation" / "ros_skills.py"
+            CONTROLLER_DIR.parents[1] / "action_planning" / "ros_skills.py"
         ).read_text(encoding="utf-8")
 
         self.assertIn(
-            'WEEK9_NAVIGATION_TIMEOUT_S", "180"',
+            'ACTION_PLANNING_NAVIGATION_TIMEOUT_S", "180"',
             runtime_source,
         )
         self.assertIn(
-            'WEEK9_ARM_ACTION_TIMEOUT_S", "75"',
+            'ACTION_PLANNING_ARM_ACTION_TIMEOUT_S", "75"',
             runtime_source,
         )
 

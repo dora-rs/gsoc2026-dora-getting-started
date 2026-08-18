@@ -12,9 +12,9 @@ from simulation_runtime import SimulationSession
 
 
 root = Path(__file__).resolve().parent
-output_dir = Path(os.environ.get("WEEK7_OUTPUT", root / "outputs" / "dora-run"))
+output_dir = Path(os.environ.get("MULTIMODAL_OUTPUT", root / "outputs" / "dora-run"))
 trajectory_path = Path(
-    os.environ.get("WEEK7_TRAJECTORY", root / "validated-trajectory.json")
+    os.environ.get("MULTIMODAL_TRAJECTORY", root / "validated-trajectory.json")
 )
 session = SimulationSession(output_dir, trajectory_path)
 node = Node()

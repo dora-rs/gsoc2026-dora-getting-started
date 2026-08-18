@@ -60,7 +60,7 @@ def run_task(task: str) -> str:
     events = EventPrinter()
     events.emit("INPUT", task)
     client = RobotApiClient(
-        os.getenv("WEEK10_API_URL", "http://127.0.0.1:8000")
+        os.getenv("AGENT_TASK_API_URL", "http://127.0.0.1:8000")
     )
     result = Runner.run_sync(
         build_agent(client, events),

@@ -20,12 +20,12 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from common import read_json_event, send_json
-from week10_runtime.indicator_vision import classify_indicator
+from agent_runtime.indicator_vision import classify_indicator
 
 
 class VisionRuntime:
     def __init__(self):
-        self.node = rclpy.create_node("week10_indicator_vision_runtime")
+        self.node = rclpy.create_node("agent_indicator_vision_runtime")
         self.bridge = CvBridge()
         self.image = None
         self.location = "unknown"
@@ -33,7 +33,7 @@ class VisionRuntime:
             Image, "/camera/image_raw", self._on_image, 10
         )
         self.node.create_subscription(
-            String, "/week10/robot_state", self._on_state, 10
+            String, "/agent_task/robot_state", self._on_state, 10
         )
 
     def _on_image(self, message):
@@ -75,7 +75,7 @@ class VisionRuntime:
                 "result": {},
             }
         output_dir = Path(
-            os.getenv("WEEK10_OUTPUT_DIR", "/workspace/outputs")
+            os.getenv("AGENT_TASK_OUTPUT_DIR", "/workspace/outputs")
         )
         output_dir.mkdir(parents=True, exist_ok=True)
         safe_id = re.sub(r"[^A-Za-z0-9_.-]", "_", request_id)
@@ -128,7 +128,7 @@ def main():
                 dora,
                 "result",
                 result,
-                "week10.action-result.v1",
+                "agent_task.action-result.v1",
             )
     finally:
         runtime.node.destroy_node()

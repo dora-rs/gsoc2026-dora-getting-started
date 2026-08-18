@@ -5,25 +5,30 @@ These sources were checked while preparing this tutorial.
 | Topic | Source |
 | --- | --- |
 | Dora main repository and README | <https://github.com/dora-rs/dora> |
-| Dora v0.5.0 release | <https://github.com/dora-rs/dora/releases/tag/v0.5.0> |
-| Dora installation guide | <https://dora-rs.ai/docs/guides/Installation/installing/> |
-| Dora Python conversation tutorial | <https://dora-rs.ai/docs/guides/getting-started/conversation_py/> |
-| Dora crates.io package | <https://crates.io/crates/dora-cli/0.5.0> |
-| Dora PyPI package | <https://pypi.org/project/dora-rs/0.5.0/> |
+| Dora v1.0.0-rc.4 release | <https://github.com/dora-rs/dora/releases/tag/v1.0.0-rc.4> |
+| Dora CLI guide | <https://dora-rs.ai/dora/operations/cli> |
+| Dora Python API | <https://dora-rs.ai/dora/languages/python> |
+| Dora CLI crate documentation | <https://docs.rs/crate/dora-cli/1.0.0-rc.4> |
+| Dora PyPI package | <https://pypi.org/project/dora-rs/1.0.0rc4/> |
 | Adora archive and consolidation notice | <https://github.com/dora-rs/adora> |
-| Codex CLI overview | <https://developers.openai.com/codex/cli> |
-| Codex CLI features | <https://developers.openai.com/codex/cli/features> |
-| Codex CLI command line options | <https://developers.openai.com/codex/cli/reference> |
-| Codex models | <https://developers.openai.com/codex/models> |
-| Codex configuration basics | <https://developers.openai.com/codex/config-basic> |
-| Codex approvals and security | <https://developers.openai.com/codex/agent-approvals-security> |
-| Codex sandboxing | <https://developers.openai.com/codex/concepts/sandboxing> |
+| Codex CLI | <https://learn.chatgpt.com/docs/codex/cli> |
+| OpenAI models | <https://developers.openai.com/api/docs/models> |
+| Claude Platform | <https://platform.claude.com/docs/en/intro> |
+| Claude Code | <https://code.claude.com/docs/en/overview> |
+| DeepSeek API | <https://api-docs.deepseek.com/> |
+| DeepSeek models and pricing | <https://api-docs.deepseek.com/quick_start/pricing/> |
+| Gemini API | <https://ai.google.dev/gemini-api/docs> |
+| Gemini CLI | <https://github.com/google-gemini/gemini-cli> |
+| xAI API | <https://docs.x.ai/overview> |
+| OctosCode | <https://github.com/octos-org/octoscode> |
+| OpenCode | <https://opencode.ai/docs/> |
+| NIST CAISI DeepSeek V4 Pro evaluation | <https://www.nist.gov/news-events/news/2026/05/caisi-evaluation-deepseek-v4-pro> |
+| Artificial Analysis DeepSeek V4 Pro | <https://artificialanalysis.ai/models/deepseek-v4-pro> |
 | Rerun Python SDK install guide | <https://rerun.io/docs/getting-started/install-rerun/python> |
 | Rerun log and ingest guide | <https://rerun.io/docs/getting-started/data-in> |
 | Rerun CLI manual | <https://rerun.io/docs/reference/cli> |
 | Rerun SDK PyPI package | <https://pypi.org/project/rerun-sdk/> |
 | Rerun GitHub repository | <https://github.com/rerun-io/rerun> |
-| Claude Code overview | <https://docs.anthropic.com/en/docs/claude-code/overview> |
 | OpenClaw repository | <https://github.com/openclaw/openclaw> |
 | Octos repository | <https://github.com/octos-org/octos> |
 
@@ -31,11 +36,10 @@ These sources were checked while preparing this tutorial.
 
 - The `adora` repository is archived and points new work to `dora-rs/dora`, so
   this book treats Dora as the active project surface.
-- The official Dora installation page and the Dora README currently expose
-  slightly different first-choice installation paths. This tutorial uses an isolated
-  Python virtual environment with `dora-rs-cli==0.5.0` and `dora-rs==0.5.0`
-  because it is easy to reproduce on Windows and does not disturb a developer's
-  existing source checkout.
+- The tutorial pins the Dora CLI release archive to `1.0.0-rc.4` and installs
+  `dora-rs==1.0.0rc4` in an isolated Python 3.11 environment. This keeps the
+  command-line runtime and Python API aligned without changing an existing
+  global installation.
 - Rerun package and platform details were checked against official Rerun
   documentation and the PyPI `rerun-sdk` package page while preparing the Rerun
   scene chapter.

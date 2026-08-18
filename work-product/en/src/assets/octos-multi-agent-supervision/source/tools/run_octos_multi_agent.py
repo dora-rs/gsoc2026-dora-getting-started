@@ -19,12 +19,12 @@ from typing import Any
 SRC = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SRC))
 
-from week11_runtime.adaptive_policy import (  # noqa: E402
+from process_runtime.adaptive_policy import (  # noqa: E402
     run_strategy,
     save_strategy_version,
     validate_strategy_replays,
 )
-from week11_runtime.octos_protocol import (  # noqa: E402
+from process_runtime.octos_protocol import (  # noqa: E402
     StrategyProposal,
     extract_octos_text,
     parse_octos_chat_response,
@@ -50,7 +50,7 @@ NORMAL_RANGES = {
     "temperature_c": [30.0, 60.0],
     "pressure_kpa": [160.0, 200.0],
 }
-SOURCE_SKILL = SRC / "octos-skills" / "week11-process-supervision"
+SOURCE_SKILL = SRC / "octos-skills" / "process-supervision"
 BASELINE_POLICY_SOURCE = """
 def decide(context):
     latest = context["history"][-1]
@@ -192,7 +192,7 @@ class OctosAgent:
             command[2:2] = ["--config", str(self.config)]
         environment = os.environ.copy()
         environment.setdefault("OPENAI_API_KEY", "ollama")
-        environment.setdefault("WEEK11_DORA_API", "http://127.0.0.1:8111")
+        environment.setdefault("PROCESS_DORA_API", "http://127.0.0.1:8111")
 
         self.event_log.write(
             "agent_started",
@@ -311,7 +311,7 @@ def sync_octos_skill(
         workspace
         / ".octos"
         / "skills"
-        / "week11-process-supervision"
+        / "process-supervision"
     )
     target.mkdir(parents=True, exist_ok=True)
     for name in ("manifest.json", "main", "SKILL.md"):

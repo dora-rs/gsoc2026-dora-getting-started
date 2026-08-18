@@ -17,8 +17,8 @@ from common import read_json_event, send_json
 
 def main():
     rclpy.init()
-    ros_node = rclpy.create_node("week10_stop_runtime")
-    publisher = ros_node.create_publisher(String, "/week10/stop", 10)
+    ros_node = rclpy.create_node("agent_stop_runtime")
+    publisher = ros_node.create_publisher(String, "/agent_task/stop", 10)
     dora = Node()
     try:
         for event in dora:
@@ -43,7 +43,7 @@ def main():
                     "message": "Stop request delivered to the robot controller.",
                     "result": {"stopped": True},
                 },
-                "week10.action-result.v1",
+                "agent_task.action-result.v1",
             )
     finally:
         ros_node.destroy_node()

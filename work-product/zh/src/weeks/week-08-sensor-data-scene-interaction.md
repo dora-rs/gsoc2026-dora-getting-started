@@ -12,7 +12,9 @@
 | `webots_ros2_tiago` | 2025.0.0 |
 | Navigation2 | 1.1.20 |
 | SLAM Toolbox | 2.6.10 |
-| Dora CLI 和 Python API | 0.5.0 |
+| Dora CLI 和 Python API | 1.0.0-rc.4 |
+| Dora 运行时 Python | 3.11.14 |
+| ROS 2 worker Python | 3.10.12 |
 
 ## 下载
 
@@ -39,6 +41,42 @@ nodes、测试和启动脚本。
 
 TIAGo Lite 模型具有移动底盘、机械臂和夹爪，以及二维激光雷达。本章只控制移动底盘，
 机械臂会保留给后续的导航与操作任务。
+
+## 选择实现路线
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">创造路线</span>
+  <strong>组合 LiDAR、SLAM、Nav2 与 Dora</strong>
+  <p>适合理解导航技术栈中的每一个 readiness 边界。</p>
+</div>
+
+```text
+创建 Ubuntu 22.04 工程，使用 Webots R2025a、ROS 2 Humble、官方 TIAGo office
+world、SLAM Toolbox、Nav2 和 Dora 1.0.0-rc.4。使用移动底盘和 2D LiDAR，机械臂
+保持不动。创建简单且可避障的探索 controller，保存非空 occupancy map，再在实时
+地图上启动 Nav2。
+
+创建 Dora 节点，桥接 scan、odometry、map、localization、goal feedback 和结构化
+mission result。发送 named goal 前，必须等待相关 topic、transform、
+navigate_to_pose action，以及 bt_navigator lifecycle 进入 active。提供唯一容器入口、
+测试、地图、截图、建图/导航录屏，并明确检查 map、sensor count、goal acceptance 和
+SUCCEEDED 状态。
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">复现路线</span>
+  <strong>运行已验证的导航技术栈</strong>
+  <p>适合先获得可靠的 SLAM 与导航闭环，再学习 ROS launch 细节。</p>
+</div>
+
+```text
+解压提供的 LiDAR/SLAM/Nav2/Dora 工程，读取 VERSIONS.md、TUTORIAL_CONTRACT.md、
+ASSET_GUIDE.md 和 READER_PROMPT.md。保留官方 world、容器镜像、Python runtime
+分层、goal 和脚本。只运行 bash tutorial.sh run，并等待该进程真正结束。检查地图文件、
+mission-result.json、正数的 scan/odometry/known-cell count、goal_sent、
+goal_accepted、SUCCEEDED、最终 PASS 和干净的 git status。不得单独运行 ROS/Dora
+组件，也不得绕过 lifecycle 检查。
+```
 
 ## 开始之前
 
@@ -77,7 +115,7 @@ Dora 管理任务状态：检查所需数据、发送目标、接收反馈，并
 
 ## 检查计算机
 
-让助手先检查环境，不要立即安装软件：
+让编程助手先检查环境，不要立即安装软件：
 
 ```text
 检查这台 Ubuntu 计算机是否适合运行 Webots 激光 SLAM 与导航教程。
@@ -283,8 +321,12 @@ ros2 lifecycle get /bt_navigator
 - `mission-controller`：等待必需字段准备就绪，并调用 Nav2。
 - `result-reporter`：打印任务状态变化。
 
+Dora nodes 使用 Python 3.11；ROS 2 Humble 的 `rclpy` workers 保持使用系统
+Python 3.10。两个运行时通过小型 JSONL bridge 传递命令和结果，应用主数据流仍由
+Dora 管理。
+
 ```text
-为当前运行的 Webots 和 Nav2 系统实现一个 Dora 0.5.0 dataflow。
+为当前运行的 Webots 和 Nav2 系统实现一个 Dora 1.0.0-rc.4 dataflow。
 
 创建 sensor-bridge、mission-controller 和 result-reporter Python nodes。
 sensor node 订阅 /scan、/odom、/map、三个 TIAGo sonar topics 和
@@ -297,9 +339,10 @@ WAITING_FOR_SENSORS、READY、GOAL_SENT、NAVIGATING、SUCCEEDED 和 FAILED 状�
 并保存最终 JSON 结果。拒绝重复目标；报告 Nav2 拒绝、timeout、cancel 或非成功
 action status。
 
-当前环境中 Dora 0.5.0 的 Python API 没有暴露 ROS 2 Action client，因此在 Dora
-mission node 内使用 rclpy ActionClient。所有 readiness 和 result messages 仍通过
-Dora dataflow 传递。为 readiness gate 和 terminal states 添加 focused tests。
+Dora-facing nodes 使用 Python 3.11，ROS subscribers 与 rclpy ActionClient 运行在
+提供的 Python 3.10 workers 中；bridge 只交换结构化 JSONL 消息。所有 readiness 和
+result messages 仍通过 Dora dataflow 传递。为 readiness gate、worker protocol 和
+terminal states 添加 focused tests。
 ```
 
 ### 参考 Dataflow
@@ -347,8 +390,8 @@ future.add_done_callback(on_goal_response)
 
 当前 Dora 文档还介绍了原生和 YAML
 [ROS 2 topic、service 与 action bridges](https://dora-rs.ai/dora/advanced/ros2-bridge)。
-使用更新的 Dora 版本时，应先让助手比较新 API 和已经验证的 `rclpy` 集成，再决定是否
-修改 dataflow。
+本工程使用显式 worker 边界，让固定版本的 ROS 2 Humble 与 Dora Python 运行时可以
+分别复现。
 
 ### 完整 Dora 源码
 
@@ -357,6 +400,10 @@ future.add_done_callback(on_goal_response)
 
 ```python
 {{#include ../assets/lidar-slam-navigation/source/dora/sensor_bridge_node.py}}
+```
+
+```python
+{{#include ../assets/lidar-slam-navigation/source/dora/sensor_ros_worker.py}}
 ```
 
 
@@ -373,6 +420,16 @@ future.add_done_callback(on_goal_response)
 
 ```python
 {{#include ../assets/lidar-slam-navigation/source/dora/mission_controller_node.py}}
+```
+
+```python
+{{#include ../assets/lidar-slam-navigation/source/dora/navigation_ros_worker.py}}
+```
+
+#### 运行时 bridge protocol
+
+```python
+{{#include ../assets/lidar-slam-navigation/source/dora/bridge_protocol.py}}
 ```
 
 

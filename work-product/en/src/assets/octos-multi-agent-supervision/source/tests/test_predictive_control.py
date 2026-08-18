@@ -1,6 +1,6 @@
 import pytest
 
-from week11_runtime.predictive_control import (
+from process_runtime.predictive_control import (
     derive_process_metrics,
     project_value,
     seconds_to_limit,

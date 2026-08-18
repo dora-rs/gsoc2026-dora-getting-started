@@ -8,7 +8,7 @@ nodes:
       - command
 
   - id: simulation
-    path: simulation_node.py
+    path: simulation_bridge_node.py
     inputs:
       command: controller/command
     outputs:

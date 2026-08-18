@@ -1,6 +1,6 @@
 import pytest
 
-from week11_runtime.plant_model import (
+from process_runtime.plant_model import (
     PlantConfig,
     PlantModel,
     plant_config_from_environment,
@@ -127,12 +127,12 @@ def test_completed_process_freezes_verified_values_with_controls_off():
 def test_environment_can_slow_pressure_for_agent_observation_cycles():
     config = plant_config_from_environment(
         {
-            "WEEK11_INITIAL_TEMPERATURE_C": "50.0",
-            "WEEK11_INITIAL_PRESSURE_KPA": "170.0",
-            "WEEK11_HEATING_RATE_C_PER_S": "0.18",
-            "WEEK11_PRESSURE_RATE_KPA_PER_S": "0.5",
-            "WEEK11_COOLING_EFFECT_C_PER_S": "-0.46",
-            "WEEK11_RELIEF_EFFECT_KPA_PER_S": "-1.2",
+            "PROCESS_INITIAL_TEMPERATURE_C": "50.0",
+            "PROCESS_INITIAL_PRESSURE_KPA": "170.0",
+            "PROCESS_HEATING_RATE_C_PER_S": "0.18",
+            "PROCESS_PRESSURE_RATE_KPA_PER_S": "0.5",
+            "PROCESS_COOLING_EFFECT_C_PER_S": "-0.46",
+            "PROCESS_RELIEF_EFFECT_KPA_PER_S": "-1.2",
         }
     )
 

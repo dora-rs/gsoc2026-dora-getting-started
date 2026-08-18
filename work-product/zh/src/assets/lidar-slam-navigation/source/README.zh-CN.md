@@ -1,36 +1,25 @@
 # 激光雷达、SLAM 与导航参考工程
 
 本工程包含教程中经过验证的 Webots R2025a、ROS 2 Humble、SLAM Toolbox、
-Nav2 与 Dora 0.5.0 流程。
+Nav2 与 Dora 1.0.0-rc.4 流程。
+
+Dora nodes 使用 Python 3.11.14；ROS 2 Humble subscribers 与 Nav2 action client
+使用系统 Python 3.10 workers，并通过 JSONL 连接。
 
 `worlds/default.wbt` 来自 `webots_ros2` 的 `2025.0.0` 标签，是 TIAGo
 官方办公室场景。安装的 `webots_ros2_tiago` 软件包提供与其匹配的机器人
 PROTO 和启动配置。
 
-## 运行
+## 复现
+
+先阅读 `VERSIONS.md`、`TUTORIAL_CONTRACT.md` 和 `ASSET_GUIDE.md`，再使用唯一入口：
 
 ```bash
-docker build -t week8-webots-nav:humble .
-chmod +x run-container.sh launch-baseline.sh launch-nav2-live.sh
-./run-container.sh
+bash tutorial.sh run
 ```
 
-在容器中：
-
-```bash
-./launch-baseline.sh
-python3 explore_with_lidar.py 75
-mkdir -p maps
-ros2 run nav2_map_server map_saver_cli -f maps/office
-```
-
-在另一个容器终端中启动 `launch-nav2-live.sh`，然后运行：
-
-```bash
-cd /workspace/dora
-pytest -q
-dora run dataflow.yml
-```
+镜像不存在时，入口会构建固定容器，并管理 Webots、ROS、Dora、地图保存、Nav2
+active 等待与结构化结果验收。组件脚本保留用于阅读实现，不是其他复现入口。
 
 官方源文件：
 

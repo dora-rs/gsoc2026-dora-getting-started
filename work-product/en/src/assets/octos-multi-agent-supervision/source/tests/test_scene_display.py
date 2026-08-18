@@ -1,4 +1,4 @@
-from week11_runtime.scene_display import (
+from process_runtime.scene_display import (
     DisplayState,
     build_hud_lines,
     gauge_fill_width,

@@ -20,13 +20,13 @@ from common import read_json_event, send_json
 
 class ArmRuntime:
     def __init__(self):
-        self.node = rclpy.create_node("week10_arm_runtime")
+        self.node = rclpy.create_node("agent_arm_runtime")
         self.status = None
         self.command = self.node.create_publisher(
-            String, "/week10/arm_command", 10
+            String, "/agent_task/arm_command", 10
         )
         self.node.create_subscription(
-            String, "/week10/arm_status", self._on_status, 10
+            String, "/agent_task/arm_status", self._on_status, 10
         )
 
     def _on_status(self, message):
@@ -51,7 +51,7 @@ class ArmRuntime:
             )
         )
         deadline = time.monotonic() + float(
-            os.getenv("WEEK10_ARM_TIMEOUT_S", "75")
+            os.getenv("AGENT_TASK_ARM_TIMEOUT_S", "75")
         )
         while time.monotonic() < deadline:
             rclpy.spin_once(self.node, timeout_sec=0.1)
@@ -94,7 +94,7 @@ def main():
                 dora,
                 "result",
                 result,
-                "week10.action-result.v1",
+                "agent_task.action-result.v1",
             )
     finally:
         runtime.node.destroy_node()

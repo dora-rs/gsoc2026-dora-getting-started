@@ -1,6 +1,6 @@
 import pytest
 
-from week11_runtime.scene_logic import (
+from process_runtime.scene_logic import (
     ControlStation,
     Pose2D,
     SwitchPanel,

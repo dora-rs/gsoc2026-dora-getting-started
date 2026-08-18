@@ -53,6 +53,43 @@ as the arm moves.
   <source src="../assets/habitat-camera-sensors/external_rgb_depth_side_by_side.mp4" type="video/mp4">
 </video>
 
+## Choose a Build Route
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">Create route</span>
+  <strong>Build the simulated camera scene and sensor rig</strong>
+  <p>Use this to learn how robot geometry, transforms, and sensor specifications fit together.</p>
+</div>
+
+```text
+Create a Habitat-Sim 0.3.3 project with isolated Python 3.9 environment. Build
+a small GPU-rendered scene with a floor, separated colored blocks, and a Franka
+Panda loaded from its official visual meshes. Extend the URDF with a fixed
+wrist_camera_link. Configure wrist RGB and metric depth sensors at 640x480 and
+an external overview camera. Animate several arm joints so the wrist viewpoint
+changes while all primary subjects remain visible.
+
+Provide one run entry that opens only application preview windows, saves raw
+observations, screenshots, and H.264 videos, and normalizes browser-compatible
+media. Add tests for sensor shape, finite depth, transform attachment, output
+dimensions, and nonblank frames. Report success only after all media checks pass.
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">Reproduce route</span>
+  <strong>Run the verified Habitat camera package</strong>
+  <p>Use this when you want working RGB and depth streams without rebuilding the robot assets.</p>
+</div>
+
+```text
+Extract the supplied camera project and read VERSIONS.md,
+TUTORIAL_CONTRACT.md, ASSET_GUIDE.md, and READER_PROMPT.md. Keep the GLB, URDF,
+environment, sensors, and run script unchanged. Run only the documented entry.
+After it exits, check git status, all required screenshot sizes, video codecs,
+dimensions and durations, and every observed Verified marker. Do not replace a
+missing asset or bypass a failed check; report the exact failing stage.
+```
+
 ## What Habitat-Sim Is
 
 Habitat-Sim is a simulator. It creates a virtual 3D world and renders sensor

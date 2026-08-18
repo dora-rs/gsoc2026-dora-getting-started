@@ -1,19 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-IMAGE="${WEEK10_IMAGE:-week10-agent-sdk:humble}"
-NAME="${WEEK10_CONTAINER:-week10-agent-sdk}"
+IMAGE="${AGENT_PLANNING_IMAGE:-dora-agent-sdk:humble}"
+NAME="${AGENT_PLANNING_CONTAINER:-dora-agent-sdk}"
 DISPLAY_VALUE="${DISPLAY:-:1}"
-WORKSPACE="${WEEK10_WORKSPACE:-${PWD}}"
-DORA_CLI="${DORA_CLI:-${HOME}/.cargo/bin/dora}"
+WORKSPACE="${AGENT_PLANNING_WORKSPACE:-${PWD}}"
 
 mkdir -p "${WORKSPACE}"
 xhost +SI:localuser:root >/dev/null
-
-if [[ ! -x "${DORA_CLI}" ]]; then
-  echo "Dora CLI not found at ${DORA_CLI}" >&2
-  exit 1
-fi
 
 docker rm -f "${NAME}" >/dev/null 2>&1 || true
 docker run --rm -it \
@@ -30,7 +24,6 @@ docker run --rm -it \
   --env OLLAMA_OPENAI_BASE_URL="${OLLAMA_OPENAI_BASE_URL:-http://127.0.0.1:11434/v1}" \
   --env OLLAMA_MODEL="${OLLAMA_MODEL:-qwen3-vl:8b-instruct}" \
   --volume /tmp/.X11-unix:/tmp/.X11-unix:rw \
-  --volume "${DORA_CLI}:/usr/local/bin/dora:ro" \
   --volume "${WORKSPACE}:/workspace" \
   --workdir /workspace \
   "${IMAGE}" \

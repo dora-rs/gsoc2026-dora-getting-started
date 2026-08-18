@@ -9,7 +9,9 @@
 | NVIDIA 驱动 | 580.159.03 |
 | Webots | R2025a |
 | ROS | ROS 2 Humble |
-| Dora CLI / Python | 0.5.0 |
+| Dora CLI / Python | 1.0.0-rc.4 |
+| Dora 运行时 Python | 3.11.14 |
+| ROS 2 / 应用 worker Python | 3.10.12 |
 | Octos | 2.0.2 |
 | Ollama | 0.32.1 |
 | Observer / Operator 模型 | `qwen3-vl:8b-instruct` |
@@ -59,12 +61,54 @@ cd octos-multi-agent-supervision
   </figure>
 </div>
 
+## 选择实现路线
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">创造路线</span>
+  <strong>创建连续多 Agent 监督系统</strong>
+  <p>适合同时设计角色、共享过程状态、自适应策略代码和机器人执行。</p>
+</div>
+
+```text
+创建 Webots R2025a 过程单元，使用两台移动机械臂，观察站和控制站相距较远。
+Observer 在压力传感器处 docking，并通过 RGB 视觉读取同步温度显示；Operator 控制
+独立的 cooling 和 relief 开关。温度与压力持续上升，安全区间为 30-60 C 和
+160-200 kPa，界面必须清楚显示趋势和阀门状态。
+
+通过 Dora 1.0.0-rc.4 连接 process simulation、robot skills、observation、receipt 和
+state。配置 Octos 2.0.2 的 Observer、Operator 和 Supervisor。各角色根据趋势自行
+决定 observation/model/tool 的调用时机；Supervisor 可以生成受限 strategy function，
+但必须先验证再激活。通过唯一入口记录多次成功控制循环、退出时双阀关闭、角色事件、
+策略来源、测试、截图和仅应用窗口视频。不得把最终策略硬编码为普通 mission logic。
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">复现路线</span>
+  <strong>运行已验证的 Octos 监督系统</strong>
+  <p>适合使用完整过程单元学习角色协作与 coding-to-action。</p>
+</div>
+
+```text
+完全按原样使用提供的 Octos 多 Agent 工程。读取 VERSIONS.md、
+TUTORIAL_CONTRACT.md、ASSET_GUIDE.md 和 READER_PROMPT.md。保留所有 lock、profile、
+skill、scene asset、model 和 policy。只运行 bash tutorial.sh run，并等待它结束。验证
+145 项测试、三个 role-start event、激活的生成策略、成功 switch receipt、至少一轮
+安全控制循环、退出时双阀关闭、非空视频、最终 PASS 和干净的 git status。不得用
+普通 Python controller 替代 Octos 决策。
+```
+
 ## 为什么选择 Octos
 
 [Octos](https://octos-org.github.io/octos/) 是开源 Agent 平台。它把模型、
 Profile、Skill、工具策略、会话、沙箱和模型 Provider 组织在同一个运行时中。
 本章使用 `octos chat --message` 启动可重复的单次 Agent 执行，并为三个角色配置
 不同模型、角色指令与编排职责。
+
+Octos 与 OctosCode 属于同一套技术体系，但位于不同层。**Octos** 是管理 Profile、
+模型、Skill、工具、会话、策略和 Agent 执行的 runtime；**OctosCode** 是建立在该
+runtime 上的终端编程助手客户端，用来帮助开发者检查和修改代码仓库。准备工作章节
+使用 OctosCode 作为开发界面；本章则把 Octos 本身作为机器人系统的决策 runtime，
+OctosCode 不参与持续控制闭环。
 
 `adora` 曾用于验证 Dora 面向 agentic workflow 的实验性设计；相关工作已经
 整合回 [Dora](https://github.com/dora-rs/dora)，因此本章直接使用 Dora CLI 和
@@ -207,10 +251,10 @@ Octos 并不是因为“比 SDK 多一个循环”才有价值。这个示例真
 先让编程助手理解工程边界，不要立即改写场景：
 
 ```text
-检查这个提供的 Webots R2025a、ROS 2 Humble、Dora 0.5.0、
+检查这个提供的 Webots R2025a、ROS 2 Humble、Dora 1.0.0-rc.4、
 Octos 2.0.2 和 Ollama 参考工程。
 
-说明 worlds、controllers、dora、week11_api、week11_runtime、
+说明 worlds、controllers、dora、process_api、process_runtime、
 octos-skills、tools、config 和 tests 的职责。画出 Observer、
 Operator、Supervisor 从 Octos Skill 到 Dora node，再到 Webots
 和结构化结果返回的路径。
@@ -220,13 +264,13 @@ Operator、Supervisor 从 Octos Skill 到 Dora node，再到 Webots
 完整环境变量或本机绝对路径。
 ```
 
-助手应识别出 `worlds/week11_process_supervision.wbt` 是场景入口，
-`dora/week11_dataflow.yml` 是运行时拓扑，`octos-skills/` 定义模型可见能力，
+编程助手应识别出 `worlds/process_supervision.wbt` 是场景入口，
+`dora/process_dataflow.yml` 是运行时拓扑，`octos-skills/` 定义模型可见能力，
 `tools/run_octos_multi_agent.py` 只负责启动角色、传递结果和管理策略生命周期。
 
 ### 准备环境
 
-让助手先检查硬件和已有安装，再执行固定版本的命令：
+让编程助手先检查硬件和已有安装，再执行固定版本的命令：
 
 ```text
 为这个参考工程准备 Ubuntu 22.04 环境。
@@ -236,8 +280,8 @@ NVIDIA Container Toolkit、X11 DISPLAY、Dora、Octos 和 Ollama。
 版本以 README.md、Dockerfile 和 pyproject.toml 为准。
 
 保留已经满足版本要求的安装。变更前列出命令和影响范围。
-Octos 与 Ollama 只在宿主机运行，Webots、ROS 2 和 Dora Python nodes
-在提供的容器中运行。不要显示 token、完整环境变量或私人路径。
+Octos 与 Ollama 只在宿主机运行，Webots、ROS 2 workers 和 Python 3.11 Dora
+sidecars 在提供的容器中运行。不要显示 token、完整环境变量或私人路径。
 ```
 
 已验证的安装与模型准备命令：
@@ -256,6 +300,10 @@ chmod +x run-container.sh launch-webots.sh
 验证机器有 24 GB 显存。runner 在视觉阶段结束后卸载 Qwen3-VL，再加载 Supervisor
 代码模型；策略生成完成后反向切换，因此两个模型不必常驻显存。显存较小的设备可
 降低模型规模，但应重新验证视觉结构化输出和策略 replay。
+
+容器中的 Dora 使用 Python 3.11 virtual environment，ROS 2、process API 与应用
+workers 使用系统 Python 3.10。通用 JSONL sidecar 把每个 worker 接入 Dora，同时
+保持依赖边界清晰。
 
 ### 加载仿真场景
 
@@ -284,10 +332,10 @@ chmod +x run-container.sh launch-webots.sh
 
 ### 定义 Dora Dataflow
 
-让助手检查数据是否真正通过 Dora，而不是由 runner 读取仿真内部变量：
+让编程助手检查数据是否真正通过 Dora，而不是由 runner 读取仿真内部变量：
 
 ```text
-检查 dora/week11_dataflow.yml 及其节点。
+检查 dora/process_dataflow.yml 及其节点。
 
 gateway 只负责本地 API、请求关联和分派；state 周期发布脱敏状态；
 command 只处理具名导航与开关动作；observation 只处理压力和 RGB 温度；
@@ -301,10 +349,18 @@ GET /v1/status 暴露给 Agent，所有 HTTP 端口只监听 127.0.0.1。
 完整 dataflow：
 
 ```yaml
-{{#include ../assets/octos-multi-agent-supervision/source/dora/week11_dataflow.yml}}
+{{#include ../assets/octos-multi-agent-supervision/source/dora/process_dataflow.yml}}
 ```
 
-`gateway` 在 `127.0.0.1:8111` 提供本地接口。Dora 的 `state`、
+```python
+{{#include ../assets/octos-multi-agent-supervision/source/dora/runtime_bridge/sidecar_node.py}}
+```
+
+```python
+{{#include ../assets/octos-multi-agent-supervision/source/dora/runtime_bridge/sidecar_bridge.py}}
+```
+
+`gateway` worker 在 `127.0.0.1:8111` 提供本地接口。Dora 的 `state`、
 `command`、`observation` 和 `activity` 节点仍保持单一职责。
 
 ### 定义 Octos Skill
@@ -312,7 +368,7 @@ GET /v1/status 暴露给 Agent，所有 HTTP 端口只监听 127.0.0.1。
 Skill 把机器人能力和安全语义一起交给 Agent：
 
 ```text
-检查 octos-skills/week11-process-supervision。
+检查 octos-skills/process-supervision。
 
 Observer 和 Operator 共享这个 Skill。确认 SKILL.md 把传感器职责分配给
 Observer、把开关职责分配给 Operator，并检查 runner 的角色提示词是否保持这项
@@ -333,22 +389,22 @@ tool policy，并重新验证每个角色。
 完整工具 manifest：
 
 ```json
-{{#include ../assets/octos-multi-agent-supervision/source/octos-skills/week11-process-supervision/manifest.json}}
+{{#include ../assets/octos-multi-agent-supervision/source/octos-skills/process-supervision/manifest.json}}
 ```
 
 关键 adapter 把 Octos 工具映射到本地 Dora API：
 
 ```python
-{{#include ../assets/octos-multi-agent-supervision/source/octos-skills/week11-process-supervision/main:42:87}}
+{{#include ../assets/octos-multi-agent-supervision/source/octos-skills/process-supervision/main:42:87}}
 ```
 
 runner 启动时会把这三个 Skill 文件同步到工程内的
-`.octos/skills/week11-process-supervision/`。这个目录是运行时生成内容，
+`.octos/skills/process-supervision/`。这个目录是运行时生成内容，
 不会进入下载包。
 
 ### 配置三个 Agent
 
-让助手实现按角色编排和模型切换：
+让编程助手实现按角色编排和模型切换：
 
 ```text
 使用 Octos CLI 配置三个独立角色。
@@ -414,7 +470,7 @@ observe_after_seconds 和 reason。只返回包含 strategy_source 和 reason
 策略在隔离的 Python 进程中运行，并必须通过启动、上界和下界 replay：
 
 ```python
-{{#include ../assets/octos-multi-agent-supervision/source/week11_runtime/adaptive_policy.py:35:88}}
+{{#include ../assets/octos-multi-agent-supervision/source/process_runtime/adaptive_policy.py:35:88}}
 ```
 
 如果候选策略无效，Supervisor 最多获得有限次数的结构化修正机会；仍然失败时，
@@ -428,7 +484,7 @@ runner 使用已经通过 replay 的基线策略。每完成三个控制周期�
 ```bash
 docker exec -it octos-process-supervision bash
 cd /workspace/dora
-dora run week11_dataflow.yml
+dora run process_dataflow.yml
 ```
 
 在宿主机第三个终端检查本地 API：
@@ -442,13 +498,13 @@ curl -s http://127.0.0.1:8111/v1/status
 压力真值。然后启动三个 Octos Agent：
 
 ```bash
-python3 tools/run_octos_multi_agent.py
+/usr/bin/python3 tools/run_octos_multi_agent.py
 ```
 
 也可以显式指定二进制和模型：
 
 ```bash
-python3 tools/run_octos_multi_agent.py \
+/usr/bin/python3 tools/run_octos_multi_agent.py \
   --octos "$(command -v octos)" \
   --ollama "$(command -v ollama)" \
   --vision-model qwen3-vl:8b-instruct \
@@ -510,7 +566,7 @@ Supervisor 激活策略、Operator 多次独立切换两个控制，以及每次
 
 ```bash
 cd /workspace
-python3 -m pytest -q
+/usr/bin/python3 -m pytest -q
 ```
 
 参考运行包含 145 项测试，覆盖 Dora wiring、本地 API、角色行为约束、Skill schema、
@@ -520,7 +576,7 @@ python3 -m pytest -q
 常见问题：
 
 - **Octos 找不到 Skill**：从工程根目录运行 runner，检查
-  `.octos/skills/week11-process-supervision/manifest.json` 是否已经同步。
+  `.octos/skills/process-supervision/manifest.json` 是否已经同步。
 - **Agent 无法连接 Ollama**：确认 `ollama list` 可用，并检查本机
   `127.0.0.1:11434/v1`；不要把服务开放到外部网络来规避配置问题。
 - **压力返回 `OBSERVER_NOT_DOCKED`**：等待 Observer 到达 station，不要读取隐藏真值。
@@ -546,7 +602,7 @@ python3 -m pytest -q
 
 ## 课程小结
 
-这个案例已经初步呈现出现代机器人长期任务管理与机器人集群治理系统的雏形：多个
+这个案例已经初步呈现出现代机器人长任务管理与机器人集群治理系统的雏形：多个
 角色围绕一个持续目标分工协作，根据可观察数据调整策略，并通过 Dora 执行结构化、
 可验证、可审计的动作。
 

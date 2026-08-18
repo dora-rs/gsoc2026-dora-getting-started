@@ -13,15 +13,15 @@ from dora import Node
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from week9_validation.mission import MissionMachine
-from week9_validation.ros_skills import RosSkillRuntime
+from action_planning.mission import MissionMachine
+from action_planning.ros_skills import RosSkillRuntime
 
 
 def send_status(node, payload):
     node.send_output(
         "status",
         pa.array([json.dumps(payload, separators=(",", ":"))]),
-        {"schema": "week9.mission-status.v1"},
+        {"schema": "action_planning.mission-status.v1"},
     )
 
 
@@ -36,7 +36,7 @@ def emit_status(node, audit_path, payload):
 
 
 def main():
-    output_dir = Path(os.getenv("WEEK9_OUTPUT_DIR", "/workspace/outputs"))
+    output_dir = Path(os.getenv("ACTION_PLANNING_OUTPUT_DIR", "/workspace/outputs"))
     result_path = output_dir / "mission-result.json"
     audit_path = output_dir / "mission-audit.jsonl"
     output_dir.mkdir(parents=True, exist_ok=True)

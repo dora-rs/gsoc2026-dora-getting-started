@@ -10,7 +10,9 @@ def test_stop_uses_an_independent_dora_node():
     )
 
     assert "stop_result: stop/result" in dataflow
-    assert "- id: stop\n    path: stop_node.py" in dataflow
+    stop = dataflow.split("- id: stop", 1)[1].split("- id: arm", 1)[0]
+    assert "path: runtime_bridge/sidecar_node.py" in stop
+    assert "DORA_WORKER_SCRIPT: /workspace/dora/stop_node.py" in stop
     navigation = dataflow.split("- id: navigation", 1)[1].split(
         "- id: stop", 1
     )[0]

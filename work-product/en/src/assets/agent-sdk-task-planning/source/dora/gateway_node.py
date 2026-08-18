@@ -37,14 +37,14 @@ def main():
     app = create_app(
         broker,
         max_state_age_seconds=float(
-            os.getenv("WEEK10_STATE_MAX_AGE_S", "2.5")
+            os.getenv("AGENT_TASK_STATE_MAX_AGE_S", "2.5")
         ),
     )
     server = uvicorn.Server(
         uvicorn.Config(
             app,
             host="127.0.0.1",
-            port=int(os.getenv("WEEK10_API_PORT", "8000")),
+            port=int(os.getenv("AGENT_TASK_API_PORT", "8000")),
             log_level="warning",
             access_log=False,
         )
@@ -74,7 +74,7 @@ def main():
                             "action_id": dispatch.action_id,
                             **dispatch.payload,
                         },
-                        "week10.action-request.v1",
+                        "agent_task.action-request.v1",
                     )
             elif event["id"] == "state":
                 broker.update_state(

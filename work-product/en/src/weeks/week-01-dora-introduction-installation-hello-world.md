@@ -5,12 +5,16 @@
 | Component | Version / Environment |
 | --- | --- |
 | Operating system | Microsoft Windows 11 Pro, build 26200, x64 |
-| Dora CLI | 0.5.0 |
-| dora-rs Python package | `dora-rs==0.5.0` |
+| Dora CLI | 1.0.0-rc.4 |
+| dora-rs Python package | `dora-rs==1.0.0rc4` |
 | Python | CPython 3.11.14 via `uv` |
 | uv | 0.11.17 |
 | pyarrow | 24.0.0 |
 | PyYAML | 6.0.3 |
+
+## Downloads
+
+- [Verified Dora Hello World project](../assets/dora-hello-world/dora-hello-world-reference.zip)
 
 ## Goal
 
@@ -24,6 +28,43 @@ The example is intentionally small:
 - `dataflow.yml` wires the nodes together.
 - `run.ps1` creates an isolated environment, installs Dora, runs the dataflow,
   and checks the expected output.
+
+## Choose a Build Route
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">Create route</span>
+  <strong>Build the smallest Dora application from scratch</strong>
+  <p>Use this when you want the assistant to create and explain every file.</p>
+</div>
+
+```text
+Create a minimal Dora 1.0.0-rc.4 Hello World project without using an existing
+example. Target CPython 3.11 and dora-rs==1.0.0rc4. Create talker.py,
+listener.py, dataflow.yml, pinned requirements, and one run script for this OS.
+The talker must publish an Apache Arrow string after timer input; the listener
+must print it. Keep the environment inside the project, verify the official CLI
+archive checksum, and do not alter a global Dora installation.
+
+Before writing files, show the dataflow and file plan. After implementation,
+run it for four seconds and report the observed listener line, exact versions,
+generated paths, and source diff. Do not claim success unless the listener
+output is present in the runtime log.
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">Reproduce route</span>
+  <strong>Run the verified project as supplied</strong>
+  <p>Use this for the fastest and most reliable first Dora run.</p>
+</div>
+
+```text
+Extract the supplied Dora Hello World project. Read VERSIONS.md,
+TUTORIAL_CONTRACT.md, ASSET_GUIDE.md, and READER_PROMPT.md before acting.
+Treat the source and pinned versions as immutable. Report the single supported
+entry, generated paths, and exact acceptance marker, then run only that entry.
+Do not install or launch components separately. Verify the runtime marker and
+git status; if either is missing, report FAIL and the exact stage.
+```
 
 ## What Dora Is
 
@@ -54,7 +95,7 @@ upstream state is:
 For this tutorial, install and run the current Dora toolchain from the active Dora
 package names:
 
-- CLI package: `dora-rs-cli`
+- CLI command: `dora`, installed from the official release, installer, or `dora-cli` crate
 - Python API package: `dora-rs`
 - Python import name: `dora`
 
@@ -67,21 +108,21 @@ Official Dora materials list several installation paths:
 
 | Method | Best for | Command |
 | --- | --- | --- |
-| Python virtual environment | Reproducible tutorial work on Windows | `pip install dora-rs-cli dora-rs` |
+| Release archive + Python virtual environment | Reproducible, pinned tutorial work | Download Dora CLI `1.0.0-rc.4`, then `pip install dora-rs==1.0.0rc4` |
 | Cargo | Rust developers who want the CLI from crates.io | `cargo install dora-cli` |
 | Windows installer | User-level CLI install | `powershell -ExecutionPolicy ByPass -c "irm https://github.com/dora-rs/dora/releases/latest/download/dora-cli-installer.ps1 \| iex"` |
 | macOS/Linux installer | User-level CLI install | `curl --proto '=https' --tlsv1.2 -LsSf https://github.com/dora-rs/dora/releases/latest/download/dora-cli-installer.sh \| sh` |
 
-This chapter uses the Python virtual environment route because it keeps the
-verification self-contained and avoids changing any existing Dora source build on
-the machine.
+This chapter uses the pinned release archive together with a Python virtual
+environment. The CLI and Python API therefore use the same Dora release without
+changing an existing global installation.
 
 ## Local Verification Setup
 
 From the tutorial root:
 
 ```powershell
-cd verification/week1-hello-world
+cd verification/dora-hello-world
 ./run.ps1
 ```
 
@@ -89,10 +130,11 @@ The script performs these steps:
 
 1. Finds `uv`.
 2. Creates `.venv` with CPython 3.11 if it does not already exist.
-3. Installs pinned packages from `requirements.txt`.
-4. Prints Dora and Python package versions.
-5. Runs `dora run dataflow.yml --uv --stop-after 4s`.
-6. Fails if the listener output is not present.
+3. Downloads and verifies the Dora CLI `1.0.0-rc.4` archive.
+4. Installs pinned packages from `requirements.txt`.
+5. Prints Dora and Python package versions.
+6. Runs `dora run dataflow.yml --uv --stop-after 4s`.
+7. Fails if the listener output is not present.
 
 Expected success marker:
 
@@ -191,230 +233,22 @@ not copied into public documentation.
 | Listener output is missing | Confirm `talker` keeps running until the stop signal; exiting immediately can stop the dataflow before delivery |
 | PowerShell blocks scripts | Run the script from a trusted checkout, or use a session policy such as `Set-ExecutionPolicy -Scope Process Bypass` |
 
-## Using Codex CLI for the Same Task
+## Continue with a Coding Assistant
 
-This section summarizes the official Codex CLI documentation and is intended as
-a guided workflow. The Dora verification above was run locally; the Codex CLI
-commands below should be checked in your own Codex session.
-
-### Official Codex Links
-
-- CLI overview: <https://developers.openai.com/codex/cli>
-- CLI features: <https://developers.openai.com/codex/cli/features>
-- CLI command reference: <https://developers.openai.com/codex/cli/reference>
-- Models in Codex: <https://developers.openai.com/codex/models>
-- Configuration basics: <https://developers.openai.com/codex/config-basic>
-- Approvals and security: <https://developers.openai.com/codex/agent-approvals-security>
-- Sandboxing: <https://developers.openai.com/codex/concepts/sandboxing>
-
-### Install Codex CLI
-
-On Windows, use the standalone installer from PowerShell:
-
-```powershell
-irm https://chatgpt.com/codex/install.ps1 | iex
-codex
-```
-
-If you prefer npm and already have Node.js installed, use:
-
-```powershell
-npm install -g @openai/codex
-codex
-```
-
-On macOS or Linux, the standalone installer shown in the Codex CLI docs is:
-
-```bash
-curl -fsSL https://chatgpt.com/codex/install.sh | sh
-codex
-```
-
-The first run prompts you to sign in with a ChatGPT account or an API key.
-
-### Start in This Repository
-
-```powershell
-cd <repo>
-codex
-```
-
-For a normal interactive run in a trusted checkout, use workspace write access
-with approval prompts:
-
-```powershell
-codex --sandbox workspace-write --ask-for-approval on-request
-```
-
-Then ask Codex:
-
-```text
-Install the latest dora-rs CLI and Python package in an isolated environment,
-create a minimal talker/listener Hello World dataflow, run it locally, and
-document the exact versions and verification command. Do not include secrets,
-tokens, private usernames, or absolute local paths in committed docs.
-```
-
-If you want Codex to look up the latest public documentation during the session,
-start with live search enabled:
-
-```powershell
-codex --search --sandbox workspace-write --ask-for-approval on-request
-```
-
-Web search and command network access are separate controls. If package
-installation cannot reach PyPI or GitHub because command network access is
-blocked, restart with explicit workspace network access:
-
-```powershell
-codex --sandbox workspace-write --ask-for-approval on-request --config sandbox_workspace_write.network_access=true
-```
-
-### Choose a Model
-
-Official Codex documentation recommends `gpt-5.5` for most Codex tasks,
-especially complex coding, research, computer use, and multi-step documentation
-work. Use `gpt-5.4-mini` when the task is lighter and speed or cost matters
-more than maximum reasoning depth. If your account exposes
-`gpt-5.3-codex-spark`, treat it as a fast iteration model rather than the first
-choice for careful end-to-end verification.
-
-Choose a model for one run:
-
-```powershell
-codex --model gpt-5.5
-```
-
-Inside an active session, use:
-
-```text
-/model
-```
-
-To make the choice persistent for local CLI and IDE use, add this to
-`~/.codex/config.toml`:
-
-```toml
-model = "gpt-5.5"
-```
-
-### Choose Reasoning Effort
-
-Reasoning effort controls how long Codex thinks before responding when the
-selected model supports it. Higher effort can improve quality for complex
-debugging, design, and multi-file edits, but it is slower and uses more tokens.
-
-Practical defaults:
-
-- Use `medium` or the built-in default for straightforward installation and
-  small documentation edits.
-- Use `high` for this tutorial workflow if Codex must inspect docs, install
-  packages, write code, run verification, and update prose in one pass.
-- Use `xhigh` only for difficult architecture or debugging work where latency is
-  acceptable.
-
-Choose a reasoning effort for one run:
-
-```powershell
-codex --model gpt-5.5 --config model_reasoning_effort='"high"'
-```
-
-Or persist it in `~/.codex/config.toml`:
-
-```toml
-model_reasoning_effort = "high"
-```
-
-### Set Permissions
-
-Codex permissions have two layers:
-
-- `sandbox_mode` defines what Codex commands can technically access.
-- `approval_policy` defines when Codex must stop and ask before crossing that
-  boundary.
-
-Useful local modes:
-
-- `read-only`: best for explanation, planning, or asking Codex to inspect files
-  without editing.
-- `workspace-write`: best for normal tutorial work; Codex can edit and run
-  routine commands inside the current workspace.
-- `danger-full-access`: removes the sandbox boundary. Use it only in a
-  disposable or tightly controlled environment.
-
-Recommended mode for the Dora Hello World task:
-
-```powershell
-codex --sandbox workspace-write --ask-for-approval on-request
-```
-
-Read-only discussion mode:
-
-```powershell
-codex --sandbox read-only --ask-for-approval on-request
-```
-
-Persistent local defaults:
-
-```toml
-sandbox_mode = "workspace-write"
-approval_policy = "on-request"
-
-[sandbox_workspace_write]
-network_access = false
-```
-
-During an interactive session, use `/permissions` to switch modes as the task
-changes, and `/status` to inspect the current workspace and permission state.
-
-### Practical Prompt Tips
-
-- Ask Codex to inspect the repository and summarize the intended file changes
-  before editing.
-- Tell Codex to use an isolated virtual environment and avoid modifying global
-  Python, Rust, or Dora installations unless you explicitly want that.
-- Ask it to run the verification script and report only sanitized version lines
-  and the Hello World listener output.
-- Ask it to keep secrets, private usernames, machine IDs, absolute local paths,
-  and access tokens out of committed documentation.
-- Ask for a final changed-file summary so you can review the work quickly.
-
-Example prompt:
-
-```text
-Use the current Dora documentation to install the latest dora-rs CLI and Python
-package in an isolated environment. Create a minimal talker/listener Hello World
-dataflow, run it locally, and update the tutorial with the exact OS and package
-versions. Before editing, summarize the files you expect to change. After
-running, report only sanitized version lines and listener output.
-```
-
-Useful follow-up prompts:
-
-```text
-Show me the files you changed and explain how the dataflow works.
-```
-
-```text
-Run the verification script again and summarize only the version lines and the
-listener output.
-```
+The route prompts near the beginning of this chapter work with any capable coding
+assistant. If you need to change models, reasoning effort, permissions, or the
+provider connection, revisit
+[Preparation: LLMs, Agents, and Coding Assistants](preparation-llms-agents-coding-assistants.md).
 
 ## Sources
 
 - Dora repository: <https://github.com/dora-rs/dora>
-- Dora installation guide: <https://dora-rs.ai/docs/guides/Installation/installing/>
-- Dora Python conversation guide: <https://dora-rs.ai/docs/guides/getting-started/conversation_py/>
-- Dora v0.5.0 release: <https://github.com/dora-rs/dora/releases/tag/v0.5.0>
+- Dora CLI guide: <https://dora-rs.ai/dora/operations/cli>
+- Dora Python API: <https://dora-rs.ai/dora/languages/python>
+- Dora v1.0.0-rc.4 release: <https://github.com/dora-rs/dora/releases/tag/v1.0.0-rc.4>
 - Adora archive notice: <https://github.com/dora-rs/adora>
-- Codex CLI setup: <https://developers.openai.com/codex/cli>
-- Codex CLI features: <https://developers.openai.com/codex/cli/features>
-- Codex CLI options: <https://developers.openai.com/codex/cli/reference>
-- Codex models: <https://developers.openai.com/codex/models>
-- Codex configuration basics: <https://developers.openai.com/codex/config-basic>
-- Codex approvals and security: <https://developers.openai.com/codex/agent-approvals-security>
-- Codex sandboxing: <https://developers.openai.com/codex/concepts/sandboxing>
 
 ## Next Step
 
-The next chapter adds Rerun on top of the Dora setup and uses a static 3D scene to verify robot, vehicle, floor, and reusable glTF asset visualization.
+The next chapter adds Rerun to the working Dora environment and creates the
+first static 3D scene.

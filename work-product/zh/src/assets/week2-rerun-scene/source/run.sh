@@ -6,6 +6,15 @@ cd "$ROOT"
 
 PYTHON_BIN="${PYTHON_BIN:-python3}"
 VENV="$ROOT/.venv"
+TOOLS="$ROOT/.tools"
+DORA_CLI="$TOOLS/dora"
+DORA_VERSION="1.0.0-rc.4"
+DORA_ARCHIVE_SHA256="251cb47b6e306049082c9d5fc30aa6e73c7be1ad27acfbcfff2f23be3202dd5a"
+
+if ! "$PYTHON_BIN" -c 'import sys; raise SystemExit(sys.version_info < (3, 11))'; then
+  echo "Python 3.11 or newer is required for dora-rs 1.0.0rc4." >&2
+  exit 1
+fi
 
 if [[ ! -x "$VENV/bin/python" ]]; then
   "$PYTHON_BIN" -m venv "$VENV"
@@ -14,7 +23,25 @@ fi
 "$VENV/bin/python" -m pip install --upgrade pip
 "$VENV/bin/python" -m pip install -r requirements.txt
 
-export PATH="$VENV/bin:$PATH"
+if [[ ! -x "$DORA_CLI" ]]; then
+  mkdir -p "$TOOLS"
+  archive="$TOOLS/dora-cli.tar.gz"
+  curl -fsSL \
+    "https://github.com/dora-rs/dora/releases/download/v$DORA_VERSION/dora-cli-x86_64-unknown-linux-gnu.tar.gz" \
+    -o "$archive"
+  echo "$DORA_ARCHIVE_SHA256  $archive" | sha256sum --check --status
+  tar -xzf "$archive" -C "$TOOLS"
+  install -m 0755 "$TOOLS/dora-cli-x86_64-unknown-linux-gnu/dora" "$DORA_CLI"
+fi
+
+runtime_path="$TOOLS:$VENV/bin"
+IFS=':' read -r -a path_entries <<< "$PATH"
+for entry in "${path_entries[@]}"; do
+  [[ -z "$entry" || "$entry" == "$TOOLS" || "$entry" == "$VENV/bin" ]] && continue
+  [[ -x "$entry/uv" ]] && continue
+  runtime_path="$runtime_path:$entry"
+done
+export PATH="$runtime_path"
 export RERUN_ANALYTICS=disabled
 mkdir -p artifacts logs
 
@@ -25,9 +52,9 @@ mkdir -p artifacts logs
   dora --version
   rerun --version
   python - <<'PY'
-import dora
+import importlib.metadata as metadata
 import rerun as rr
-print("dora-rs python package", getattr(dora, "__version__", "unknown"))
+print("dora-rs python package", metadata.version("dora-rs"))
 print("rerun-sdk", getattr(rr, "__version__", "unknown"))
 PY
 
@@ -37,7 +64,7 @@ PY
   fi
   test -s models/humanoid_robot.gltf
   test -s models/small_car.gltf
-  dora run dataflow.yml --uv --stop-after 13s
+  dora run dataflow.yml --stop-after 13s
 
   if [[ "${CAPTURE_VIEWER:-1}" == "1" ]]; then
     echo "== Rerun Viewer screenshot and recording =="

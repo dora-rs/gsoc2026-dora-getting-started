@@ -5,7 +5,8 @@
 | 组件 | 版本 / 环境 |
 | --- | --- |
 | 操作系统 | Ubuntu 22.04.5 LTS, x86_64 |
-| Python | CPython 3.10.12 |
+| Python | CPython 3.11.14 |
+| Dora CLI / Python 包 | `1.0.0-rc.4` / `dora-rs==1.0.0rc4` |
 | Rerun CLI 与 Python SDK | 0.33.0 |
 
 ## 下载
@@ -32,6 +33,38 @@
 
 ![Rerun Viewer 静态场景截图](../assets/week2-rerun-scene/rerun_viewer_screenshot.png)
 
+## 选择实现路线
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">创造路线</span>
+  <strong>创建模型与静态场景</strong>
+  <p>适合探索 Rerun 场景层级与资产流水线。</p>
+</div>
+
+```text
+使用 Python 3.11 创建固定到 Rerun 0.33.0 的工程。制作两个可复用 glTF 资产：
+小型人形机器人和轮式小车，必须带清晰材质，不能是白模。创建静态右手 Z-up 场景，
+包含地面、一个正方体障碍、一个圆柱体目标和两个模型，主体互不重叠。模型生成过程
+必须确定性，并与场景记录逻辑分离。
+
+保存非空 .rrd，打开 Rerun Viewer，只截取 Viewer 窗口，生成 960x540 截图和短 H.264
+录屏。提供固定依赖、唯一运行入口、资产与场景测试和明确验收标记。实现前先给出
+场景层级与坐标。
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">复现路线</span>
+  <strong>使用已验证的 Rerun 资产</strong>
+  <p>适合不把模型制作和场景搭建作为当前学习重点的读者。</p>
+</div>
+
+```text
+解压提供的 Rerun 参考工程，读取 VERSIONS.md、TUTORIAL_CONTRACT.md、
+ASSET_GUIDE.md 和 READER_PROMPT.md。严格保留 glTF 模型、坐标、依赖、dataflow 和
+运行脚本。报告唯一入口与验收标记，只运行该入口，再检查 RRD、截图、录屏、
+运行时标记和干净的 git status。不得重新生成或替换模型；缺少任何产物都报告 FAIL。
+```
+
 ## Rerun 是什么
 
 Rerun 是面向 robotics、computer vision 和 physical AI 系统的可视化与日志工具。程序可以记录 transform、box、image、point、text、tensor、时间序列状态等带类型的数据。Rerun Viewer 可以实时查看这些数据，也可以打开保存下来的 `.rrd` 录制文件。
@@ -45,7 +78,7 @@ Linux x86-64、Linux ARM64 和 macOS ARM64 wheels。如果你的平台没有对�
 
 ## 检查静态场景
 
-把参考工程解压到新目录后，让助手检查这些固定输入，而不是重新创建：
+把参考工程解压到新目录后，让编程助手检查这些固定输入，而不是重新创建：
 
 ```text
 检查这个已经提供的 Rerun 与 Dora 参考工程。
@@ -58,7 +91,7 @@ visualizer.py 中的物体坐标视为固定教程资产。不要替换、重新
 IP 地址、token 或无关系统信息。
 ```
 
-这样可以让所有读者使用同一个场景，同时仍然借助助手理解依赖和执行流程。
+这样可以让所有读者使用同一个场景，同时仍然借助编程助手理解依赖和执行流程。
 
 ## 工程结构
 

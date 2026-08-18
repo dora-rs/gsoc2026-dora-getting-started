@@ -1,6 +1,6 @@
 import unittest
 
-from week9_validation.contracts import parse_switch_observation
+from action_planning.contracts import parse_switch_observation
 
 
 class ObservationTests(unittest.TestCase):

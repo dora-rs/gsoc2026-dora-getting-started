@@ -5,12 +5,16 @@
 | 组件 | 版本 / 环境 |
 | --- | --- |
 | 操作系统 | Microsoft Windows 11 Pro, build 26200, x64 |
-| Dora CLI | 0.5.0 |
-| dora-rs Python 包 | `dora-rs==0.5.0` |
+| Dora CLI | 1.0.0-rc.4 |
+| dora-rs Python 包 | `dora-rs==1.0.0rc4` |
 | Python | CPython 3.11.14 via `uv` |
 | uv | 0.11.17 |
 | pyarrow | 24.0.0 |
 | PyYAML | 6.0.3 |
+
+## 下载
+
+- [已验证的 Dora Hello World 工程](../assets/dora-hello-world/dora-hello-world-reference.zip)
 
 ## 目标
 
@@ -22,6 +26,38 @@
 - `listener.py` 接收消息并打印。
 - `dataflow.yml` 把两个节点连起来。
 - `run.ps1` 创建隔离环境、安装 Dora、运行 dataflow，并检查预期输出。
+
+## 选择实现路线
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">创造路线</span>
+  <strong>从零创建最小 Dora 应用</strong>
+  <p>适合希望让编程助手创建并解释每个文件的读者。</p>
+</div>
+
+```text
+不要使用现有示例，从零创建一个最小的 Dora 1.0.0-rc.4 Hello World 工程。
+使用 CPython 3.11 和 dora-rs==1.0.0rc4。创建 talker.py、listener.py、
+dataflow.yml、固定版本的 requirements，以及适合当前操作系统的唯一运行脚本。
+talker 必须在收到 timer input 后发布 Apache Arrow 字符串，listener 必须打印它。
+环境只能创建在工程目录中；校验官方 CLI 压缩包的 checksum，不修改全局 Dora。
+
+写文件前先给出 dataflow 和文件计划。实现后运行四秒，报告实际观察到的 listener
+输出、准确版本、生成目录和源码 diff。运行日志中没有 listener 输出时不能声称成功。
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">复现路线</span>
+  <strong>按原样运行已验证工程</strong>
+  <p>适合最快、最可靠地完成第一次 Dora 运行。</p>
+</div>
+
+```text
+解压提供的 Dora Hello World 工程。操作前读取 VERSIONS.md、
+TUTORIAL_CONTRACT.md、ASSET_GUIDE.md 和 READER_PROMPT.md。源码和固定版本不可修改。
+先报告唯一入口、生成目录和准确验收标记，再只运行该入口。不要单独安装或启动组件。
+检查运行时标记和 git status；任一条件缺失都要报告 FAIL 和准确阶段。
+```
 
 ## Dora 是什么
 
@@ -47,7 +83,7 @@ Dora 是面向机器人和 AI 应用的 dataflow 框架。一个 Dora 应用可�
 
 本教程使用当前活跃的 Dora 包名进行安装和运行：
 
-- CLI 包：`dora-rs-cli`
+- CLI 命令：`dora`，通过官方 release、安装脚本或 `dora-cli` crate 安装
 - Python API 包：`dora-rs`
 - Python import 名称：`dora`
 
@@ -59,19 +95,20 @@ Dora 官方资料列出了几种安装路径：
 
 | 方式 | 适合场景 | 命令 |
 | --- | --- | --- |
-| Python virtual environment | Windows 上可复现的教程验证 | `pip install dora-rs-cli dora-rs` |
+| Release 压缩包 + Python virtual environment | 固定版本、可复现的教程验证 | 下载 Dora CLI `1.0.0-rc.4`，再运行 `pip install dora-rs==1.0.0rc4` |
 | Cargo | 希望从 crates.io 安装 CLI 的 Rust 开发者 | `cargo install dora-cli` |
 | Windows installer | 用户级 CLI 安装 | `powershell -ExecutionPolicy ByPass -c "irm https://github.com/dora-rs/dora/releases/latest/download/dora-cli-installer.ps1 \| iex"` |
 | macOS/Linux installer | 用户级 CLI 安装 | `curl --proto '=https' --tlsv1.2 -LsSf https://github.com/dora-rs/dora/releases/latest/download/dora-cli-installer.sh \| sh` |
 
-本章采用 Python virtual environment 路径，因为它让验证过程自包含，也不会改变机器上已有的 Dora 源码构建。
+本章组合使用固定版本的 release 压缩包与 Python virtual environment，让 CLI 和
+Python API 对应同一个 Dora release，同时不改变机器上已有的全局安装。
 
 ## 本地验证
 
 从教程根目录运行：
 
 ```powershell
-cd verification/week1-hello-world
+cd verification/dora-hello-world
 ./run.ps1
 ```
 
@@ -79,10 +116,11 @@ cd verification/week1-hello-world
 
 1. 查找 `uv`。
 2. 如果本地还没有 `.venv`，用 CPython 3.11 创建它。
-3. 根据 `requirements.txt` 安装固定版本依赖。
-4. 打印 Dora 与 Python 包版本。
-5. 运行 `dora run dataflow.yml --uv --stop-after 4s`。
-6. 如果没有观察到 listener 输出，则失败退出。
+3. 下载并校验 Dora CLI `1.0.0-rc.4` 压缩包。
+4. 根据 `requirements.txt` 安装固定版本依赖。
+5. 打印 Dora 与 Python 包版本。
+6. 运行 `dora run dataflow.yml --uv --stop-after 4s`。
+7. 如果没有观察到 listener 输出，则失败退出。
 
 预期成功标记：
 
@@ -176,204 +214,20 @@ listener received: Hello from dora-rs #3 from greeting
 | listener 没有输出 | 确认 `talker` 会持续运行直到 stop signal；如果立刻退出，dataflow 可能来不及投递消息 |
 | PowerShell 阻止脚本 | 在可信 checkout 中运行脚本，或使用 `Set-ExecutionPolicy -Scope Process Bypass` |
 
-## 用 Codex CLI 完成同样任务
+## 使用编程助手继续
 
-本节基于官方 Codex CLI 文档整理，用作操作引导。上面的 Dora 示例已经在本机验证；下面的 Codex CLI 命令需要在你自己的 Codex 会话中确认。
-
-### Codex 官方文档链接
-
-- CLI 概览：<https://developers.openai.com/codex/cli>
-- CLI 功能：<https://developers.openai.com/codex/cli/features>
-- CLI 命令行选项：<https://developers.openai.com/codex/cli/reference>
-- Codex 模型：<https://developers.openai.com/codex/models>
-- 配置基础：<https://developers.openai.com/codex/config-basic>
-- 审批与安全：<https://developers.openai.com/codex/agent-approvals-security>
-- 沙盒机制：<https://developers.openai.com/codex/concepts/sandboxing>
-
-### 安装 Codex CLI
-
-Windows 上可以在 PowerShell 中使用 standalone installer：
-
-```powershell
-irm https://chatgpt.com/codex/install.ps1 | iex
-codex
-```
-
-如果你已经安装 Node.js，也可以使用 npm：
-
-```powershell
-npm install -g @openai/codex
-codex
-```
-
-macOS 或 Linux 上，Codex CLI 文档展示的 standalone installer 是：
-
-```bash
-curl -fsSL https://chatgpt.com/codex/install.sh | sh
-codex
-```
-
-第一次运行时会提示你使用 ChatGPT 账号或 API key 登录。
-
-### 在本仓库中启动
-
-```powershell
-cd <repo>
-codex
-```
-
-在可信 checkout 中进行普通交互式开发时，建议使用 workspace write 权限，并保留审批提示：
-
-```powershell
-codex --sandbox workspace-write --ask-for-approval on-request
-```
-
-然后可以让 Codex 执行：
-
-```text
-Install the latest dora-rs CLI and Python package in an isolated environment,
-create a minimal talker/listener Hello World dataflow, run it locally, and
-document the exact versions and verification command. Do not include secrets,
-tokens, private usernames, or absolute local paths in committed docs.
-```
-
-如果希望 Codex 在会话中查找最新公开文档，可以启用 live search：
-
-```powershell
-codex --search --sandbox workspace-write --ask-for-approval on-request
-```
-
-Web search 和命令的网络访问权限是两件事。如果安装包时无法访问 PyPI 或 GitHub，说明命令网络访问可能被沙盒拦截，可以重新启动并显式允许 workspace 网络访问：
-
-```powershell
-codex --sandbox workspace-write --ask-for-approval on-request --config sandbox_workspace_write.network_access=true
-```
-
-### 选择模型
-
-Codex 官方文档推荐大多数 Codex 任务从 `gpt-5.5` 开始，尤其适合复杂编码、调研、computer use，以及多步骤文档工作。任务较轻、并且更看重速度或成本时，可以选择 `gpt-5.4-mini`。如果账号中可用 `gpt-5.3-codex-spark`，更适合作为快速迭代模型，而不是严谨端到端验证的首选。
-
-为单次运行指定模型：
-
-```powershell
-codex --model gpt-5.5
-```
-
-在已打开的交互会话中，可以使用：
-
-```text
-/model
-```
-
-如果希望 CLI 和 IDE 默认使用同一个模型，可以在 `~/.codex/config.toml` 中写入：
-
-```toml
-model = "gpt-5.5"
-```
-
-### 选择思考强度
-
-思考强度控制模型在支持该能力时回答前投入多少推理。更高的思考强度可能提升复杂调试、设计和多文件修改质量，但会更慢，也会消耗更多 token。
-
-实用建议：
-
-- 简单安装、解释和小范围文档修改，使用 `medium` 或默认值。
-- 如果要让 Codex 在一次任务中查文档、安装依赖、写代码、运行验证并更新正文，使用 `high`。
-- `xhigh` 留给困难架构分析或复杂调试，前提是可以接受更长等待时间。
-
-为单次运行指定思考强度：
-
-```powershell
-codex --model gpt-5.5 --config model_reasoning_effort='"high"'
-```
-
-或在 `~/.codex/config.toml` 中持久化：
-
-```toml
-model_reasoning_effort = "high"
-```
-
-### 设置权限
-
-Codex 权限由两层组成：
-
-- `sandbox_mode` 决定 Codex 执行命令时技术上能访问什么。
-- `approval_policy` 决定 Codex 什么时候必须停下来请求确认。
-
-常用本地模式：
-
-- `read-only`：适合解释、规划，或只让 Codex 读取文件而不修改。
-- `workspace-write`：适合普通教程开发；Codex 可以在当前 workspace 内编辑并运行常规命令。
-- `danger-full-access`：移除沙盒边界。只建议在一次性或严格受控环境中使用。
-
-Dora Hello World 任务推荐：
-
-```powershell
-codex --sandbox workspace-write --ask-for-approval on-request
-```
-
-只讨论不修改时：
-
-```powershell
-codex --sandbox read-only --ask-for-approval on-request
-```
-
-本机持久默认值可以这样写：
-
-```toml
-sandbox_mode = "workspace-write"
-approval_policy = "on-request"
-
-[sandbox_workspace_write]
-network_access = false
-```
-
-交互会话中，可以使用 `/permissions` 随任务切换权限模式，并用 `/status` 查看当前 workspace 和权限状态。
-
-### 实用提示
-
-- 先让 Codex 检查仓库并总结预计修改哪些文件，再开始编辑。
-- 明确要求使用隔离虚拟环境，除非你特别说明，否则不要修改全局 Python、Rust 或 Dora 安装。
-- 让 Codex 运行验证脚本，并只汇报脱敏后的版本行和 Hello World listener 输出。
-- 明确要求不要把 secrets、私人用户名、机器 ID、本地绝对路径、access token 写进文档。
-- 最后让 Codex 给出 changed-file summary，方便快速 review。
-
-示例 prompt：
-
-```text
-Use the current Dora documentation to install the latest dora-rs CLI and Python
-package in an isolated environment. Create a minimal talker/listener Hello World
-dataflow, run it locally, and update the tutorial with the exact OS and package
-versions. Before editing, summarize the files you expect to change. After
-running, report only sanitized version lines and listener output.
-```
-
-常用后续 prompt：
-
-```text
-Show me the files you changed and explain how the dataflow works.
-```
-
-```text
-Run the verification script again and summarize only the version lines and the
-listener output.
-```
+本章开头的两种路线提示词可以交给任意能力合适的编程助手。如果需要更换模型、思考
+强度、权限或 Provider 连接，请回看
+[准备工作：LLM、Agent 与编程助手](preparation-llms-agents-coding-assistants.md)。
 
 ## 来源
 
 - Dora repository: <https://github.com/dora-rs/dora>
-- Dora installation guide: <https://dora-rs.ai/docs/guides/Installation/installing/>
-- Dora Python conversation guide: <https://dora-rs.ai/docs/guides/getting-started/conversation_py/>
-- Dora v0.5.0 release: <https://github.com/dora-rs/dora/releases/tag/v0.5.0>
+- Dora CLI guide: <https://dora-rs.ai/dora/operations/cli>
+- Dora Python API: <https://dora-rs.ai/dora/languages/python>
+- Dora v1.0.0-rc.4 release: <https://github.com/dora-rs/dora/releases/tag/v1.0.0-rc.4>
 - Adora archive notice: <https://github.com/dora-rs/adora>
-- Codex CLI setup: <https://developers.openai.com/codex/cli>
-- Codex CLI features: <https://developers.openai.com/codex/cli/features>
-- Codex CLI options: <https://developers.openai.com/codex/cli/reference>
-- Codex models: <https://developers.openai.com/codex/models>
-- Codex configuration basics: <https://developers.openai.com/codex/config-basic>
-- Codex approvals and security: <https://developers.openai.com/codex/agent-approvals-security>
-- Codex sandboxing: <https://developers.openai.com/codex/concepts/sandboxing>
 
 ## 下一步
 
-下一章会在 Dora 基础环境之外加入 Rerun，用一个静态 3D 场景验证机器人、车辆、地面和可复用 glTF 资产的可视化流程。
+下一章会在当前 Dora 环境中加入 Rerun，并创建第一个静态 3D 场景。

@@ -102,7 +102,10 @@ body {
 }
 
 .content main {
+  width: 100%;
+  min-width: 0;
   max-width: var(--content-max-width);
+  box-sizing: border-box;
   padding-top: 34px;
 }
 
@@ -156,6 +159,8 @@ body {
 }
 
 .table-wrapper {
+  width: 100%;
+  max-width: 100%;
   margin: 1.35rem 0;
   overflow-x: auto;
   border-radius: var(--dora-radius);
@@ -253,6 +258,86 @@ body {
   object-fit: cover;
 }
 
+.route-overview {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin: 1.6rem 0 2rem;
+}
+
+.route-overview__item,
+.prompt-route {
+  border: 1px solid var(--dora-border);
+  border-top: 4px solid var(--dora-accent);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--dora-panel) 94%, var(--dora-panel-soft));
+}
+
+.route-overview__item {
+  padding: 20px 22px;
+}
+
+.route-overview__item--create,
+.prompt-route--create {
+  border-top-color: var(--dora-accent-2);
+}
+
+.route-overview__item--reproduce,
+.prompt-route--reproduce {
+  border-top-color: var(--dora-accent);
+}
+
+.route-overview__label,
+.prompt-route__label {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--dora-muted);
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.route-overview__item strong,
+.prompt-route strong {
+  display: block;
+  font-size: 1.65rem;
+  line-height: 1.35;
+}
+
+.route-overview__item p,
+.prompt-route p {
+  margin: 10px 0 0;
+  color: var(--dora-muted);
+  font-size: 1.4rem;
+  line-height: 1.62;
+}
+
+.prompt-route {
+  margin-top: 1.45rem;
+  padding: 15px 18px 16px;
+}
+
+.prompt-route + pre {
+  margin-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top: 0;
+}
+
+.prompt-route + pre code {
+  font-size: 1.35rem;
+  line-height: 1.62;
+}
+
+.prompt-route--create + pre {
+  border-left: 4px solid var(--dora-accent-2);
+}
+
+.prompt-route--reproduce + pre {
+  border-left: 4px solid var(--dora-accent);
+}
+
 .content video.process-demo-video {
   height: auto;
   aspect-ratio: 8 / 3;
@@ -262,6 +347,12 @@ body {
 .content video.standard-demo-video {
   height: auto;
   aspect-ratio: 8 / 5;
+  object-fit: cover;
+}
+
+.content video.terminal-demo-video {
+  height: auto;
+  aspect-ratio: 1358 / 870;
   object-fit: cover;
 }
 
@@ -578,8 +669,11 @@ body {
 
 .roadmap-item {
   display: grid;
-  gap: 10px;
-  padding: 20px 22px;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: 14px;
+  row-gap: 4px;
+  padding: 13px 18px;
   border: 1px solid var(--dora-border);
   border-left: 4px solid var(--dora-accent);
   border-radius: var(--dora-radius);
@@ -598,20 +692,22 @@ body {
 
 .roadmap-item span {
   color: var(--links);
-  font-size: 1rem;
+  font-size: 1.08rem;
   font-weight: 800;
+  line-height: 1.3;
 }
 
 .roadmap-item strong {
-  font-size: 1.34rem;
-  line-height: 1.25;
+  font-size: 1.42rem;
+  line-height: 1.3;
 }
 
 .roadmap-item em {
+  grid-column: 1 / -1;
   color: var(--dora-muted);
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-style: normal;
-  line-height: 1.55;
+  line-height: 1.45;
 }
 
 .language-switch {
@@ -687,14 +783,29 @@ body {
   }
 
   .roadmap-item {
-    padding: 17px 18px;
+    column-gap: 10px;
+    row-gap: 3px;
+    padding: 12px 14px;
+  }
+
+  .roadmap-item span {
+    font-size: 1.02rem;
   }
 
   .roadmap-item strong {
-    font-size: 1.22rem;
+    font-size: 1.28rem;
   }
 
   .roadmap-item em {
-    font-size: 1.02rem;
+    font-size: 1.08rem;
+  }
+
+  .route-overview {
+    grid-template-columns: 1fr;
+  }
+
+  .route-overview__item,
+  .prompt-route {
+    padding: 15px 16px;
   }
 }

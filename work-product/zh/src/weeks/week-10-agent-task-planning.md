@@ -9,12 +9,13 @@
 | NVIDIA 驱动 | 580.159.03 |
 | Webots | R2025a |
 | ROS 2 | Humble |
-| Dora CLI 和 Python API | 0.5.0 |
+| Dora CLI 和 Python API | 1.0.0-rc.4 |
 | OpenAI Agents SDK | `openai-agents==0.19.0` |
 | Robot API | FastAPI 0.140.13，Pydantic 2.13.4 |
 | 本地模型引擎 | Ollama 0.32.1 |
 | 本地模型 | `qwen3-vl:8b-instruct` |
-| Python | 3.10.12 |
+| Dora 运行时 Python | 3.11.14 |
+| ROS 2 / 应用 worker Python | 3.10.12 |
 
 ## 下载
 
@@ -48,6 +49,40 @@ Agent。Agent 不会一次性生成固定动作计划，而是在每次工具返
 
 <img src="../assets/agent-sdk-task-planning/media/scene-start.jpg" alt="Webots 开关场景，移动机械臂位于起点" width="1920" height="540">
 
+## 选择实现路线
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">创造路线</span>
+  <strong>创建逐步选择机器人工具的 Agent</strong>
+  <p>适合把一次性规划改造成 observe-act-observe 循环。</p>
+</div>
+
+```text
+为任务“观察指示灯；如果亮着就关闭开关，确认灯灭后返回 home”创建 Webots R2025a
+和 Dora 1.0.0-rc.4 工程。使用官方 youBot、清晰指示灯、named locations、稳定 camera
+视角和经过验证的机械臂姿态。navigation、arm、vision、stop 和 state 必须是独立
+Dora 节点，并位于 FastAPI/Pydantic Robot API 后方。
+
+集成 OpenAI Agents SDK 0.19.0，通过 Ollama-compatible qwen3-vl:8b-instruct
+运行。只暴露原子 named tools 和新鲜的结构化结果，不暴露坐标、轮速或关节参数。
+增加幂等、timeout、stale-state 拒绝、唯一入口、contract tests、before/after 图片、
+tool-call log、最终 home 状态证据和应用录屏。Agent 必须根据上一个结果选择下一个工具。
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">复现路线</span>
+  <strong>运行已验证的 Agents SDK 工程</strong>
+  <p>适合观察一个可运行 Agent loop 及其安全边界。</p>
+</div>
+
+```text
+解压提供的 Agents SDK 工程，读取 VERSIONS.md、TUTORIAL_CONTRACT.md、
+ASSET_GUIDE.md 和 READER_PROMPT.md。保留所有源码、lock、模型、pose 和 contract。
+只运行 bash tutorial.sh run；只有明确的瞬时仿真 timeout 才允许原样重试一次。验证 44 项
+测试、lit=true 后 lit=false、实际 tool-call 序列、[DONE]、两张证据图、最终 location
+和 arm pose 都为 home、PASS 和干净的 git status。不得修改工程来让失败运行通过。
+```
+
 ## Agent 不只是聊天
 
 普通聊天模型接收一段文字并返回一段文字。即使回答中写出了合理步骤，它也不会
@@ -73,7 +108,7 @@ Agent 由**模型、指令、工具和运行循环**组成。OpenAI Agents SDK �
 | Agent 编排 | OpenAI Agents SDK | 提供 `Agent`、`Runner`、函数工具和回合限制 |
 | Agent 模型 | Ollama + Qwen3-VL 8B | 本地完成工具选择，也复用于 RGB 指示灯识别 |
 | 机器人接口 | FastAPI + Pydantic | 给 Agent 提供严格、可校验的原子动作 |
-| 数据流 | Dora 0.5.0 | 分离状态、导航、机械臂、视觉和停止节点 |
+| 数据流 | Dora 1.0.0-rc.4 | 分离状态、导航、机械臂、视觉和停止节点 |
 | 仿真 | Webots R2025a + ROS 2 Humble | 运行 KUKA youBot、相机、开关和已验证轨迹 |
 
 Agents SDK 默认可以连接 OpenAI 模型；本工程使用
@@ -170,10 +205,10 @@ gateway node 把它发送给导航、机械臂或视觉 node；node 的结构化
 先让编程助手理解提供的工程，不要重新生成场景或替换机器人：
 
 ```text
-检查这个提供的 Webots R2025a、ROS 2 Humble、Dora 0.5.0 和
+检查这个提供的 Webots R2025a、ROS 2 Humble、Dora 1.0.0-rc.4 和
 OpenAI Agents SDK 参考工程。
 
-说明 worlds、controllers、dora、robot_api、week10_runtime、config、
+说明 worlds、controllers、dora、robot_api、agent_runtime、config、
 agent_tools.py、agent_cli.py 和 tests 的职责。画出从 Agent 工具调用到
 Dora node，再到 Webots controller 和结构化结果返回的路径。
 
@@ -182,7 +217,7 @@ Dora node，再到 Webots controller 和结构化结果返回的路径。
 主机名、私有路径、网络地址、token 或无关环境变量。
 ```
 
-助手应该识别出三个位置定义在 `config/locations.json`，但这些坐标不会出现在
+编程助手应该识别出三个位置定义在 `config/locations.json`，但这些坐标不会出现在
 工具 schema 中。`config/skill_manifest.json` 给出了模型可以理解的能力边界：
 
 ```json
@@ -191,7 +226,7 @@ Dora node，再到 Webots controller 和结构化结果返回的路径。
 
 ### 准备本地模型与容器
 
-在带 NVIDIA GPU 的 Ubuntu 22.04 桌面上，让助手先检查资源和已有版本：
+在带 NVIDIA GPU 的 Ubuntu 22.04 桌面上，让编程助手先检查资源和已有版本：
 
 ```text
 为这个提供的参考工程准备运行环境。
@@ -209,13 +244,17 @@ Docker、NVIDIA Container Toolkit、Dora、Ollama 和 X11 DISPLAY。
 
 ```bash
 ollama pull qwen3-vl:8b-instruct
-docker build -t week10-agent-sdk:humble .
+docker build -t dora-agent-sdk:humble .
 chmod +x run-container.sh launch-webots.sh
-python3 -m pytest -q
+/usr/bin/python3 -m pytest -q
 ```
 
 24 GB 显存的验证机器可以同时运行 Webots、Qwen3-VL 和录屏。显存较小的设备应
 先关闭录屏并观察 `nvidia-smi`；不要通过降低输出约束来换取更小的模型占用。
+
+容器中的 Dora 使用 Python 3.11 virtual environment；ROS 2、FastAPI、Agents SDK
+和应用 workers 使用系统 Python 3.10。通用 JSONL sidecar 把每个 worker 接入 Dora
+inputs 和 outputs，同时保持两套依赖隔离。
 
 ### 加载提供的场景
 
@@ -247,7 +286,7 @@ python3 -m pytest -q
 
 ### 定义 Dora Dataflow
 
-让助手检查每个能力是否有独立的 node 和输入输出：
+让编程助手检查每个能力是否有独立的 node 和输入输出：
 
 ```text
 检查 dora/dataflow.yml 和对应 Python nodes。
@@ -266,7 +305,17 @@ navigation、arm、vision、stop 分别处理一种能力。每个动作都携�
 {{#include ../assets/agent-sdk-task-planning/source/dora/dataflow.yml}}
 ```
 
-`gateway_node.py` 同时在 `127.0.0.1:8000` 启动 Robot API。它不会把 API
+通用 sidecar 是运行在 Python 3.11 中、面向 Dora 的进程：
+
+```python
+{{#include ../assets/agent-sdk-task-planning/source/dora/runtime_bridge/sidecar_node.py}}
+```
+
+```python
+{{#include ../assets/agent-sdk-task-planning/source/dora/runtime_bridge/sidecar_bridge.py}}
+```
+
+`gateway_node.py` worker 同时在 `127.0.0.1:8000` 启动 Robot API。它不会把 API
 暴露到外部网络。
 
 ### 定义严格的 Robot API
@@ -297,7 +346,7 @@ retryable、error_code、message、robot_state 和 result。
 
 ### 暴露 Agents SDK 工具
 
-让助手把 Robot API 客户端包装成函数工具：
+让编程助手把 Robot API 客户端包装成函数工具：
 
 ```text
 使用 OpenAI Agents SDK 的 @function_tool 包装本地 Robot API。
@@ -328,7 +377,7 @@ Agent 指令规定任务边界，而不是写死一份动作列表：
 {{#include ../assets/agent-sdk-task-planning/source/agent_tools.py:11:32}}
 ```
 
-让助手完成 Agent 入口：
+让编程助手完成 Agent 入口：
 
 ```text
 创建一个单 Agent 终端入口。
@@ -358,7 +407,7 @@ Agent 每次决策前读取新状态；先观察指示灯；只有 visible=true 
 保持 Webots 窗口运行，在第二个终端进入容器并启动 Dora：
 
 ```bash
-docker exec -it week10-agent-sdk bash
+docker exec -it dora-agent-sdk bash
 cd /workspace/dora
 dora run dataflow.yml
 ```
@@ -366,7 +415,7 @@ dora run dataflow.yml
 在第三个终端检查 API 已经收到新鲜状态：
 
 ```bash
-docker exec -it week10-agent-sdk bash
+docker exec -it dora-agent-sdk bash
 curl -s http://127.0.0.1:8000/v1/robot/state
 ```
 
@@ -374,9 +423,9 @@ curl -s http://127.0.0.1:8000/v1/robot/state
 然后运行任务：
 
 ```bash
-docker exec -it week10-agent-sdk bash
+docker exec -it dora-agent-sdk bash
 cd /workspace
-python3 agent_cli.py --task \
+/usr/bin/python3 agent_cli.py --task \
   "查看指示灯；如果亮着就关闭开关，确认灯灭后回到起点。"
 ```
 
@@ -406,7 +455,7 @@ python3 agent_cli.py --task \
 视觉 node 把 RGB 图像发送给本地 Qwen3-VL，并要求严格结构化输出：
 
 ```python
-{{#include ../assets/agent-sdk-task-planning/source/week10_runtime/indicator_vision.py:13:40}}
+{{#include ../assets/agent-sdk-task-planning/source/agent_runtime/indicator_vision.py:13:40}}
 ```
 
 模型必须返回 `visible`、`lit` 和 `confidence`。如果指示灯被遮挡，
@@ -442,7 +491,7 @@ python3 agent_cli.py --task \
 先运行不依赖 Webots 的测试：
 
 ```bash
-python3 -m pytest -q
+/usr/bin/python3 -m pytest -q
 ```
 
 参考工程包含 44 项测试，覆盖工具白名单、API contract、过期状态、重复请求、

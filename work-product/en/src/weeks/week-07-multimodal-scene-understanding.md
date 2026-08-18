@@ -7,16 +7,13 @@
 | Operating system | Ubuntu 22.04.5 LTS, x86_64 |
 | GPU | NVIDIA GeForce RTX 5090 Laptop GPU, 24 GB VRAM |
 | NVIDIA driver | 580.159.03 |
-| Dora CLI and Python API | 0.5.0 |
+| Dora CLI and Python API | 1.0.0-rc.4 |
+| Dora runtime Python | 3.11.14 |
 | Habitat-Sim | 0.3.3 |
+| Habitat-Sim worker Python | 3.9.23 |
 | Ollama | 0.32.1 |
 | Local model | `qwen3-vl:8b-instruct`, Q4_K_M |
 | Model digest | `0533d74300e4f9bc367d675d4e64ffd073d50ff16a2b4096cc2e8a1cf8c96319` |
-
-The example uses Dora `v0.5.0`. Before reproducing it, compare that version
-with the [latest official release](https://github.com/dora-rs/dora/releases/latest)
-and check the [official installation guide](https://dora-rs.ai/dora/getting-started/installation.html),
-because releases and model availability change.
 
 ## Downloads
 
@@ -51,6 +48,44 @@ Dora connects the complete task:
 The simulation motion is deliberately deterministic. The experiment evaluates
 visual judgment and Dora orchestration, not grasp-policy uncertainty.
 
+## Choose a Build Route
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">Create route</span>
+  <strong>Create the vision-gated manipulation system</strong>
+  <p>Use this to build the scene, trajectory, contracts, and Dora orchestration as one project.</p>
+</div>
+
+```text
+Create a reproducible Habitat-Sim manipulation project with a Franka Panda,
+an RGB wrist camera, and three separated red, yellow, and blue cubes visible
+from the home pose. Implement a deterministic trajectory that picks the red
+cube, places it on the blue cube, and returns home. Keep Habitat-Sim Python 3.9
+isolated from Dora 1.0.0-rc.4 on Python 3.11.
+
+Connect simulation, a local qwen3-vl:8b-instruct vision node, and a controller
+through Dora. Require strict JSON with red_visible, blue_visible, red_on_blue,
+and confidence. Gate motion on the before result and success on the after
+result. Add schema tests, confidence checks, one run entry, four clear images,
+and overview/wrist/side-by-side videos. Never replace visual evidence with
+hidden simulator state.
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">Reproduce route</span>
+  <strong>Run the validated vision-gated task</strong>
+  <p>Use this to focus on perception contracts and Dora control flow.</p>
+</div>
+
+```text
+Use the supplied multimodal pick-and-place project exactly as packaged. Read
+VERSIONS.md, TUTORIAL_CONTRACT.md, ASSET_GUIDE.md, and READER_PROMPT.md. Confirm
+that the pinned Ollama model is available, report the single entry and runtime
+acceptance markers, then execute only that entry. Inspect the focused test
+result, before/after JSON, TASK_SUCCESS, required images and videos, and clean
+git status. Do not change the trajectory, threshold, model, schema, or assets.
+```
+
 ## Before You Begin
 
 The commands in this chapter target Ubuntu/Linux and assume that the downloaded
@@ -79,7 +114,7 @@ inference node with a cloud API near the end of the chapter.
 articulated-object joint control, and RGB sensors. The Panda scene and real
 visual meshes can be reused from the previous camera chapter.
 
-[Dora](https://dora-rs.ai/docs/) expresses the controller, simulator, and model
+[Dora](https://dora-rs.ai/) expresses the controller, simulator, and model
 as nodes with explicit inputs and outputs. The vision model proposes an
 observation; ordinary program logic decides whether the task may continue.
 
@@ -345,9 +380,15 @@ def parse_observation(payload: str) -> ObservationResult:
 Use three nodes and keep each responsibility narrow:
 
 - `controller`: owns the task state machine and the confidence threshold.
-- `simulation`: captures images, executes the validated trajectory, and records
-  media.
+- `simulation`: a Dora 3.11 bridge that delegates rendering and trajectory
+  execution to a Habitat-Sim 3.9 worker.
 - `vision`: calls Ollama and validates the response.
+
+Habitat-Sim 0.3.3 and Dora 1.0 use different supported Python runtimes. The
+provided project keeps them isolated: Dora nodes use Python 3.11, while a
+JSONL worker process uses Python 3.9 for Habitat-Sim. The bridge forwards only
+structured commands, observations, and errors; it does not expose a second
+control path.
 
 This same-computer example publishes a small JSON observation containing
 `phase` and `wrist_path`; the `vision` node reads that PNG from local storage.
@@ -357,7 +398,7 @@ input. If the nodes run on different computers, replace the local path with
 encoded image bytes or a shared object-storage URI.
 
 ```text
-Implement the current example as a Dora 0.5.0 dataflow.
+Implement the current example as a Dora 1.0.0-rc.4 dataflow.
 
 Create controller, simulation, and vision Python nodes with explicit inputs and
 outputs. The controller must request an initial capture, run motion only when
@@ -365,7 +406,8 @@ red and blue are visible, red_on_blue is false, and confidence is at least 0.8,
 then request a final capture. It may report success only when the final result
 has both cubes visible, red_on_blue true, and confidence at least 0.8.
 
-The simulation node must own Habitat-Sim and the validated trajectory. The
+The simulation bridge must start the supplied Habitat-Sim worker and own its
+lifecycle. The worker owns Habitat-Sim and the validated trajectory. The
 vision node must own the model request and schema validation. Publish a
 sanitized error instead of inventing an observation on timeout, service error,
 invalid JSON, or schema failure. Make every node exit cleanly after success or
@@ -388,7 +430,7 @@ nodes:
       - command
 
   - id: simulation
-    path: simulation_node.py
+    path: simulation_bridge_node.py
     inputs:
       command: controller/command
     outputs:
@@ -539,8 +581,9 @@ error, stack error, peak GPU memory, and GPU utilization. Keep GPU memory below
 ### Run the Dora Dataflow
 
 With Ollama still running in the other terminal, use the supplied script. It
-creates or reuses the pinned environment, puts its Python first on `PATH`, runs
-the unit tests, starts the Dora dataflow, and requires `TASK_SUCCESS`:
+creates or reuses the pinned Dora and Habitat environments, downloads and
+verifies the Dora CLI, runs the unit tests in the Habitat environment, starts
+the dataflow with Python 3.11, and requires `TASK_SUCCESS`:
 
 ```bash
 cd multimodal-pick-and-place-reference
@@ -659,14 +702,18 @@ sources used by the tutorial are also shown directly here.
 {{#include ../assets/multimodal-pick-and-place/source/dataflow.yml}}
 ```
 
-### Dora Nodes
+### Dora Nodes and Habitat Worker
 
 ```python
 {{#include ../assets/multimodal-pick-and-place/source/controller_node.py}}
 ```
 
 ```python
-{{#include ../assets/multimodal-pick-and-place/source/simulation_node.py}}
+{{#include ../assets/multimodal-pick-and-place/source/simulation_bridge_node.py}}
+```
+
+```python
+{{#include ../assets/multimodal-pick-and-place/source/simulation_worker.py}}
 ```
 
 ```python
@@ -683,10 +730,14 @@ sources used by the tutorial are also shown directly here.
 {{#include ../assets/multimodal-pick-and-place/source/record_demo.py}}
 ```
 
-### `environment.yml`
+### Runtime Environments
 
 ```yaml
 {{#include ../assets/multimodal-pick-and-place/source/environment.yml}}
+```
+
+```yaml
+{{#include ../assets/multimodal-pick-and-place/source/environment-dora.yml}}
 ```
 
 ### `run.sh`

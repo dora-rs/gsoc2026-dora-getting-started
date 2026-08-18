@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from week10_runtime.indicator_vision import IndicatorObservation
+from agent_runtime.indicator_vision import IndicatorObservation
 
 
 def test_visible_indicator_has_boolean_lit_state():

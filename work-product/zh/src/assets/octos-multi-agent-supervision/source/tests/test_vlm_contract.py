@@ -1,6 +1,6 @@
 import pytest
 
-from week11_runtime.vlm_contract import (
+from process_runtime.vlm_contract import (
     build_temperature_vlm_request,
     parse_temperature_result,
 )

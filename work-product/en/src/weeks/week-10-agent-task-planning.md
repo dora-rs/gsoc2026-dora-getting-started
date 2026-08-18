@@ -9,12 +9,13 @@
 | NVIDIA driver | 580.159.03 |
 | Webots | R2025a |
 | ROS 2 | Humble |
-| Dora CLI and Python API | 0.5.0 |
+| Dora CLI and Python API | 1.0.0-rc.4 |
 | OpenAI Agents SDK | `openai-agents==0.19.0` |
 | Robot API | FastAPI 0.140.13, Pydantic 2.13.4 |
 | Local model runtime | Ollama 0.32.1 |
 | Local model | `qwen3-vl:8b-instruct` |
-| Python | 3.10.12 |
+| Dora runtime Python | 3.11.14 |
+| ROS 2 / application worker Python | 3.10.12 |
 
 ## Downloads
 
@@ -52,6 +53,45 @@ each tool returns:
 
 <img src="../assets/agent-sdk-task-planning/media/scene-start.jpg" alt="Webots switch scene with the mobile manipulator at its home position" width="1920" height="540">
 
+## Choose a Build Route
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">Create route</span>
+  <strong>Build an Agent that chooses one robot tool at a time</strong>
+  <p>Use this to replace one-shot planning with an observe-act-observe loop.</p>
+</div>
+
+```text
+Create a Webots R2025a and Dora 1.0.0-rc.4 project for the task: inspect the
+indicator; if lit, turn off its switch, verify it is off, and return home. Use
+the official youBot, a readable indicator, named locations, stable camera
+views, and validated arm poses. Put navigation, arm, vision, stop, and state in
+separate Dora nodes behind a FastAPI/Pydantic Robot API.
+
+Integrate OpenAI Agents SDK 0.19.0 with an Ollama-compatible
+qwen3-vl:8b-instruct model. Expose only atomic named tools and fresh structured
+results; never expose coordinates, wheel speeds, or joints. Add idempotency,
+timeouts, stale-state rejection, one run entry, contract tests, before/after
+images, tool-call logs, final home-state evidence, and an application recording.
+The Agent must choose the next tool from the previous result.
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">Reproduce route</span>
+  <strong>Run the verified Agents SDK project</strong>
+  <p>Use this to inspect a working agent loop and its safety boundary.</p>
+</div>
+
+```text
+Extract the supplied Agents SDK project and read VERSIONS.md,
+TUTORIAL_CONTRACT.md, ASSET_GUIDE.md, and READER_PROMPT.md. Preserve all source,
+locks, models, poses, and contracts. Run only bash tutorial.sh run and allow at
+most one unchanged retry for a clearly transient simulation timeout. Verify 44
+tests, lit=true then lit=false, the actual tool-call sequence, [DONE], two
+evidence images, final location and arm pose home, PASS, and clean git status.
+Never edit the project to make a failed run pass.
+```
+
 ## An Agent Is More Than Chat
 
 A chat model receives text and returns text. Even when its answer contains
@@ -80,7 +120,7 @@ minimal complete observe-act-observe loop. Continue with the official guides:
 | Agent orchestration | OpenAI Agents SDK | Provides `Agent`, `Runner`, function tools, and a turn limit |
 | Agent model | Ollama + Qwen3-VL 8B | Selects tools locally and also classifies the RGB indicator |
 | Robot interface | FastAPI + Pydantic | Exposes strict, validated atomic actions to the agent |
-| Dataflow | Dora 0.5.0 | Separates state, navigation, arm, vision, and stop nodes |
+| Dataflow | Dora 1.0.0-rc.4 | Separates state, navigation, arm, vision, and stop nodes |
 | Simulation | Webots R2025a + ROS 2 Humble | Runs the KUKA youBot, cameras, switch, and validated trajectories |
 
 The Agents SDK can connect to OpenAI models by default. This project uses
@@ -185,11 +225,11 @@ First ask your coding assistant to understand the supplied project. Do not
 regenerate the scene or replace the robot:
 
 ```text
-Inspect this provided Webots R2025a, ROS 2 Humble, Dora 0.5.0, and
+Inspect this provided Webots R2025a, ROS 2 Humble, Dora 1.0.0-rc.4, and
 OpenAI Agents SDK reference project.
 
 Explain the responsibilities of worlds, controllers, dora, robot_api,
-week10_runtime, config, agent_tools.py, agent_cli.py, and tests. Diagram the
+agent_runtime, config, agent_tools.py, agent_cli.py, and tests. Diagram the
 path from an agent tool call to a Dora node, a Webots controller, and the
 structured result returning to the agent.
 
@@ -232,14 +272,19 @@ The validated preparation commands are:
 
 ```bash
 ollama pull qwen3-vl:8b-instruct
-docker build -t week10-agent-sdk:humble .
+docker build -t dora-agent-sdk:humble .
 chmod +x run-container.sh launch-webots.sh
-python3 -m pytest -q
+/usr/bin/python3 -m pytest -q
 ```
 
 The validated machine can run Webots, Qwen3-VL, and screen recording within
 24 GB of VRAM. On a smaller GPU, stop recording first and watch `nvidia-smi`;
 do not weaken the output contract merely to fit a smaller model.
+
+The container keeps Dora in a Python 3.11 virtual environment. ROS 2,
+FastAPI, the Agents SDK, and the application workers use the system Python
+3.10 environment. A generic JSONL sidecar connects each worker to its Dora
+inputs and outputs without mixing the two dependency sets.
 
 ### Load the Provided Scene
 
@@ -295,7 +340,17 @@ The complete dataflow is:
 {{#include ../assets/agent-sdk-task-planning/source/dora/dataflow.yml}}
 ```
 
-`gateway_node.py` also starts the Robot API on `127.0.0.1:8000`. It does not
+The common sidecar is the Python 3.11 Dora-facing process:
+
+```python
+{{#include ../assets/agent-sdk-task-planning/source/dora/runtime_bridge/sidecar_node.py}}
+```
+
+```python
+{{#include ../assets/agent-sdk-task-planning/source/dora/runtime_bridge/sidecar_bridge.py}}
+```
+
+The `gateway_node.py` worker also starts the Robot API on `127.0.0.1:8000`. It does not
 expose the API to an external network.
 
 ### Define a Strict Robot API
@@ -400,7 +455,7 @@ Keep the Webots window open. In a second terminal, enter the container and
 start Dora:
 
 ```bash
-docker exec -it week10-agent-sdk bash
+docker exec -it dora-agent-sdk bash
 cd /workspace/dora
 dora run dataflow.yml
 ```
@@ -408,7 +463,7 @@ dora run dataflow.yml
 In a third terminal, check that the API has received fresh state:
 
 ```bash
-docker exec -it week10-agent-sdk bash
+docker exec -it dora-agent-sdk bash
 curl -s http://127.0.0.1:8000/v1/robot/state
 ```
 
@@ -416,9 +471,9 @@ The returned `location` and `arm_pose` should not be `unknown`, and
 `captured_at` should continue updating. Run the task:
 
 ```bash
-docker exec -it week10-agent-sdk bash
+docker exec -it dora-agent-sdk bash
 cd /workspace
-python3 agent_cli.py --task \
+/usr/bin/python3 agent_cli.py --task \
   "Inspect the indicator; if it is lit, turn off the switch, confirm that the indicator is off, and return home."
 ```
 
@@ -450,7 +505,7 @@ The vision node sends an RGB frame to local Qwen3-VL and requests strict
 structured output:
 
 ```python
-{{#include ../assets/agent-sdk-task-planning/source/week10_runtime/indicator_vision.py:13:40}}
+{{#include ../assets/agent-sdk-task-planning/source/agent_runtime/indicator_vision.py:13:40}}
 ```
 
 The model must return `visible`, `lit`, and `confidence`. When the indicator is
@@ -491,7 +546,7 @@ observation `lit=false`:
 Run the tests that do not require Webots first:
 
 ```bash
-python3 -m pytest -q
+/usr/bin/python3 -m pytest -q
 ```
 
 The reference project contains 44 tests covering tool allowlists, API

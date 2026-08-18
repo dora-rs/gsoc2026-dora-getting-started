@@ -1,19 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-IMAGE="${WEEK9_IMAGE:-week9-webots-llm:humble}"
-NAME="${WEEK9_CONTAINER:-week9-webots-llm}"
+IMAGE="${ACTION_PLANNING_IMAGE:-dora-llm-action:humble}"
+NAME="${ACTION_PLANNING_CONTAINER:-dora-llm-action}"
 DISPLAY_VALUE="${DISPLAY:-:1}"
-WORKSPACE="${WEEK9_WORKSPACE:-${PWD}}"
-DORA_CLI="${DORA_CLI:-${HOME}/.cargo/bin/dora}"
+WORKSPACE="${ACTION_PLANNING_WORKSPACE:-${PWD}}"
 
 mkdir -p "${WORKSPACE}"
 xhost +SI:localuser:root >/dev/null
-
-if [[ ! -x "${DORA_CLI}" ]]; then
-  echo "Dora CLI not found at ${DORA_CLI}" >&2
-  exit 1
-fi
 
 docker rm -f "${NAME}" >/dev/null 2>&1 || true
 docker run --rm -it \
@@ -25,7 +19,6 @@ docker run --rm -it \
   --env QT_X11_NO_MITSHM=1 \
   --env NVIDIA_DRIVER_CAPABILITIES=all \
   --volume /tmp/.X11-unix:/tmp/.X11-unix:rw \
-  --volume "${DORA_CLI}:/usr/local/bin/dora:ro" \
   --volume "${WORKSPACE}:/workspace" \
   --workdir /workspace \
   "${IMAGE}" \

@@ -9,10 +9,11 @@
 | NVIDIA 驱动 | 580.159.03 |
 | Webots | R2025a |
 | ROS 2 | Humble |
-| Dora CLI 和 Python API | 0.5.0 |
+| Dora CLI 和 Python API | 1.0.0-rc.4 |
 | 本地模型引擎 | Ollama 0.32.1 |
 | 规划与视觉模型 | `qwen3-vl:8b-instruct` |
-| Python | 3.10 |
+| Dora 运行时 Python | 3.11.14 |
+| ROS 2 worker Python | 3.10.12 |
 
 ## 下载
 
@@ -60,13 +61,47 @@ skill manifest 提供 `navigate_to`、`observe_switch` 和
 具名路线和预设机械臂轨迹让物理动作简单且可复现。LLM 决定语义层的动作
 顺序与条件分支，但不会在电机层控制机器人。
 
-## 检查参考工程
+## 选择实现路线
 
-请使用提供的场景，不要让助手自行猜测场景几何或机器人尺寸。将压缩包解压到新目录
-后，让助手检查工程，而不是重新生成：
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">创造路线</span>
+  <strong>创建场景、Skill API 与结构化规划器</strong>
+  <p>适合设计语义规划和确定性机器人控制之间的边界。</p>
+</div>
 
 ```text
-检查这个提供的 Webots R2025a 与 Dora 0.5.0 参考工程。
+创建 Webots R2025a 场景，使用官方 KUKA youBot、稳定的前向摄像机、固定 overview
+camera、简单障碍和清晰可见且初始为 ON 的开关。定义 named locations 和能可靠按下
+开关的机械臂轨迹。只暴露语义 skill：navigate、observe、
+move_arm_to_named_pose、press_switch、return_home 和 stop。
+
+通过 Ollama 使用 qwen3-vl:8b-instruct，把“关闭主开关，然后返回 home”转换成包含
+条件分支的严格 JSON 动作序列。完整 plan 必须先通过 validator，再由 Dora 执行。
+验证动作前 ON、动作后 OFF、完成后 home。提供唯一入口、测试、结构化 audit、两张
+证据图和仅应用窗口录屏。模型不得输出坐标、轮速或关节角度。
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">复现路线</span>
+  <strong>运行已验证的规划工程</strong>
+  <p>适合在不重建 Webots 几何的情况下学习 JSON plan 与 Skill 边界。</p>
+</div>
+
+```text
+使用提供的动作规划工程，不修改版本、world、named skills、模型或轨迹。读取
+VERSIONS.md、TUTORIAL_CONTRACT.md、ASSET_GUIDE.md 和 READER_PROMPT.md。
+只运行 bash tutorial.sh run。检查 26 项测试、生成的 plan 和 audit、ON observation、
+OFF verification、成功 return_home、最终 SUCCEEDED/PASS、图片和干净的 git status。
+任何外部标记缺失都要报告 FAIL，不能根据源码或退出码推断成功。
+```
+
+## 检查参考工程
+
+请使用提供的场景，不要让编程助手自行猜测场景几何或机器人尺寸。将压缩包解压到新目录
+后，让编程助手检查工程，而不是重新生成：
+
+```text
+检查这个提供的 Webots R2025a 与 Dora 1.0.0-rc.4 参考工程。
 
 把 worlds/youbot_switch_office.wbt 和固定到 R2025a 的官方 youBot 模型
 视为可复现的场景源文件。不要替换机器人、重建场景、移动开关或修改相机姿态。
@@ -78,13 +113,13 @@ skill manifest 提供 `navigate_to`、`observe_switch` 和
 
 ## 准备环境
 
-让助手只安装提供的工程所需的内容：
+让编程助手只安装提供的工程所需的内容：
 
 ```text
 准备这台 Ubuntu 22.04 计算机，用于运行提供的参考工程。
 
-使用 Webots R2025a、ROS 2 Humble、Dora CLI 与 Python API 0.5.0，以及
-Ollama。下载 qwen3-vl:8b-instruct，同时用于结构化动作规划和 RGB 开关识别。
+使用 Webots R2025a、ROS 2 Humble、Dora CLI 1.0.0-rc.4、
+dora-rs 1.0.0rc4 和 Ollama。下载 qwen3-vl:8b-instruct，同时用于结构化动作规划和 RGB 开关识别。
 Webots 与 ROS 依赖优先使用提供的 Dockerfile，Ollama 在主机运行。
 
 修改前先报告可用磁盘、内存、GPU 与驱动兼容性、现有版本和准备执行的准确命令。
@@ -96,7 +131,7 @@ Webots 与 ROS 依赖优先使用提供的 Dockerfile，Ollama 在主机运行�
 
 ```bash
 ollama pull qwen3-vl:8b-instruct
-docker build -t week9-webots-llm:humble .
+docker build -t dora-llm-action:humble .
 chmod +x run-container.sh launch-webots.sh
 ./run-container.sh
 ```
@@ -104,6 +139,9 @@ chmod +x run-container.sh launch-webots.sh
 容器使用 host 网络，因此默认 Ollama endpoint 是
 `http://127.0.0.1:11434`。请保持服务仅本机可访问，不要绑定到不受信任的
 网络。
+
+容器将运行时依赖隔离：Dora 与 JSONL sidecar nodes 使用 Python 3.11，ROS 2 和
+应用 workers 使用 ROS 2 Humble 提供的系统 Python 3.10。
 
 ## 定义 Skill API
 
@@ -138,7 +176,7 @@ arguments、save_as，以及只支持 eq/ne 的小型条件树。拒绝坐标、
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/week9_validation/plan_validator.py}}
+{{#include ../assets/llm-action-planning/source/action_planning/plan_validator.py}}
 ```
 
 
@@ -165,7 +203,7 @@ HTTP、解析、schema 或校验出现错误时都必须停止。模型绝不能
 
 ```json
 {
-  "schema": "week9.action-plan.v1",
+  "schema": "action-planning.plan.v1",
   "goal": "Turn off the main switch, then return home.",
   "steps": [
     {
@@ -213,7 +251,7 @@ HTTP、解析、schema 或校验出现错误时都必须停止。模型绝不能
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/week9_validation/model_clients.py}}
+{{#include ../assets/llm-action-planning/source/action_planning/model_clients.py}}
 ```
 
 
@@ -225,10 +263,22 @@ Dora graph 把规划、执行和结果记录分离：
 {{#include ../assets/llm-action-planning/source/dora/dataflow.yml}}
 ```
 
-让助手围绕通过校验的计划构建编排层：
+每个 dataflow entry 都启动同一个小型 Python 3.11 sidecar，并通过环境变量指定对应的
+Python 3.10 worker。sidecar 使用 JSONL 转发 Dora events 和 outputs，因此规划和
+任务状态仍通过 Dora graph 传递。
+
+```python
+{{#include ../assets/llm-action-planning/source/dora/runtime_bridge/sidecar_node.py}}
+```
+
+```python
+{{#include ../assets/llm-action-planning/source/dora/runtime_bridge/sidecar_bridge.py}}
+```
+
+让编程助手围绕通过校验的计划构建编排层：
 
 ```text
-为提供的场景实现 Dora 0.5.0 应用。
+为提供的场景实现 Dora 1.0.0-rc.4 应用。
 
 创建三个 nodes：
 1. planner 读取 skill manifest，请求一份结构化计划，校验后只发布一次；
@@ -236,7 +286,8 @@ Dora graph 把规划、执行和结果记录分离：
    结果判断条件，并在失败时停止；
 3. reporter 把脱敏后的事件写入 JSONL。
 
-在 executor 的 skill runtime 内使用 rclpy 与提供的 Webots controller 通信。
+使用 Python 3.11 运行 Dora sidecars，并用 Python 3.10 运行提供的 planner、executor
+和 reporter workers。在 executor worker 内使用 rclpy 与提供的 Webots controller 通信。
 规划与任务状态继续通过 Dora outputs 传递。使用 request ID 关联命令和结果，
 设置 timeout，保存最终 JSON，并为开启、已经关闭、执行失败和动作后视觉验证
 分支添加测试。
@@ -249,7 +300,7 @@ Dora graph 把规划、执行和结果记录分离：
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/week9_validation/mission.py}}
+{{#include ../assets/llm-action-planning/source/action_planning/mission.py}}
 ```
 
 
@@ -317,7 +368,7 @@ set_switch_state 要求机器人位于开关工作空间内，再调用提供的
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/week9_validation/ros_skills.py}}
+{{#include ../assets/llm-action-planning/source/action_planning/ros_skills.py}}
 ```
 
 
@@ -334,12 +385,12 @@ cd /workspace
 
 ```bash
 cd /workspace
-pytest -q
+/usr/bin/python3 -m pytest -q
 cd dora
 dora run dataflow.yml
 ```
 
-让助手验证完整流程：
+让编程助手验证完整流程：
 
 ```text
 端到端运行提供的动作规划工程。
@@ -399,7 +450,7 @@ Dora dataflow。
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/controllers/week9_controller/navigation_control.py}}
+{{#include ../assets/llm-action-planning/source/controllers/action_controller/navigation_control.py}}
 ```
 
 
@@ -407,7 +458,7 @@ Dora dataflow。
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/controllers/week9_controller/week9_controller.py}}
+{{#include ../assets/llm-action-planning/source/controllers/action_controller/action_controller.py}}
 ```
 
 
@@ -452,7 +503,7 @@ Dora dataflow。
 
 
 ```python
-{{#include ../assets/llm-action-planning/source/week9_validation/contracts.py}}
+{{#include ../assets/llm-action-planning/source/action_planning/contracts.py}}
 ```
 
 

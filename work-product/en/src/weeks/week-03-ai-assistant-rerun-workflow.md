@@ -5,9 +5,9 @@
 | Component | Version / Environment |
 | --- | --- |
 | Operating system | Ubuntu 22.04.5 LTS, x86_64 |
-| Python | CPython 3.10.12 |
-| Dora CLI | 0.5.0 |
-| dora-rs Python package | `dora-rs==0.5.0` |
+| Python | CPython 3.11.14 |
+| Dora CLI | 1.0.0-rc.4 |
+| dora-rs Python package | `dora-rs==1.0.0rc4` |
 | Rerun CLI and Python SDK | 0.33.0 |
 | uv | 0.11.17 |
 | pyarrow | 24.0.0 |
@@ -34,6 +34,43 @@ floor, cube, cylinder, robot, and car, then uses Dora to drive motion:
 - Rerun records the changing transforms and captures a short Viewer recording.
 
 <video controls muted loop src="../assets/week2-rerun-scene/rerun_viewer_recording.mp4"></video>
+
+## Choose a Build Route
+
+<div class="prompt-route prompt-route--create">
+  <span class="prompt-route__label">Create route</span>
+  <strong>Add Dora-controlled motion to the static scene</strong>
+  <p>Use this to design the dataflow, state contract, and trajectories yourself.</p>
+</div>
+
+```text
+Starting from the static Rerun scene specification, create a Dora 1.0.0-rc.4
+dataflow with separate controller and visualizer nodes. Define one structured
+scene-state output containing frame index plus robot and car transforms. Design
+collision-free deterministic trajectories: the humanoid starts first, each
+actor goes around the cube, approaches the cylinder, and stops; the car starts
+later so the motion is easy to read.
+
+Keep Rerun at 0.33.0 and preserve all static coordinates and model scale. Add
+trajectory tests, a single run entry, an RRD output, and a 960x540 H.264 Viewer
+recording that begins at the initial positions and reaches both final waypoints.
+Verify runtime markers and artifacts before reporting success.
+```
+
+<div class="prompt-route prompt-route--reproduce">
+  <span class="prompt-route__label">Reproduce route</span>
+  <strong>Run the verified Dora motion project</strong>
+  <p>Use this to focus on how Dora drives an existing scene.</p>
+</div>
+
+```text
+Use the supplied Rerun and Dora project without changing models, coordinates,
+paths, versions, or scripts. Read VERSIONS.md, TUTORIAL_CONTRACT.md,
+ASSET_GUIDE.md, and READER_PROMPT.md. Report the only entry and acceptance
+markers, run it once, and inspect controller/visualizer runtime markers, the
+non-empty RRD, the recording dimensions and duration, final waypoints, and git
+status. A zero exit code alone is not success.
+```
 
 ## Inspect the Dora-Controlled Motion
 

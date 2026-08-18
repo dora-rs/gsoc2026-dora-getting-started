@@ -25,12 +25,12 @@ from tools.run_octos_multi_agent import (
     sync_octos_skill,
     unload_ollama_model,
 )
-from week11_runtime.adaptive_policy import (
+from process_runtime.adaptive_policy import (
     run_strategy,
     save_strategy_version,
     validate_strategy_replays,
 )
-from week11_runtime.octos_protocol import StrategyProposal
+from process_runtime.octos_protocol import StrategyProposal
 
 
 class ConcurrentAgent:
@@ -581,7 +581,7 @@ def test_sync_octos_skill_replaces_stale_installed_copy(
     tmp_path: Path,
 ) -> None:
     source = tmp_path / "source"
-    installed = tmp_path / ".octos" / "skills" / "week11-process-supervision"
+    installed = tmp_path / ".octos" / "skills" / "process-supervision"
     source.mkdir()
     installed.mkdir(parents=True)
     (source / "manifest.json").write_text("new manifest", encoding="utf-8")

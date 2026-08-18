@@ -1,11 +1,11 @@
 import unittest
 
-from week9_validation.plan_validator import validate_plan
+from action_planning.plan_validator import validate_plan
 
 
 def canonical_plan():
     return {
-        "schema": "week9.action-plan.v1",
+        "schema": "action_planning.action-plan.v1",
         "goal": "ensure main_switch is off and return home",
         "steps": [
             {

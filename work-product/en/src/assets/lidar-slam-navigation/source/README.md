@@ -1,36 +1,29 @@
 # LiDAR, SLAM, and Navigation Reference Project
 
 This project contains the validated Webots R2025a, ROS 2 Humble, SLAM Toolbox,
-Nav2, and Dora 0.5.0 workflow used by the tutorial.
+Nav2, and Dora 1.0.0-rc.4 workflow used by the tutorial.
+
+Dora nodes run on Python 3.11.14. ROS 2 Humble subscribers and the Nav2 action
+client run on system Python 3.10 workers connected through JSONL.
 
 The supplied `worlds/default.wbt` is the official TIAGo office world from
 `webots_ros2` tag `2025.0.0`. The installed `webots_ros2_tiago` package supplies
 its matching robot PROTO and launch configuration.
 
-## Run
+## Reproduce
+
+Read `VERSIONS.md`, `TUTORIAL_CONTRACT.md`, and `ASSET_GUIDE.md`, then use the
+single supported entry:
 
 ```bash
-docker build -t week8-webots-nav:humble .
-chmod +x run-container.sh launch-baseline.sh launch-nav2-live.sh
-./run-container.sh
+bash tutorial.sh run
 ```
 
-In the container:
-
-```bash
-./launch-baseline.sh
-python3 explore_with_lidar.py 75
-mkdir -p maps
-ros2 run nav2_map_server map_saver_cli -f maps/office
-```
-
-Start `launch-nav2-live.sh` in another container shell, then run:
-
-```bash
-cd /workspace/dora
-pytest -q
-dora run dataflow.yml
-```
+The entry builds the pinned container image when it is missing, owns the
+Webots/ROS/Dora lifecycle, saves the map, waits for Nav2 to become active, and
+verifies the structured mission result. The component launch scripts remain in
+the project so the implementation can be inspected; they are not alternative
+reproduction entries.
 
 Official source:
 

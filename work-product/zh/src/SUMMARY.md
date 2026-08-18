@@ -1,6 +1,7 @@
 # Summary
 
 - [导言](introduction.md)
+- [准备工作：LLM、Agent 与编程助手](weeks/preparation-llms-agents-coding-assistants.md)
 - [dora-rs 介绍、安装与 Hello World](weeks/week-01-dora-introduction-installation-hello-world.md)
 - [Rerun 介绍与静态场景](weeks/week-02-rerun-scene-with-dora.md)
 - [Dora 控制 Rerun 场景运动](weeks/week-03-ai-assistant-rerun-workflow.md)
